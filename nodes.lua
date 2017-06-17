@@ -22,15 +22,13 @@ minetest.register_node("laptop:core_open", {
 		return inv:is_empty('storage') and inv:is_empty('storage1')
 	end,
 	on_construct = function(pos)
-		local meta = minetest.env:get_meta(pos)
-		local inv = meta:get_inventory()
-		inv:set_size('main', 8*4)
-		inv:set_size('storage', 3*3)
-		meta:set_string('formspec',
-			'size [15,10]'..
-			'bgcolor[#00000000;false]'..
-			'background[4,4;0,0;os_main.png;true]')
-	end,
+			local meta = minetest.env:get_meta(pos)
+			local inv = meta:get_inventory()
+			inv:set_size('main', 8*4)
+			inv:set_size('storage', 3*3)
+			meta:set_string('formspec', laptop.laptop_formspec)
+			meta:set_string('infotext', 'MineTest Core')
+		end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -58,6 +56,10 @@ minetest.register_node("laptop:core_closed", {
 		node.name = "laptop:core_open"
 		minetest.set_node(pos, node)
 	end,
+	on_construct = function(pos)
+			local meta = minetest.env:get_meta(pos)
+			meta:set_string('infotext', 'MineTest Core')
+		end,
 	node_box = {
 		type = "fixed",
 		fixed = {
