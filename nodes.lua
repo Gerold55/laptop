@@ -1,7 +1,7 @@
 minetest.register_node("laptop:core_open", {
     description = "MineTest Core",
 	tiles = {
-		"laptop_core_tp.png",
+		"laptop_core_tp_off.png",
 		"laptop_core_bt.png",
 		"laptop_core_rt.png",
 		"laptop_core_lt.png",
