@@ -16,6 +16,7 @@ laptop = {
 	filtered_items_list = {},
 	pages = {},
 	buttons = {},
+    apps = {},
 
 	pagecols = 8,
 	pagerows = 10,
@@ -30,3 +31,4 @@ laptop = {
 
 dofile(minetest.get_modpath('laptop')..'/nodes.lua')
 dofile(minetest.get_modpath('laptop')..'/formspecs.lua')
+dofile(minetest.get_modpath('laptop')..'/functions.lua')

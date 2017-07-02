@@ -22,7 +22,7 @@ minetest.register_node("laptop:core_open", {
 		return inv:is_empty('storage') and inv:is_empty('storage1')
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			meta:set_string('infotext', 'MineTest Core')
 		end,
 	node_box = {
@@ -58,7 +58,7 @@ minetest.register_node("laptop:core_open_on", {
 		return inv:is_empty('storage') and inv:is_empty('storage1')
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size('main', 8*4)
 			inv:set_size('storage', 3*3)
@@ -93,7 +93,7 @@ minetest.register_node("laptop:core_closed", {
 		minetest.set_node(pos, node)
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			meta:set_string('infotext', 'MineTest Core')
 		end,
 	node_box = {
@@ -129,11 +129,11 @@ minetest.register_node("laptop:monitor_on", {
 		return inv:is_empty('storage') and inv:is_empty('storage1')
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size('main', 8*4)
 			inv:set_size('storage', 3*3)
-			meta:set_string('formspec', laptop.laptop_formspec)
+			meta:set_string('formspec', laptop.laptop_formspe)
 			meta:set_string('infotext', 'MT Desktop')
 		end,
 	node_box = {
@@ -167,7 +167,7 @@ minetest.register_node("laptop:monitor_off", {
 		minetest.set_node(pos, node)
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			meta:set_string('infotext', 'MT Desktop')
 		end,
 	node_box = {
@@ -206,13 +206,19 @@ minetest.register_node("laptop:monitor2_on", {
 		return inv:is_empty('storage') and inv:is_empty('storage1')
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			local inv = meta:get_inventory()
 			inv:set_size('main', 8*4)
 			inv:set_size('storage', 3*3)
-			meta:set_string('formspec', laptop.laptop_formspec)
+			meta:set_string('formspec', laptop.display_menu())
 			meta:set_string('infotext', 'MT Desktop')
 		end,
+   on_receive_fields = function(pos, formname, fields)
+      if fields['exit'] then
+         local meta = minetest.get_meta(pos)
+         meta:set_string('formspec', laptop.display_menu())
+      end
+   end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -248,7 +254,7 @@ minetest.register_node("laptop:monitor2_off", {
 		minetest.set_node(pos, node)
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
+			local meta = minetest.get_meta(pos)
 			meta:set_string('infotext', 'MT Desktop')
 		end,
 	node_box = {
