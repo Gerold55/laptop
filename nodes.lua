@@ -10,6 +10,7 @@ minetest.register_node("laptop:core_open", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:core_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
@@ -46,6 +47,7 @@ minetest.register_node("laptop:core_open_on", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:core_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
@@ -86,6 +88,7 @@ minetest.register_node("laptop:core_closed", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:core_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
@@ -117,6 +120,7 @@ minetest.register_node("laptop:monitor_on", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:monitor_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
@@ -160,6 +164,7 @@ minetest.register_node("laptop:monitor_off", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:monitor_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
@@ -194,6 +199,7 @@ minetest.register_node("laptop:monitor2_on", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:monitor_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
@@ -241,6 +247,7 @@ minetest.register_node("laptop:monitor2_off", {
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
+	paramtype2 = "facedir",
 	drop = "laptop:monitor_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
