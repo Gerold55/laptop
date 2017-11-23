@@ -11,9 +11,7 @@ function os_class:power_on(new_node_name)
 		node.name = new_node_name
 		minetest.swap_node(self.pos, node )
 	end
-	self.meta:set_string('formspec', 'size[15,10]'..
-	'background[15,10;0,0;os_main2.png;true]'..
-	'bgcolor[#00000000;false]')
+	self:set_app("launcher") -- allways start with launcher after power on
 end
 
 -- Power off the system
@@ -31,16 +29,37 @@ function os_class:set_infotext(infotext)
 	self.meta:set_string('infotext', infotext)
 end
 
+function os_class:save()
+	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
+end
+
+-- Set infotext for system
+function os_class:set_app(appname)
+	if not appname then
+		appname = "launcher"
+	end
+	self.appdata.launcher.current_app = appname
+	local app = laptop.get_app(appname, self)
+	self.meta:set_string('formspec', app:get_formspec())
+	self:save()
+end
+
+function os_class:receive_fields(fields, sender)
+	local appname = self.appdata.launcher.current_app or "launcher"
+	local app = laptop.get_app(appname, self)
+	app:receive_fields(fields, sender)
+end
+
 -----------------------------------------------------
 -- Get Operating system object
 -----------------------------------------------------
 function laptop.os_get(pos)
-	local os = {}
-	setmetatable(os, os_class)
-	os.__index = os_class
-	os.pos = pos
-	os.meta = minetest.get_meta(pos)
-
-
-	return os
+	local self = {}
+	setmetatable(self, os_class)
+	self.__index = os_class
+	self.pos = pos
+	self.meta = minetest.get_meta(pos)
+	self.appdata = minetest.deserialize(self.meta:get_string('laptop_appdata')) or {}
+	self.appdata.launcher = self.appdata.launcher or {}
+	return self
 end

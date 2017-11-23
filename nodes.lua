@@ -55,6 +55,10 @@ minetest.register_node("laptop:core_open_on", {
 		os:power_on()
 		os:set_infotext('MineTest Core')
 	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		local os = laptop.os_get(pos)
+		os:receive_fields(fields, sender)
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -121,6 +125,10 @@ minetest.register_node("laptop:monitor_on", {
 		local os = laptop.os_get(pos)
 		os:power_on()
 		os:set_infotext('MT Desktop')
+	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		local os = laptop.os_get(pos)
+		os:receive_fields(fields, sender)
 	end,
 	node_box = {
 		type = "fixed",
@@ -193,6 +201,10 @@ minetest.register_node("laptop:monitor2_on", {
 		local os = laptop.os_get(pos)
 		os:power_on()
 		os:set_infotext('MT Desktop')
+	end,
+	on_receive_fields = function(pos, formname, fields, sender)
+		local os = laptop.os_get(pos)
+		os:receive_fields(fields, sender)
 	end,
 	node_box = {
 		type = "fixed",
