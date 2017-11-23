@@ -48,6 +48,10 @@ function os_class:receive_fields(fields, sender)
 	local appname = self.appdata.launcher.current_app or "launcher"
 	local app = laptop.get_app(appname, self)
 	app:receive_fields(fields, sender)
+	if self.appdata.launcher.current_app == appname then
+		self.meta:set_string('formspec', app:get_formspec())
+	end
+	self:save()
 end
 
 -----------------------------------------------------

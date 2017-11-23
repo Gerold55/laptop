@@ -20,6 +20,13 @@ function app_class:receive_fields(fields, sender)
 	end
 end
 
+function app_class:get_storage_ref()
+	if not self.os.appdata[self.name] then
+		self.os.appdata[self.name] = {}
+	end
+	return self.os.appdata[self.name]
+end
+
 
 --[[ ********** App API definition  ***********
 	* methods
@@ -41,6 +48,7 @@ function laptop.get_app(name, os)
 		return
 	end
 	app = setmetatable(app, app_class)
+	app.name = name
 	app.os = os
 	return app
 end
@@ -76,7 +84,6 @@ laptop.register_app("launcher", {
 laptop.register_app("demo1", {
 	app_name = "Demo App",
 	formspec_func = function(app, os)
-	print("formspec_func")
 		return 'button[5,5;3,1;Back;Back to launcher]'
 	end,
 	receive_fields_func = function(app, os, fields, sender)
@@ -87,9 +94,17 @@ laptop.register_app("demo1", {
 laptop.register_app("demo2", {
 	app_name = "Demo App 2",
 	formspec_func = function(app, os)
-		return 'button[3,3;5,1;Back;Back to launcher]'
+		local data = app:get_storage_ref()
+		data.counter = data.counter or 1
+		return 'button[3,1;5,1;count;Click: '..data.counter..']'..
+				'button[3,3;5,1;back;Back to launcher]'
 	end,
 	receive_fields_func = function(app, os, fields, sender)
-		os:set_app("launcher")
+		if fields.count then
+			local data = app:get_storage_ref()
+			data.counter = data.counter + 1
+		elseif fields.back then
+			os:set_app("launcher")
+		end
 	end
 })
