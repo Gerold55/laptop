@@ -1,5 +1,5 @@
 minetest.register_node("laptop:core_open", {
-    description = "MineTest Core",
+	description = "MineTest Core",
 	tiles = {
 		"laptop_core_tp_off.png",
 		"laptop_core_bt.png",
@@ -14,18 +14,14 @@ minetest.register_node("laptop:core_open", {
 	drop = "laptop:core_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:core_open_on"
-		minetest.set_node(pos, node)
-	end,
-	can_dig = function(pos,player)
-		local meta = minetest.get_meta(pos);
-		local inv = meta:get_inventory()
-		return inv:is_empty('storage') and inv:is_empty('storage1')
+		local os = laptop.os_get(pos)
+		os:power_on("laptop:core_open_on")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			meta:set_string('infotext', 'MineTest Core')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_off()
+		os:set_infotext('MineTest Core')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -36,7 +32,7 @@ minetest.register_node("laptop:core_open", {
 })
 
 minetest.register_node("laptop:core_open_on", {
-    description = "MineTest Core",
+	description = "MineTest Core",
 	tiles = {
 		"laptop_core_tp.png",
 		"laptop_core_bt.png",
@@ -51,22 +47,14 @@ minetest.register_node("laptop:core_open_on", {
 	drop = "laptop:core_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:core_closed"
-		minetest.set_node(pos, node)
-	end,
-	can_dig = function(pos,player)
-		local meta = minetest.get_meta(pos);
-		local inv = meta:get_inventory()
-		return inv:is_empty('storage') and inv:is_empty('storage1')
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:core_closed")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			local inv = meta:get_inventory()
-			inv:set_size('main', 8*4)
-			inv:set_size('storage', 3*3)
-			meta:set_string('formspec', laptop.laptop_formspec)
-			meta:set_string('infotext', 'MineTest Core')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_on()
+		os:set_infotext('MineTest Core')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -77,7 +65,7 @@ minetest.register_node("laptop:core_open_on", {
 })
 
 minetest.register_node("laptop:core_closed", {
-    description = "MineTest Core",
+	description = "MineTest Core",
 	tiles = {
 		"laptop_core_bk_off.png",
 		"laptop_core_bt.png",
@@ -92,13 +80,14 @@ minetest.register_node("laptop:core_closed", {
 	drop = "laptop:core_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:core_open"
-		minetest.set_node(pos, node)
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:core_open")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			meta:set_string('infotext', 'MineTest Core')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_off()
+		os:set_infotext('MineTest Core')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -108,8 +97,9 @@ minetest.register_node("laptop:core_closed", {
 	}
 })
 
+
 minetest.register_node("laptop:monitor_on", {
-    description = "MT Desktop",
+	description = "MT Desktop",
 	tiles = {
 		"monitor_core_bt.png",
 		"laptop_core_bt.png",
@@ -124,22 +114,14 @@ minetest.register_node("laptop:monitor_on", {
 	drop = "laptop:monitor_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:monitor_off"
-		minetest.set_node(pos, node)
-	end,
-	can_dig = function(pos,player)
-		local meta = minetest.get_meta(pos);
-		local inv = meta:get_inventory()
-		return inv:is_empty('storage') and inv:is_empty('storage1')
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:monitor_off")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			local inv = meta:get_inventory()
-			inv:set_size('main', 8*4)
-			inv:set_size('storage', 3*3)
-			meta:set_string('formspec', laptop.laptop_formspec)
-			meta:set_string('infotext', 'MT Desktop')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_on()
+		os:set_infotext('MT Desktop')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -153,7 +135,7 @@ minetest.register_node("laptop:monitor_on", {
 })
 
 minetest.register_node("laptop:monitor_off", {
-    description = "MT Desktop",
+	description = "MT Desktop",
 	tiles = {
 		"monitor_core_bt.png",
 		"laptop_core_bt.png",
@@ -168,13 +150,14 @@ minetest.register_node("laptop:monitor_off", {
 	drop = "laptop:monitor_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:monitor_on"
-		minetest.set_node(pos, node)
+		local os = laptop.os_get(pos)
+		os:power_on("laptop:monitor_on")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			meta:set_string('infotext', 'MT Desktop')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_off()
+		os:set_infotext('MT Desktop')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -200,25 +183,17 @@ minetest.register_node("laptop:monitor2_on", {
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
-	drop = "laptop:monitor_off",
+	drop = "laptop:monitor2_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:monitor2_off"
-		minetest.set_node(pos, node)
-	end,
-	can_dig = function(pos,player)
-		local meta = minetest.get_meta(pos);
-		local inv = meta:get_inventory()
-		return inv:is_empty('storage') and inv:is_empty('storage1')
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:monitor2_off")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			local inv = meta:get_inventory()
-			inv:set_size('main', 8*4)
-			inv:set_size('storage', 3*3)
-			meta:set_string('formspec', laptop.laptop_formspec)
-			meta:set_string('infotext', 'MT Desktop')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_on()
+		os:set_infotext('MT Desktop')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -248,16 +223,17 @@ minetest.register_node("laptop:monitor2_off", {
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = "facedir",
-	drop = "laptop:monitor_off",
+	drop = "laptop:monitor2_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:monitor2_on"
-		minetest.set_node(pos, node)
+		local os = laptop.os_get(pos)
+		os:power_on("laptop:monitor2_on")
 	end,
 	on_construct = function(pos)
-			local meta = minetest.env:get_meta(pos)
-			meta:set_string('infotext', 'MT Desktop')
-		end,
+		local os = laptop.os_get(pos)
+		os:power_off()
+		os:set_infotext('MT Desktop')
+	end,
 	node_box = {
 		type = "fixed",
 		fixed = {
