@@ -12,7 +12,7 @@ minetest.register_node("laptop:core_open", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:core_closed",
-	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
+	groups = {choppy=2, oddly_breakably_by_hand=2,  dig_immediate = 2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_on("laptop:core_open_on")
@@ -22,6 +22,9 @@ minetest.register_node("laptop:core_open", {
 		os:power_off()
 		os:set_infotext('MineTest Core')
 	end,
+	stack_max = 1,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -45,7 +48,7 @@ minetest.register_node("laptop:core_open_on", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:core_closed",
-	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
+	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_off("laptop:core_closed")
@@ -55,6 +58,9 @@ minetest.register_node("laptop:core_open_on", {
 		os:power_on()
 		os:set_infotext('MineTest Core')
 	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
 	on_receive_fields = function(pos, formname, fields, sender)
 		local os = laptop.os_get(pos)
 		os:receive_fields(fields, sender)
@@ -82,7 +88,7 @@ minetest.register_node("laptop:core_closed", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:core_closed",
-	groups = {choppy=2, oddly_breakably_by_hand=2},
+	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_off("laptop:core_open")
@@ -92,6 +98,9 @@ minetest.register_node("laptop:core_closed", {
 		os:power_off()
 		os:set_infotext('MineTest Core')
 	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -116,7 +125,7 @@ minetest.register_node("laptop:monitor_on", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:monitor_off",
-	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
+	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_off("laptop:monitor_off")
@@ -126,6 +135,9 @@ minetest.register_node("laptop:monitor_on", {
 		os:power_on()
 		os:set_infotext('MT Desktop')
 	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
 	on_receive_fields = function(pos, formname, fields, sender)
 		local os = laptop.os_get(pos)
 		os:receive_fields(fields, sender)
@@ -156,11 +168,14 @@ minetest.register_node("laptop:monitor_off", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:monitor_off",
-	groups = {choppy=2, oddly_breakably_by_hand=2},
+	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_on("laptop:monitor_on")
 	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
 		os:power_off()
@@ -192,7 +207,7 @@ minetest.register_node("laptop:monitor2_on", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:monitor2_off",
-	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
+	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_off("laptop:monitor2_off")
@@ -202,6 +217,9 @@ minetest.register_node("laptop:monitor2_on", {
 		os:power_on()
 		os:set_infotext('MT Desktop')
 	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
 	on_receive_fields = function(pos, formname, fields, sender)
 		local os = laptop.os_get(pos)
 		os:receive_fields(fields, sender)
@@ -236,11 +254,14 @@ minetest.register_node("laptop:monitor2_off", {
 	paramtype = "light",
 	paramtype2 = "facedir",
 	drop = "laptop:monitor2_off",
-	groups = {choppy=2, oddly_breakably_by_hand=2},
+	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_on("laptop:monitor2_on")
 	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
 		os:power_off()
