@@ -58,8 +58,7 @@ end
 -- Get Operating system object
 -----------------------------------------------------
 function laptop.os_get(pos)
-	local self = {}
-	setmetatable(self, os_class)
+	local self = setmetatable({}, os_class)
 	self.__index = os_class
 	self.pos = pos
 	self.meta = minetest.get_meta(pos)
