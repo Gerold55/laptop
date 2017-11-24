@@ -12,7 +12,9 @@ Usable from node functions, from apps or outsite
 `local os = laptop.os_get(pos)` - Get the Operating system object. pos is the node position
 
 - `os:power_on(new_node_name)` - Activate the app "launcher" and if given swap node to new_node_name
+- `os:resume(new_node_name)` - Restore the last running app after power_off. if given swap node to new_node_name
 - `os:power_off(new_node_name)` - Remove the formspec and if given swap node to new_node_name
+- `os:swap_node(new_node_name)`- Swap the node only without any changes on OS
 - `os:set_infotext(infotext)` - Set the mouseover infotext for laptop node
 - `os:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `os:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called

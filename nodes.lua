@@ -15,7 +15,7 @@ minetest.register_node("laptop:core_open", {
 	groups = {choppy=2, oddly_breakably_by_hand=2,  dig_immediate = 2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
-		os:power_on("laptop:core_open_on")
+		os:resume("laptop:core_open_on")
 	end,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)

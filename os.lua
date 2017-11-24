@@ -4,22 +4,33 @@
 local os_class = {}
 os_class.__index = os_class
 
--- Power on the system / initialize formspec and so
+-- Swap the node
+function os_class:swap_node(new_node_name)
+	local node = minetest.get_node(self.pos)
+	node.name = new_node_name
+	minetest.swap_node(self.pos, node)
+end
+
+-- Power on the system and start the launcher
 function os_class:power_on(new_node_name)
 	if new_node_name then
-		local node = minetest.get_node(self.pos)
-		node.name = new_node_name
-		minetest.swap_node(self.pos, node )
+		self:swap_node(new_node_name)
 	end
-	self:set_app("launcher") -- allways start with launcher after power on
+	self:set_app("launcher")
+end
+
+-- Power on the system / and resume last running app
+function os_class:resume(new_node_name)
+	if new_node_name then
+		self:swap_node(new_node_name)
+	end
+	self:set_app(self.appdata.launcher.current_app)
 end
 
 -- Power off the system
 function os_class:power_off(new_node_name)
 	if new_node_name then
-		local node = minetest.get_node(self.pos)
-		node.name = new_node_name
-		minetest.swap_node(self.pos, node )
+		self:swap_node(new_node_name)
 	end
 	self.meta:set_string('formspec', "")
 end
