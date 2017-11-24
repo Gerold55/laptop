@@ -1,6 +1,8 @@
 
 laptop.register_app("demo1", {
 	app_name = "Demo App",
+	app_icon = "setting_wrench.png",
+	app_info = "The first and simple demo app",
 	formspec_func = function(app, os)
 		return 'button[5,5;3,1;Back;Back to launcher]'
 	end,

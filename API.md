@@ -22,9 +22,11 @@ Usable from node functions, from apps or outsite
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
 - `app_name` - App name shown in launcher. If not defined the app is just a view, not visible in launcher but can be activated. This way multi-screen apps are possible
+- `app_icon` - Icon to be shown in launcher. If nothing given the default icon is used
+- `app_info` - Short app info visible in launcher tooltip
 - `background_img` - if set the image is added as background to formspec by framework
--	`formspec_func(app, os)` - Function, should return the app formspec (mandatory) During definition the "app" and the "os" are available
--	`receive_fields_func(app, os, fields, sender)` Function for input processing. The "app" and the "os" are available inside the call
+- `formspec_func(app, os)` - Function, should return the app formspec (mandatory) During definition the "app" and the "os" are available
+- `receive_fields_func(app, os, fields, sender)` Function for input processing. The "app" and the "os" are available inside the call
 
 ## App Object
 `local app = laptop.get_app(internal_shortname, os)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
