@@ -4,10 +4,12 @@ laptop.register_app("demo1", {
 	app_icon = "setting_wrench.png",
 	app_info = "The first and simple demo app",
 	formspec_func = function(app, os)
-		return 'button[5,5;3,1;Back;Back to launcher]'
+		return 'button[5,5;3,1;back;Back to launcher]'
 	end,
 	receive_fields_func = function(app, os, fields, sender)
-		os:set_app("launcher")
+		if fields.back then
+			os:set_app("launcher")
+		end
 	end
 })
 
