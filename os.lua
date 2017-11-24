@@ -33,6 +33,7 @@ function os_class:power_off(new_node_name)
 		self:swap_node(new_node_name)
 	end
 	self.meta:set_string('formspec', "")
+	self:save()
 end
 
 -- Set infotext for system
@@ -41,22 +42,25 @@ function os_class:set_infotext(infotext)
 end
 
 function os_class:save()
+	self.appdata.launcher.custom = self.custom_launcher
 	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
 end
 
 -- Set infotext for system
 function os_class:set_app(appname)
-	if not appname then
-		appname = "launcher"
+	local name = appname or "launcher"
+
+	if name == "launcher" and self.custom_launcher then
+		name = self.custom_launcher
 	end
-	self.appdata.launcher.current_app = appname
-	local app = laptop.get_app(appname, self)
+	self.appdata.launcher.current_app = name
+	local app = laptop.get_app(name, self)
 	self.meta:set_string('formspec', app:get_formspec())
 	self:save()
 end
 
 function os_class:receive_fields(fields, sender)
-	local appname = self.appdata.launcher.current_app or "launcher"
+	local appname = self.appdata.launcher.current_app or self.custom_launcher or "launcher"
 	local app = laptop.get_app(appname, self)
 	app:receive_fields(fields, sender)
 	if self.appdata.launcher.current_app == appname then
@@ -75,6 +79,7 @@ function laptop.os_get(pos)
 	self.meta = minetest.get_meta(pos)
 	self.appdata = minetest.deserialize(self.meta:get_string('laptop_appdata')) or {}
 	self.appdata.launcher = self.appdata.launcher or {}
+	self.custom_launcher = self.appdata.launcher.custom
 	return self
 end
 

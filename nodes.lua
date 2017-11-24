@@ -95,6 +95,7 @@ minetest.register_node("laptop:core_closed", {
 	end,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
+--		os.custom_launcher = 'stickynote'
 		os:power_off()
 		os:set_infotext('MineTest Core')
 	end,

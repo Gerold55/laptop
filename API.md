@@ -19,7 +19,7 @@ Usable from node functions, from apps or outsite
 - `os:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `os:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `os:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
-
+- `os.custom_launcher` - Replacement for default "launcher" app. Can be set/changed in node constructor or anytime at runtime
 
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
