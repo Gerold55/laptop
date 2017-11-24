@@ -15,7 +15,7 @@ minetest.register_node("laptop:core_open", {
 	groups = {choppy=2, oddly_breakably_by_hand=2,  dig_immediate = 2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
-		os:power_on("laptop:core_open_on")
+		os:resume("laptop:core_open_on")
 	end,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
@@ -95,6 +95,7 @@ minetest.register_node("laptop:core_closed", {
 	end,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
+--		os.custom_launcher = 'stickynote'
 		os:power_off()
 		os:set_infotext('MineTest Core')
 	end,
@@ -171,6 +172,10 @@ minetest.register_node("laptop:monitor_off", {
 	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
+		-- change lauchher background - swap background for all instances on punch
+		local app = laptop.get_app("launcher", os)
+		app.background_img = "os_main.png"
+		app:sync_storage()
 		os:power_on("laptop:monitor_on")
 	end,
 	after_place_node = laptop.after_place_node,
@@ -178,6 +183,10 @@ minetest.register_node("laptop:monitor_off", {
 	stack_max = 1,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
+		-- change lauchher background
+		local app = laptop.get_app("launcher", os)
+		app.background_img = "os_main.png"
+		app:sync_storage()
 		os:power_off()
 		os:set_infotext('MT Desktop')
 	end,
@@ -214,6 +223,9 @@ minetest.register_node("laptop:monitor2_on", {
 	end,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
+		local app = laptop.get_app("launcher", os)
+		app.background_img = "os_main.png"
+		app:sync_storage()
 		os:power_on()
 		os:set_infotext('MT Desktop')
 	end,

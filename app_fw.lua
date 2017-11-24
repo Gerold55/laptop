@@ -22,6 +22,19 @@ function app_class:receive_fields(fields, sender)
 	end
 end
 
+function app_class:sync_storage()
+	if self.background_img then
+		local data = self:get_storage_ref()
+		data._background_img = self.background_img
+	elseif self.os.appdata[self.name] then
+		self.os.appdata[self.name]._background_img = self.background_img
+		-- remove table if empty
+		if not next(self.os.appdata[self.name]) then
+			self.os.appdata[self.name] = nil
+		end
+	end
+end
+
 function app_class:get_storage_ref()
 	if not self.os.appdata[self.name] then
 		self.os.appdata[self.name] = {}
@@ -41,6 +54,9 @@ function laptop.get_app(name, os)
 	local app = setmetatable(table.copy(template), app_class)
 	app.name = name
 	app.os = os
+	if os.appdata[name] then
+		app.background_img = os.appdata[name]._background_img or app.background_img
+	end
 	return app
 end
 

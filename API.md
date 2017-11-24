@@ -12,12 +12,14 @@ Usable from node functions, from apps or outsite
 `local os = laptop.os_get(pos)` - Get the Operating system object. pos is the node position
 
 - `os:power_on(new_node_name)` - Activate the app "launcher" and if given swap node to new_node_name
+- `os:resume(new_node_name)` - Restore the last running app after power_off. if given swap node to new_node_name
 - `os:power_off(new_node_name)` - Remove the formspec and if given swap node to new_node_name
+- `os:swap_node(new_node_name)`- Swap the node only without any changes on OS
 - `os:set_infotext(infotext)` - Set the mouseover infotext for laptop node
 - `os:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `os:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `os:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
-
+- `os.custom_launcher` - Replacement for default "launcher" app. Can be set/changed in node constructor or anytime at runtime
 
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
@@ -31,4 +33,5 @@ Usable from node functions, from apps or outsite
 ## App Object
 `local app = laptop.get_app(internal_shortname, os)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
 - `data = app:get_storage_ref()` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off.
+- `app:sync_storage()` - Store internal data (eg. background_img) to app storage
 - `app.background_img` - Background image from definition. Can be changed at runtime
