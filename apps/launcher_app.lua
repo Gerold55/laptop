@@ -1,7 +1,7 @@
 
 laptop.register_app("launcher", {
 --	app_name = "Main launcher", -- not in launcher list
-	background_img = "os_main2.png",
+	background_img = "laptop_os_main2.png",
 	formspec_func = function(app, os)
 		local c_row_count = 4
 
