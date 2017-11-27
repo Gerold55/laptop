@@ -1,12 +1,12 @@
 minetest.register_node("laptop:core_open", {
 	description = "MineTest Core",
 	tiles = {
-		"laptop_core_tp_off.png",
-		"laptop_core_bt.png",
-		"laptop_core_rt.png",
-		"laptop_core_lt.png",
-		"laptop_core_bk.png",
-		"laptop_core_ft.png"
+		"laptop_laptop_core_tp_off.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_laptop_core_rt.png",
+		"laptop_laptop_core_lt.png",
+		"laptop_laptop_core_bk.png",
+		"laptop_laptop_core_ft.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -37,12 +37,12 @@ minetest.register_node("laptop:core_open", {
 minetest.register_node("laptop:core_open_on", {
 	description = "MineTest Core",
 	tiles = {
-		"laptop_core_tp.png",
-		"laptop_core_bt.png",
-		"laptop_core_rt.png",
-		"laptop_core_lt.png",
-		"laptop_core_bk.png",
-		"laptop_core_ft_on.png"
+		"laptop_laptop_core_tp.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_laptop_core_rt.png",
+		"laptop_laptop_core_lt.png",
+		"laptop_laptop_core_bk.png",
+		"laptop_laptop_core_ft_on.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -77,12 +77,12 @@ minetest.register_node("laptop:core_open_on", {
 minetest.register_node("laptop:core_closed", {
 	description = "MineTest Core",
 	tiles = {
-		"laptop_core_bk_off.png",
-		"laptop_core_bt.png",
-		"laptop_core_rt_off.png",
-		"laptop_core_lt_off.png",
-		"laptop_core_r_off.png",
-		"laptop_core_ft_off.png"
+		"laptop_laptop_core_bk_off.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_laptop_core_rt_off.png",
+		"laptop_laptop_core_lt_off.png",
+		"laptop_laptop_core_r_off.png",
+		"laptop_laptop_core_ft_off.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -115,12 +115,12 @@ minetest.register_node("laptop:core_closed", {
 minetest.register_node("laptop:monitor_on", {
 	description = "MT Desktop",
 	tiles = {
-		"monitor_core_bt.png",
-		"laptop_core_bt.png",
-		"monitor_core_rt.png",
-		"monitor_core_lt.png",
-		"monitor_core_bk.png",
-		"monitor_core_ft_on.png"
+		"laptop_monitor_core_bt.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_monitor_core_rt.png",
+		"laptop_monitor_core_lt.png",
+		"laptop_monitor_core_bk.png",
+		"laptop_monitor_core_ft_on.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -158,12 +158,12 @@ minetest.register_node("laptop:monitor_on", {
 minetest.register_node("laptop:monitor_off", {
 	description = "MT Desktop",
 	tiles = {
-		"monitor_core_bt.png",
-		"laptop_core_bt.png",
-		"monitor_core_rt.png",
-		"monitor_core_lt.png",
-		"monitor_core_bk.png",
-		"monitor_core_ft.png"
+		"laptop_monitor_core_bt.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_monitor_core_rt.png",
+		"laptop_monitor_core_lt.png",
+		"laptop_monitor_core_bk.png",
+		"laptop_monitor_core_ft.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -174,7 +174,7 @@ minetest.register_node("laptop:monitor_off", {
 		local os = laptop.os_get(pos)
 		-- change lauchher background - swap background for all instances on punch
 		local app = laptop.get_app("launcher", os)
-		app.background_img = "os_main.png"
+		app.background_img = "laptop_os_main.png"
 		app:sync_storage()
 		os:power_on("laptop:monitor_on")
 	end,
@@ -185,7 +185,7 @@ minetest.register_node("laptop:monitor_off", {
 		local os = laptop.os_get(pos)
 		-- change lauchher background
 		local app = laptop.get_app("launcher", os)
-		app.background_img = "os_main.png"
+		app.background_img = "laptop_os_main.png"
 		app:sync_storage()
 		os:power_off()
 		os:set_infotext('MT Desktop')
@@ -205,12 +205,12 @@ minetest.register_node("laptop:monitor_off", {
 minetest.register_node("laptop:monitor2_on", {
     description = "MT Desktop 2.0",
 	tiles = {
-		"monitor2_core_bt.png",
-		"laptop_core_bt.png",
-		"monitor_core_rt.png",
-		"monitor_core_lt.png",
-		"monitor2_core_bk.png",
-		"monitor2_core_ft_on.png"
+		"laptop_monitor2_core_bt.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_monitor_core_rt.png",
+		"laptop_monitor_core_lt.png",
+		"laptop_monitor2_core_bk.png",
+		"laptop_monitor2_core_ft_on.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
@@ -224,7 +224,7 @@ minetest.register_node("laptop:monitor2_on", {
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
 		local app = laptop.get_app("launcher", os)
-		app.background_img = "os_main.png"
+		app.background_img = "laptop_os_main.png"
 		app:sync_storage()
 		os:power_on()
 		os:set_infotext('MT Desktop')
@@ -255,12 +255,12 @@ minetest.register_node("laptop:monitor2_on", {
 minetest.register_node("laptop:monitor2_off", {
     description = "MT Desktop 2.0",
 	tiles = {
-		"monitor2_core_bt.png",
-		"laptop_core_bt.png",
-		"monitor_core_rt.png",
-		"monitor_core_lt.png",
-		"monitor2_core_bk.png",
-		"monitor2_core_ft.png"
+		"laptop_monitor2_core_bt.png",
+		"laptop_laptop_core_bt.png",
+		"laptop_monitor_core_rt.png",
+		"laptop_monitor_core_lt.png",
+		"laptop_monitor2_core_bk.png",
+		"laptop_monitor2_core_ft.png"
 	},
 	drawtype = "nodebox",
 	paramtype = "light",
