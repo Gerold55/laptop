@@ -10,7 +10,7 @@ table.sort(background_tab)
 
 
 laptop.register_app("launcher_settings", {
-	app_name = "Settings",
+	app_name = "Laptop Settings",
 	app_icon = "laptop_setting_wrench.png",
 	app_info = "Change laptop settings",
 
