@@ -172,10 +172,6 @@ minetest.register_node("laptop:monitor_off", {
 	groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
-		-- change lauchher background - swap background for all instances on punch
-		local app = laptop.get_app("launcher", os)
-		app.background_img = "laptop_os_main.png"
-		app:sync_storage()
 		os:power_on("laptop:monitor_on")
 	end,
 	after_place_node = laptop.after_place_node,

@@ -32,6 +32,6 @@ Usable from node functions, from apps or outsite
 
 ## App Object
 `local app = laptop.get_app(internal_shortname, os)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
-- `data = app:get_storage_ref()` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off.
+- `data = app:get_storage_ref(appname)` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
 - `app:sync_storage()` - Store internal data (eg. background_img) to app storage
 - `app.background_img` - Background image from definition. Can be changed at runtime
