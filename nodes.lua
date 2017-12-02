@@ -290,3 +290,86 @@ minetest.register_node("laptop:monitor2_off", {
 		}
 	}
 })
+minetest.register_node("laptop:monitor3_on", {
+    description = "MT Desktop vintage 3.0",
+	tiles = {
+		"k_top.png^t_top.png^p_top.png^m_top.png",
+		"k_bottom.png^t_bottom.png^p_bottom.png^m_bottom.png",
+		"k_right.png^t_right.png^p_right.png^m_right.png",
+		"k_left.png^t_left.png^p_left.png^m_left.png",
+		"k_back.png^t_back.png^p_back.png^m_back.png",
+		"k_front.png^t_front_on.png^p_front.png^m_front_on.png",
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = 'facedir',
+	drop = "laptop:monitor_off",
+	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
+	on_punch = function (pos, node, puncher)
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:monitor3_off")
+	end,
+	on_construct = function(pos)
+		local os = laptop.os_get(pos)
+		os:power_on()
+		os:set_infotext('MT Desktop')
+	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
+	on_receive_fields = function(pos, formname, fields, sender)
+		local os = laptop.os_get(pos)
+		os:receive_fields(fields, sender)
+	end,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.3125, -0.5, -0.5, 0.3125, -0.4375, -0.25}, -- keyboard
+			{-0.4375, -0.5, -0.1875, 0.4375, -0.3125, 0.4375}, -- tower
+			{-0.25, -0.3125, -0.0625, 0.25, -0.25, 0.375}, -- pedestal
+			{-0.375, -0.25, -0.125, 0.375, 0.25, 0.4375}, -- monitor
+		}
+	}
+})
+
+minetest.register_node("laptop:monitor3_off", {
+    description = "MT Desktop vintage 3.0",
+	tiles = {
+		"k_top.png^t_top.png^p_top.png^m_top.png",
+		"k_bottom.png^t_bottom.png^p_bottom.png^m_bottom.png",
+		"k_right.png^t_right.png^p_right.png^m_right.png",
+		"k_left.png^t_left.png^p_left.png^m_left.png",
+		"k_back.png^t_back.png^p_back.png^m_back.png",
+		"k_front.png^t_front.png^p_front.png^m_front.png",
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = 'facedir',
+	drop = "laptop:monitor3_off",
+	groups = {choppy=2, oddly_breakably_by_hand=2},
+	on_punch = function (pos, node, puncher)
+		node.name = "laptop:monitor3_on"
+		minetest.set_node(pos, node)
+	end,
+	on_construct = function(pos)
+			local meta = minetest.env:get_meta(pos)
+			meta:set_string('infotext', 'MT Desktop')
+		end,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.3125, -0.5, -0.5, 0.3125, -0.4375, -0.25}, -- keyboard
+			{-0.4375, -0.5, -0.1875, 0.4375, -0.3125, 0.4375}, -- tower
+			{-0.25, -0.3125, -0.0625, 0.25, -0.25, 0.375}, -- pedestal
+			{-0.375, -0.25, -0.125, 0.375, 0.25, 0.4375}, -- monitor
+		}
+	}
+})
+minetest.register_craft({
+	output = 'laptop:monitor3_off',
+	recipe = {
+		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
+		{'default:steel_ingot', 'default:copper_ingot', 'default:steel_ingot'},
+		{'default:steel_ingot', 'default:glass', 'default:steel_ingot'},
+	}
+})
