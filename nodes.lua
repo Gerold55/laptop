@@ -414,7 +414,7 @@ minetest.register_node("laptop:laptop_open", {
 	paramtype = "light",
 	paramtype2 = 'facedir',
 	drop = "laptop:laptop_closed",
-	groups = {choppy=2, oddly_breakably_by_hand=2},
+	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		node.name = "laptop:laptop_open_on"
 		minetest.set_node(pos, node)
@@ -446,7 +446,7 @@ minetest.register_node("laptop:laptop_open_on", {
 	paramtype = "light",
 	paramtype2 = 'facedir',
 	drop = "laptop:laptop_closed",
-	groups = {choppy=2, oddly_breakably_by_hand=2},
+	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
 		os:power_off("laptop:laptop_closed")
