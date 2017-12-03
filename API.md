@@ -41,3 +41,13 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 - `data = app:get_storage_ref(appname)` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
 - `app:back_app() - Go back to previous app/view
 - `app:exit_app() - Delete call stack and return to launcher
+
+## Theme definition
+`laptop.register_theme(name, definitiontable)` - add a new theme. All parameters optional, if missed, the default is used
+Definitiontable:
+- `launcher_bg` Launcher background image
+- `app_bg` Apps background image
+- `back_button` Back Button image
+- `exit_button` Exit button image
+- `major_button` Major (highlighted) button image
+- `minor_button` Minor button image
