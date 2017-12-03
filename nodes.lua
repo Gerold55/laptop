@@ -373,3 +373,115 @@ minetest.register_craft({
 		{'default:steel_ingot', 'default:glass', 'default:steel_ingot'},
 	}
 })
+-- Laptop v2.0
+minetest.register_node("laptop:laptop_closed", {
+    description = "laptop v2.0",
+	tiles = {
+		"lap_base_closed_top.png",
+		"lap_base_closed_bottom.png",
+		"lap_base_closed_right.png",
+		"lap_base_closed_left.png",
+		"lap_base_closed_back.png",
+		"lap_base_closed_front.png",
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = 'facedir',
+	drop = "laptop:laptop_closed",
+	groups = {choppy=2, oddly_breakably_by_hand=2},
+	on_punch = function (pos, node, puncher)
+		node.name = "laptop:laptop_open"
+		minetest.set_node(pos, node)
+	end,
+	on_construct = function(pos)
+			local meta = minetest.env:get_meta(pos)
+			meta:set_string('infotext', 'MT Desktop')
+		end,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.4375, -0.5, -0.4375, 0.4375, -0.375, 0.375}, -- base_closed
+			
+		}
+	}
+})
+minetest.register_node("laptop:laptop_open", {
+    description = "laptop v2.0",
+	tiles = {
+		"lap_base_open_top.png",
+		"lap_base_open_bottom.png^lap_sc_open_bottom.png",
+		"lap_base_open_right.png",
+		"lap_base_open_left.png",
+		"lap_base_open_back.png^lap_sc_open_back.png",
+		"lap_base_open_front.png^lap_sc_open_front.png",
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = 'facedir',
+	drop = "laptop:laptop_closed",
+	groups = {choppy=2, oddly_breakably_by_hand=2},
+	on_punch = function (pos, node, puncher)
+		node.name = "laptop:laptop_open_on"
+		minetest.set_node(pos, node)
+	end,
+	on_construct = function(pos)
+			local meta = minetest.env:get_meta(pos)
+			meta:set_string('infotext', 'MT Desktop')
+		end,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.4375, -0.5, -0.4375, 0.4375, -0.4375, 0.375}, -- base_open
+			{-0.4375, -0.4375, 0.375, 0.4375, 0.3125, 0.4375}, -- sc_open
+			
+		}
+	}
+})
+minetest.register_node("laptop:laptop_open_on", {
+    description = "laptop v2.0",
+	tiles = {
+		"lap_base_open_on_top.png",
+		"lap_base_open_bottom.png^lap_sc_open_bottom.png",
+		"lap_base_open_right.png",
+		"lap_base_open_left.png",
+		"lap_base_open_back.png^lap_sc_open_back.png",
+		"lap_base_open_front.png^lap_sc_open_on_front.png",
+	},
+	drawtype = "nodebox",
+	paramtype = "light",
+	paramtype2 = 'facedir',
+	drop = "laptop:laptop_closed",
+	groups = {choppy=2, oddly_breakably_by_hand=2},
+	on_punch = function (pos, node, puncher)
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:laptop_closed")
+	end,
+	on_construct = function(pos)
+		local os = laptop.os_get(pos)
+		os:power_on()
+		os:set_infotext('MineTest Core')
+	end,
+	after_place_node = laptop.after_place_node,
+	after_dig_node = laptop.after_dig_node,
+	stack_max = 1,
+	on_receive_fields = function(pos, formname, fields, sender)
+		local os = laptop.os_get(pos)
+		os:receive_fields(fields, sender)
+	end,
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.4375, -0.5, -0.4375, 0.4375, -0.4375, 0.375}, -- base_open
+			{-0.4375, -0.4375, 0.375, 0.4375, 0.3125, 0.4375}, -- sc_open
+			
+		}
+	}
+})
+minetest.register_craft({
+	output = 'laptop:laptop_closed',
+	recipe = {
+		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
+		{'default:copper_ingot', 'default:copper_ingot', 'default:copper_ingot'},
+		{'default:steel_ingot', 'default:glass', 'default:steel_ingot'},
+	}
+})
