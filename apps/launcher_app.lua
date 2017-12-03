@@ -1,12 +1,15 @@
 
 laptop.register_app("launcher", {
 --	app_name = "Main launcher", -- not in launcher list
-	background_img = "laptop_os_main2.png",
+	fullscreen = true,
 	formspec_func = function(app, os)
 		local c_row_count = 4
 
 		local i = 0
-		local out = ""
+		local out = "size[15,10]"
+		if os.theme.launcher_bg then
+			out = out..'background[15,10;0,0;'..os.theme.launcher_bg..';true]'
+		end
 		local appslist_sorted = {}
 		for name, def in pairs(laptop.apps) do
 			if def.app_name then

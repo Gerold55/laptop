@@ -5,36 +5,29 @@ app_class.__index = app_class
 
 -- internally used: get current app formspec
 function app_class:get_formspec()
-	if self.formspec_func then
-		local app_result = self.formspec_func(self, self.os)
-		local formspec = 'size[15,10]'
-		if self.background_img then
-			formspec = formspec..'background[15,10;0,0;'..self.background_img..';true]'
-		end
-		return formspec..app_result
+
+	local app_result
+	if  self.formspec_func then
+		app_result = self.formspec_func(self, self.os)
 	else
-		return ""
+		app_result = ""
 	end
+
+	if self.fullscreen then
+		return app_result
+	end
+
+	local formspec = 'size[15,10]'
+	if self.os.theme.app_bg then
+		formspec = formspec..'background[15,10;0,0;'..self.os.theme.app_bg..';true]'
+	end
+	return formspec..app_result
 end
 
 -- internally used: process input
 function app_class:receive_fields(fields, sender)
 	if self.receive_fields_func then
 		return self.receive_fields_func(self, self.os, fields, sender)
-	end
-end
-
--- Sync attributes to storage (save background_img)
-function app_class:sync_storage()
-	if self.background_img then
-		local data = self:get_storage_ref()
-		data.background_img = self.background_img
-	elseif self.os.appdata[self.name] then
-		self.os.appdata[self.name].background_img = self.background_img
-		-- remove table if empty
-		if not next(self.os.appdata[self.name]) then
-			self.os.appdata[self.name] = nil
-		end
 	end
 end
 
@@ -61,9 +54,6 @@ function laptop.get_app(name, os)
 	local app = setmetatable(table.copy(template), app_class)
 	app.name = name
 	app.os = os
-	if os.appdata[name] then
-		app.background_img = os.appdata[name].background_img or app.background_img
-	end
 	return app
 end
 

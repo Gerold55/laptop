@@ -1,52 +1,51 @@
--- Load available backgrounds
-local path = minetest.get_modpath('laptop')..'/textures/'
-local background_tab = {}
-for _, file in ipairs(minetest.get_dir_list(path, false)) do
-	if file:sub(1,10) == 'laptop_os_' then
-		table.insert(background_tab, file)
+-- Load available Themes
+local themes_tab = {}
+for name, _ in pairs(laptop.themes) do
+	if name ~= "default" then
+		table.insert(themes_tab, name)
 	end
 end
-table.sort(background_tab)
-
+table.sort(themes_tab)
 
 laptop.register_app("launcher_settings", {
-	app_name = "Laptop Settings",
+	app_name = "Settings",
 	app_icon = "laptop_setting_wrench.png",
-	app_info = "Change laptop settings",
+	app_info = "Change the computer's settings.",
 
 	formspec_func = function(app, os)
 		local settings_data = app:get_storage_ref()
-		local launcher_data = app:get_storage_ref("launcher")
 
 		-- Change background setting
-		local bgr_img = settings_data.bgr_img or launcher_data.background_img or laptop.apps.launcher.background_img
-		local bgr_selected_idx
+		local current_theme_name = settings_data.selected_theme or os:get_theme().name or "default"
+		local current_theme = os:get_theme(current_theme_name)
+		local current_idx
 
-		local formspec = "label[0,0;Select background]"
+		local formspec = "label[0,0;Select theme]"
 
-		local formspec = formspec.."textlist[0,1;5,2;sel_bg;"
-		for i, img in ipairs(background_tab) do
+		local formspec = formspec.."textlist[0,1;5,2;sel_theme;"
+		for i, theme in ipairs(themes_tab) do
 			if i > 1 then
 				formspec = formspec..','
 			end
-			if img == bgr_img then
-				bgr_selected_idx = i
+			if theme == current_theme_name then
+				current_idx = i
 			end
-			formspec = formspec..img:sub(11,-5)
+			formspec = formspec..theme
 		end
-		if bgr_selected_idx then
-			formspec = formspec..";"..bgr_selected_idx
+		if current_idx then
+			formspec = formspec..";"..current_idx
 		end
 		formspec = formspec.."]"
 
-		if bgr_img then
-			formspec = formspec.."image[5.5,1;5,3.75;"..bgr_img.."]"
+		if current_theme then
+			formspec = formspec.."image[5.5,1;5,3.75;"..current_theme.launcher_bg.."]"
 		end
 
-		formspec = formspec.."button[1,3;3,1;bgr_apply;Apply background]"
+		formspec = formspec..'image_button[-0.14,3;3,1;'..current_theme.major_button..';theme_apply;Apply]'
 
 		-- Exit/Quit
-		formspec = formspec.."button[1,7;3,1;back;Exit settings]"
+		formspec = formspec..'image_button[2.36,3;3,1;'..current_theme.minor_button..';back;Cancel]'
+
 		return formspec
 	end,
 
@@ -54,18 +53,18 @@ laptop.register_app("launcher_settings", {
 		local settings_data = app:get_storage_ref()
 		local launcher_data = app:get_storage_ref("launcher")
 
-		if fields.sel_bg then
+		if fields.sel_theme then
 			-- CHG:<idx> for selected or DCL:<idx> for double-clicked
-			local bgr_selected_idx = tonumber(fields.sel_bg:sub(5))
-			settings_data.bgr_img = background_tab[bgr_selected_idx]
+			local selected_idx = tonumber(fields.sel_theme:sub(5))
+			settings_data.selected_theme = themes_tab[selected_idx]
 		end
 
-		if fields.bgr_apply then
-			launcher_data.background_img = settings_data.bgr_img
-			settings_data.bgr_img = nil
+		if fields.theme_apply and settings_data.selected_theme then
+			os:set_theme(settings_data.selected_theme)
+			settings_data.selected_theme = nil
 			os:set_app("launcher")
 		elseif fields.back then
-			settings_data.bgr_img = nil
+			settings_data.selected_theme = nil
 			os:set_app("launcher")
 		end
 	end
