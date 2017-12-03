@@ -78,6 +78,15 @@ function os_class:set_app(appname)
 	if name == "launcher" and self.custom_launcher then
 		name = self.custom_launcher
 	end
+
+	-- Add app to the stack
+	local stacksize = #self.appdata.os.stack
+	if (stacksize == 0 or self.appdata.os.stack[stacksize] ~= name) and
+			name ~= (self.custom_launcher or "launcher") then
+		table.insert(self.appdata.os.stack, name)
+	end
+
+
 	self.appdata.os.current_app = name
 	local app = laptop.get_app(name, self)
 	self.meta:set_string('formspec', app:get_formspec())
@@ -105,6 +114,7 @@ function laptop.os_get(pos)
 	self.appdata = minetest.deserialize(self.meta:get_string('laptop_appdata')) or {}
 	self.appdata.launcher = self.appdata.launcher or {}
 	self.appdata.os = self.appdata.os or {}
+	self.appdata.os.stack = self.appdata.os.stack or {}
 	self.custom_launcher = self.appdata.os.custom_launcher
 	self.theme = self:get_theme()
 	return self
@@ -118,6 +128,8 @@ function laptop.after_place_node(pos, placer, itemstack, pointed_thing)
 	if appdata then
 		local os = laptop.os_get(pos)
 		os.appdata = appdata
+		os.appdata.launcher = os.appdata.launcher or {}
+		os.appdata.os = os.appdata.os or {}
 		os:save()
 	end
 end

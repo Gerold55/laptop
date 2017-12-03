@@ -12,7 +12,7 @@ laptop.register_app("launcher", {
 		end
 		local appslist_sorted = {}
 		for name, def in pairs(laptop.apps) do
-			if def.app_name then
+			if def.app_name and not def.view then
 				table.insert(appslist_sorted, {name = name, def = def})
 			end
 		end

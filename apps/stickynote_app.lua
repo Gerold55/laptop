@@ -6,16 +6,12 @@ laptop.register_app("stickynote", {
 		local data = app:get_storage_ref()
 		data.text = data.text or ""
 
-		return "textarea[0,0.35;15.58,10.5;text;;"..minetest.formspec_escape(data.text).."]"..
-				'image_button[0.5,9.51;3,1;'..os.theme.major_button..';back;Save]'
+		return "textarea[0.35,0.35;15.08,10.5;text;;"..minetest.formspec_escape(data.text).."]"
 	end,
 	receive_fields_func = function(app, os, fields, sender)
 		if fields.text then
 			local data = app:get_storage_ref()
 			data.text = fields.text
-		end
-		if fields.back then
-			os:set_app("launcher")
 		end
 	end
 })
