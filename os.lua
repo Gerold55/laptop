@@ -24,7 +24,7 @@ function os_class:resume(new_node_name)
 	if new_node_name then
 		self:swap_node(new_node_name)
 	end
-	self:set_app(self.appdata.launcher.current_app)
+	self:set_app(self.appdata.os.current_app)
 end
 
 -- Power off the system
@@ -43,13 +43,13 @@ end
 
 -- Save the data
 function os_class:save()
-	self.appdata.launcher.custom = self.custom_launcher
+	self.appdata.os.custom_launcher = self.custom_launcher
 	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
 end
 
 -- Get given or current theme
 function os_class:get_theme(theme)
-	local theme_sel = theme or self.appdata.launcher.theme
+	local theme_sel = theme or self.appdata.os.theme
 	local ret = table.copy(laptop.themes.default)
 	if theme_sel and laptop.themes[theme_sel] then
 		for k,v in pairs(laptop.themes[theme_sel]) do
@@ -65,7 +65,7 @@ end
 -- Set current theme
 function os_class:set_theme(theme)
 	if laptop.themes[theme] then
-		self.appdata.launcher.theme = theme
+		self.appdata.os.theme = theme
 		self.theme = self:get_theme()
 		self:save()
 	end
@@ -78,17 +78,17 @@ function os_class:set_app(appname)
 	if name == "launcher" and self.custom_launcher then
 		name = self.custom_launcher
 	end
-	self.appdata.launcher.current_app = name
+	self.appdata.os.current_app = name
 	local app = laptop.get_app(name, self)
 	self.meta:set_string('formspec', app:get_formspec())
 	self:save()
 end
 
 function os_class:receive_fields(fields, sender)
-	local appname = self.appdata.launcher.current_app or self.custom_launcher or "launcher"
+	local appname = self.appdata.os.current_app or self.custom_launcher or "launcher"
 	local app = laptop.get_app(appname, self)
 	app:receive_fields(fields, sender)
-	if self.appdata.launcher.current_app == appname then
+	if self.appdata.os.current_app == appname then
 		self.meta:set_string('formspec', app:get_formspec())
 	end
 	self:save()
@@ -104,7 +104,8 @@ function laptop.os_get(pos)
 	self.meta = minetest.get_meta(pos)
 	self.appdata = minetest.deserialize(self.meta:get_string('laptop_appdata')) or {}
 	self.appdata.launcher = self.appdata.launcher or {}
-	self.custom_launcher = self.appdata.launcher.custom
+	self.appdata.os = self.appdata.os or {}
+	self.custom_launcher = self.appdata.os.custom_launcher
 	self.theme = self:get_theme()
 	return self
 end
