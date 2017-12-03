@@ -29,10 +29,15 @@ Usable from node functions, from apps or outsite
 - `app_name` - App name shown in launcher. If not defined the app is just a view, not visible in launcher but can be activated. This way multi-screen apps are possible
 - `app_icon` - Icon to be shown in launcher. If nothing given the default icon is used
 - `app_info` - Short app info visible in launcher tooltip
-- `fullscreen` - Do not add app-background and window buttons
+- `fullscreen` - (boolean) Do not add app-background and window buttons
+- `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
 - `formspec_func(app, os)` - Function, should return the app formspec (mandatory) During definition the "app" and the "os" are available
 - `receive_fields_func(app, os, fields, sender)` Function for input processing. The "app" and the "os" are available inside the call
+`laptop.register_view(internal_shortname, { definitiontable })` - add a new app or view
+same as register_app, but the view flag is set. app_name and app_icon not necessary
 
 ## App Object
 `local app = laptop.get_app(internal_shortname, os)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
 - `data = app:get_storage_ref(appname)` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
+- `app:back_app() - Go back to previous app/view
+- `app:exit_app() - Delete call stack and return to launcher

@@ -4,14 +4,24 @@ laptop.register_app("demo1", {
 	app_icon = "laptop_setting_wrench.png",
 	app_info = "The first and simple demo app",
 	formspec_func = function(app, os)
-		return 'image_button[5,5;3,1;'..os.theme.major_button..';back;Back to launcher]'
+		return 'image_button[5,5;3,1;'..os.theme.major_button..';next;Second screen]'
 	end,
 	receive_fields_func = function(app, os, fields, sender)
-		if fields.back then
-			os:set_app("launcher")
+		if fields.next then
+			os:set_app("demo1_view2")
 		end
 	end
 })
+
+laptop.register_view("demo1_view2", {
+	app_info = "Second screen in Demo App 1",
+	formspec_func = function(app, os)
+		return "label[1,5;Use the framework buttons to navigate back or cancel]"
+	end,
+	receive_fields_func = function(app, os, fields, sender)
+	end
+})
+
 
 laptop.register_app("demo2", {
 	app_name = "Demo App 2",
@@ -27,7 +37,7 @@ laptop.register_app("demo2", {
 			local data = app:get_storage_ref()
 			data.counter = data.counter + 1
 		elseif fields.back then
-			os:set_app("launcher")
+			app:exit_app()
 		end
 	end
 })
