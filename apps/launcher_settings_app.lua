@@ -44,7 +44,7 @@ laptop.register_app("launcher_settings", {
 		formspec = formspec..'image_button[-0.14,3;3,1;'..current_theme.major_button..';theme_apply;Apply]'
 
 		-- Exit/Quit
-		formspec = formspec..'image_button[2.36,3;3,1;'..current_theme.major_button..';back;Cancel]'
+		formspec = formspec..'image_button[2.36,3;3,1;'..current_theme.minor_button..';back;Cancel]'
 
 		return formspec
 	end,
