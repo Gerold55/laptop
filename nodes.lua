@@ -179,10 +179,7 @@ minetest.register_node("laptop:monitor_off", {
 	stack_max = 1,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
-		-- change lauchher background
-		local app = laptop.get_app("launcher", os)
-		app.background_img = "laptop_os_main.png"
-		app:sync_storage()
+		os:set_theme("red")
 		os:power_off()
 		os:set_infotext('MT Desktop')
 	end,
@@ -219,9 +216,7 @@ minetest.register_node("laptop:monitor2_on", {
 	end,
 	on_construct = function(pos)
 		local os = laptop.os_get(pos)
-		local app = laptop.get_app("launcher", os)
-		app.background_img = "laptop_os_main.png"
-		app:sync_storage()
+		os:set_theme("red")
 		os:power_on()
 		os:set_infotext('MT Desktop')
 	end,

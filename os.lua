@@ -41,9 +41,34 @@ function os_class:set_infotext(infotext)
 	self.meta:set_string('infotext', infotext)
 end
 
+-- Save the data
 function os_class:save()
 	self.appdata.launcher.custom = self.custom_launcher
 	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
+end
+
+-- Get given or current theme
+function os_class:get_theme(theme)
+	local theme_sel = theme or self.appdata.launcher.theme
+	local ret = table.copy(laptop.themes.default)
+	if theme_sel and laptop.themes[theme_sel] then
+		for k,v in pairs(laptop.themes[theme_sel]) do
+			ret[k] = v
+		end
+		ret.name = theme_sel
+	else
+		ret.name = "default"
+	end
+	return ret
+end
+
+-- Set current theme
+function os_class:set_theme(theme)
+	if laptop.themes[theme] then
+		self.appdata.launcher.theme = theme
+		self.theme = self:get_theme()
+		self:save()
+	end
 end
 
 -- Set infotext for system
@@ -80,6 +105,7 @@ function laptop.os_get(pos)
 	self.appdata = minetest.deserialize(self.meta:get_string('laptop_appdata')) or {}
 	self.appdata.launcher = self.appdata.launcher or {}
 	self.custom_launcher = self.appdata.launcher.custom
+	self.theme = self:get_theme()
 	return self
 end
 

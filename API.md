@@ -19,19 +19,20 @@ Usable from node functions, from apps or outsite
 - `os:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `os:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `os:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
+- `os:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
+- `os:set_theme(theme)`- Activate theme
 - `os.custom_launcher` - Replacement for default "launcher" app. Can be set/changed in node constructor or anytime at runtime
+
 
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
 - `app_name` - App name shown in launcher. If not defined the app is just a view, not visible in launcher but can be activated. This way multi-screen apps are possible
 - `app_icon` - Icon to be shown in launcher. If nothing given the default icon is used
 - `app_info` - Short app info visible in launcher tooltip
-- `background_img` - if set the image is added as background to formspec by framework
+- `fullscreen` - Do not add app-background and window buttons
 - `formspec_func(app, os)` - Function, should return the app formspec (mandatory) During definition the "app" and the "os" are available
 - `receive_fields_func(app, os, fields, sender)` Function for input processing. The "app" and the "os" are available inside the call
 
 ## App Object
 `local app = laptop.get_app(internal_shortname, os)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
 - `data = app:get_storage_ref(appname)` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
-- `app:sync_storage()` - Store internal data (eg. background_img) to app storage
-- `app.background_img` - Background image from definition. Can be changed at runtime
