@@ -19,3 +19,8 @@ laptop.themes = {
 }
 
 laptop.themes.default = laptop.themes.blue -- default can be an complete theme only
+
+
+function laptop.register_theme(name, def)
+	laptop.themes[name] = def
+end
