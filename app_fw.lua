@@ -22,12 +22,16 @@ function app_class:get_formspec()
 		formspec = formspec..'background[0,0;15,10;'..self.os.theme.app_bg..';true]'
 	end
 	if #self.os.appdata.os.stack > 1 then
-		formspec = formspec..'image_button[0,-0.3;1,0.5;'..self.os.theme.back_button..';os_back;<<<]' --TODO: if stack exists
+		formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..self.os.theme.back_button..';os_back;<]' --TODO: if stack exists
 	end
 	if self.app_info then
-		formspec = formspec.."label[1,-0.3;"..self.app_info.."]"
+		if #self.os.appdata.os.stack > 1 then
+			formspec = formspec.."label[0.8,-0.29;"..self.app_info.."]"
+		else
+			formspec = formspec.."label[-0.1,-0.29;"..self.app_info.."]"
+		end
 	end
-	formspec = formspec..'image_button[14,-0.3;1,0.5;'..self.os.theme.exit_button..';os_exit;X]'
+	formspec = formspec..'image_button[14.2,-0.31;1.09,0.61;'..self.os.theme.exit_button..';os_exit;X]'
 	return formspec..app_result
 end
 
