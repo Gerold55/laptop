@@ -343,8 +343,8 @@ minetest.register_node("laptop:monitor3_off", {
 	drop = "laptop:monitor3_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:monitor3_on"
-		minetest.set_node(pos, node)
+		local os = laptop.os_get(pos)
+		os:power_on( "laptop:monitor3_on")
 	end,
 	on_construct = function(pos)
 			local meta = minetest.env:get_meta(pos)
@@ -385,8 +385,8 @@ minetest.register_node("laptop:laptop_closed", {
 	drop = "laptop:laptop_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:laptop_open"
-		minetest.set_node(pos, node)
+		local os = laptop.os_get(pos)
+		os:power_off("laptop:laptop_open")
 	end,
 	on_construct = function(pos)
 			local meta = minetest.env:get_meta(pos)
@@ -416,8 +416,8 @@ minetest.register_node("laptop:laptop_open", {
 	drop = "laptop:laptop_closed",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
-		node.name = "laptop:laptop_open_on"
-		minetest.set_node(pos, node)
+		local os = laptop.os_get(pos)
+		os:resume("laptop:laptop_open_on")
 	end,
 	on_construct = function(pos)
 			local meta = minetest.env:get_meta(pos)
