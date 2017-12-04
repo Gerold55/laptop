@@ -100,6 +100,7 @@ function os_class:receive_fields(fields, sender)
 	if self.appdata.os.current_app == appname then
 		self.meta:set_string('formspec', app:get_formspec())
 	end
+	self.appdata.os.last_player = sender:get_player_name()
 	self:save()
 end
 
