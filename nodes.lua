@@ -298,7 +298,7 @@ minetest.register_node("laptop:monitor3_on", {
 	drawtype = "nodebox",
 	paramtype = "light",
 	paramtype2 = 'facedir',
-	drop = "laptop:monitor_off",
+	drop = "laptop:monitor3_off",
 	groups = {choppy=2, oddly_breakably_by_hand=2, not_in_creative_inventory=1},
 	on_punch = function (pos, node, puncher)
 		local os = laptop.os_get(pos)
