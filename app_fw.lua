@@ -2,37 +2,26 @@ laptop.apps = {}
 
 local app_class = {}
 app_class.__index = app_class
+laptop.class_lib.app = app_class
 
 -- internally used: get current app formspec
 function app_class:get_formspec()
-
 	local app_result
 	if  self.formspec_func then
 		app_result = self.formspec_func(self, self.os)
 	else
 		app_result = ""
 	end
-
 	if self.fullscreen then
 		return app_result
 	end
 
-	local formspec = 'size[15,10]'
-	if self.os.theme.app_bg then
-		formspec = formspec..'background[0,0;15,10;'..self.os.theme.app_bg..';true]'
+	local launcher = self.os:get_app(self.os.custom_launcher or "launcher")
+	local window_formspec = ""
+	if launcher.appwindow_formspec_func then
+		window_formspec = launcher.appwindow_formspec_func(launcher, self, self.os)
 	end
-	if #self.os.appdata.os.stack > 1 then
-		formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..self.os.theme.back_button..';os_back;<]' --TODO: if stack exists
-	end
-	if self.app_info then
-		if #self.os.appdata.os.stack > 1 then
-			formspec = formspec.."label[0.8,-0.29;"..self.app_info.."]"
-		else
-			formspec = formspec.."label[-0.1,-0.29;"..self.app_info.."]"
-		end
-	end
-	formspec = formspec..'image_button[14.2,-0.31;1.09,0.61;'..self.os.theme.exit_button..';os_exit;X]'
-	return formspec..app_result
+	return window_formspec..app_result
 end
 
 -- internally used: process input
@@ -59,24 +48,13 @@ function app_class:get_storage_ref(app_name)
 	return self.os.appdata[store_name]
 end
 
+-- Back to previous app in stack
 function app_class:back_app()
-	local stacksize = #self.os.appdata.os.stack
-
-	-- pop stack
-	if stacksize > 0 then
-		self.os.appdata.os.stack[stacksize] = nil
-		stacksize = #self.os.appdata.os.stack
-	end
-
-	if stacksize == 0 then
-		self.os:set_app() -- launcher
-	else
-		self.os:set_app(self.os.appdata.os.stack[stacksize])
-	end
+	self.os:set_app(self.os:appstack_pop())
 end
 
+-- Exit current app and back to launcher
 function app_class:exit_app()
-	self.os.appdata.os.stack = {}
 	self.os:set_app() -- launcher
 end
 
@@ -89,18 +67,6 @@ end
 function laptop.register_view(name, def)
 	def.view = true
 	laptop.apps[name] = def
-end
-
--- Get app instance for object
-function laptop.get_app(name, os)
-	local template = laptop.apps[name]
-	if not template then
-		return
-	end
-	local app = setmetatable(table.copy(template), app_class)
-	app.name = name
-	app.os = os
-	return app
 end
 
 -- load all apps

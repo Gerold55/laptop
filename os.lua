@@ -3,6 +3,7 @@
 -----------------------------------------------------
 local os_class = {}
 os_class.__index = os_class
+laptop.class_lib.os = os_class
 
 -- Swap the node
 function os_class:swap_node(new_node_name)
@@ -16,7 +17,7 @@ function os_class:power_on(new_node_name)
 	if new_node_name then
 		self:swap_node(new_node_name)
 	end
-	self:set_app("launcher")
+	self:set_app() --launcher
 end
 
 -- Power on the system / and resume last running app
@@ -71,31 +72,61 @@ function os_class:set_theme(theme)
 	end
 end
 
--- Set infotext for system
+-- Add app to stack (before starting new)
+function os_class:appstack_add(appname)
+	table.insert(self.appdata.os.stack, appname)
+end
+
+-- Get last app from stack
+function os_class:appstack_pop()
+	local ret
+	if #self.appdata.os.stack > 0 then
+		ret = self.appdata.os.stack[#self.appdata.os.stack]
+		table.remove(self.appdata.os.stack, #self.appdata.os.stack)
+	end
+	return ret
+end
+
+-- Free stack
+function os_class:appstack_free()
+	self.appdata.os.stack = {}
+end
+
+-- Get new app instance
+function os_class:get_app(name)
+	local template = laptop.apps[name]
+	if not template then
+		return
+	end
+	local app = setmetatable(table.copy(template), laptop.class_lib.app)
+	app.name = name
+	app.os = self
+	return app
+end
+
+-- Activate the app
 function os_class:set_app(appname)
-	local name = appname or "launcher"
+	local launcher = self.custom_launcher or "launcher"
+	local newapp = appname or launcher
 
-	if name == "launcher" and self.custom_launcher then
-		name = self.custom_launcher
+	if newapp == launcher then
+		self:appstack_free()
+	elseif self.appdata.os.current_app and
+			self.appdata.os.current_app ~= launcher and
+			self.appdata.os.current_app ~= newapp then
+		os_class:appstack_add(self.appdata.os.current_app)
 	end
 
-	-- Add app to the stack
-	local stacksize = #self.appdata.os.stack
-	if (stacksize == 0 or self.appdata.os.stack[stacksize] ~= name) and
-			name ~= (self.custom_launcher or "launcher") then
-		table.insert(self.appdata.os.stack, name)
-	end
-
-
-	self.appdata.os.current_app = name
-	local app = laptop.get_app(name, self)
+	self.appdata.os.current_app = newapp
+	local app = self:get_app(newapp)
 	self.meta:set_string('formspec', app:get_formspec())
 	self:save()
 end
 
+-- Handle input processing
 function os_class:receive_fields(fields, sender)
 	local appname = self.appdata.os.current_app or self.custom_launcher or "launcher"
-	local app = laptop.get_app(appname, self)
+	local app = self:get_app(appname)
 	app:receive_fields(fields, sender)
 	self.appdata.os.last_player = sender:get_player_name()
 	if self.appdata.os.current_app == appname then
@@ -103,7 +134,6 @@ function os_class:receive_fields(fields, sender)
 	end
 	self:save()
 end
-
 -----------------------------------------------------
 -- Get Operating system object
 -----------------------------------------------------

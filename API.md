@@ -36,6 +36,7 @@ Usable from node functions, from apps or outsite
 - `os:swap_node(new_node_name)`- Swap the node only without any changes on OS
 - `os:set_infotext(infotext)` - Set the mouseover infotext for laptop node
 - `os:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
+- `os:get_app(appname)`- Get the app instance
 - `os:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `os:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
 - `os:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
@@ -51,12 +52,13 @@ Usable from node functions, from apps or outsite
 - `fullscreen` - (boolean) Do not add app-background and window buttons
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
 - `formspec_func(app, os)` - Function, should return the app formspec (mandatory) During definition the "app" and the "os" are available
+- `appwindow_formspec_func(launcher_app, app, os)`- Only custom launcher app: App background / Window decorations and buttons
 - `receive_fields_func(app, os, fields, sender)` Function for input processing. The "app" and the "os" are available inside the call
 `laptop.register_view(internal_shortname, { definitiontable })` - add a new app or view
 same as register_app, but the view flag is set. app_name and app_icon not necessary
 
 ## App Object
-`local app = laptop.get_app(internal_shortname, os)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
+`local app = os:get_app(appname)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
 - `data = app:get_storage_ref(appname)` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
 - `app:back_app() - Go back to previous app/view
 - `app:exit_app() - Delete call stack and return to launcher

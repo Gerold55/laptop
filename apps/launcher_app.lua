@@ -2,7 +2,7 @@
 laptop.register_app("launcher", {
 --	app_name = "Main launcher", -- not in launcher list
 	fullscreen = true,
-	formspec_func = function(app, os)
+	formspec_func = function(launcher_app, os)
 		local c_row_count = 4
 
 		local i = 0
@@ -26,7 +26,25 @@ laptop.register_app("launcher", {
 		end
 		return out
 	end,
-	receive_fields_func = function(app, os, fields, sender)
+	appwindow_formspec_func = function(launcher_app, app, os)
+		local formspec = 'size[15,10]'
+		if os.theme.app_bg then
+			formspec = formspec..'background[0,0;15,10;'..os.theme.app_bg..';true]'
+		end
+		if #os.appdata.os.stack > 0 then
+			formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..os.theme.back_button..';os_back;<]' --TODO: if stack exists
+		end
+		if app.app_info then
+			if #os.appdata.os.stack > 1 then
+				formspec = formspec.."label[0.8,-0.29;"..app.app_info.."]"
+			else
+				formspec = formspec.."label[-0.1,-0.29;"..app.app_info.."]"
+			end
+		end
+		formspec = formspec..'image_button[14.2,-0.31;1.09,0.61;'..os.theme.exit_button..';os_exit;X]'
+		return formspec
+	end,
+	receive_fields_func = function(launcher_app, os, fields, sender)
 		for name, descr in pairs(fields) do
 			if laptop.apps[name] then
 				os:set_app(name)
