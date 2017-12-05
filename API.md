@@ -1,6 +1,25 @@
 # Laptop Mod API
 
-## Node creator helpers
+## Add new hardware nodes
+`laptop.register_hardware(name, hwdef)`
+- `name` - Item name (prefix) The created node names are name_variant
+- `hwdef.description`  -  Computer item name
+- `hwdef.infotext` - Text shown if node is pointed
+- `hwdef.sequence = { "variant_1_name", "variant_2_name", "variant_3_name" }` On punch swaps sequence. the first variant is in creative inventory
+- `hwdef.custom_launcer` - optional - custom launcher name
+- `hwdef.custom_theme` -  optional - custom initial theme name
+- `hwdef.node_defs = {
+		variant_1_name = {
+			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
+			--node 1 definiton
+		},
+		variant_2_name = {
+			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
+			--node 2 definiton
+		},
+	}` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
+
+
 - `laptop.os_get(pos)` - Get an OS object. Usefull in on_construct or on_punch to initialize or do anything with OS
   Needed in on_receive_fields to be able to call os:receive_fields(fields, sender) for interactive apps
 - `laptop.after_place_node` / `laptop.after_dig_node` - (optional) can be used directly for node definition. Move laptop apps data to ItemStack if digged and restored back if placed again. So you can take along your laptop. Note: you need to set `stack_max = 1` because the data can be stored per stack only, not per item.
