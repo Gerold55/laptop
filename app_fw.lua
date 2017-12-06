@@ -16,6 +16,10 @@ function app_class:get_formspec()
 		return app_result
 	end
 
+	if app_result == false then
+		return false
+	end
+
 	local launcher = self.os:get_app(self.os.custom_launcher or "launcher")
 	local window_formspec = ""
 	if launcher.appwindow_formspec_func then
@@ -48,9 +52,15 @@ function app_class:get_storage_ref(app_name)
 	return self.os.appdata[store_name]
 end
 
+-- Get persitant storage table
+function app_class:get_cloud_storage_ref(app_name)
+	return self.os:connect_to_cloud(app_name)
+end
+
 -- Back to previous app in stack
 function app_class:back_app()
-	self.os:set_app(self.os:appstack_pop())
+	self.os.appdata.os.current_app = self.os:appstack_pop()
+	self.os:set_app(self.os.appdata.os.current_app)
 end
 
 -- Exit current app and back to launcher

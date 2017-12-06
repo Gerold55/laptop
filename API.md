@@ -59,7 +59,8 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 
 ## App Object
 `local app = os:get_app(appname)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
-- `data = app:get_storage_ref(appname)` - Returns a "persitant" data table that means the data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
+- `data = app:get_storage_ref(appname)` - Returns a "persitant" data table from nodemeta (=hdd). The data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
+- `data = app:get_cloud_storage_ref(appname)` - Returns a persistant table from modmeta (=internet)
 - `app:back_app() - Go back to previous app/view
 - `app:exit_app() - Delete call stack and return to launcher
 

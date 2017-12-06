@@ -35,7 +35,7 @@ laptop.register_app("launcher", {
 			formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..os.theme.back_button..';os_back;<]' --TODO: if stack exists
 		end
 		if app.app_info then
-			if #os.appdata.os.stack > 1 then
+			if #os.appdata.os.stack > 0 then
 				formspec = formspec.."label[0.8,-0.29;"..app.app_info.."]"
 			else
 				formspec = formspec.."label[-0.1,-0.29;"..app.app_info.."]"

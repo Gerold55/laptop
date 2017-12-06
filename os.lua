@@ -5,6 +5,8 @@ local os_class = {}
 os_class.__index = os_class
 laptop.class_lib.os = os_class
 
+local mod_storage = minetest.get_mod_storage()
+
 -- Swap the node
 function os_class:swap_node(new_node_name)
 	local node = minetest.get_node(self.pos)
@@ -46,6 +48,12 @@ end
 function os_class:save()
 	self.appdata.os.custom_launcher = self.custom_launcher
 	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
+	if self.cloud_store then
+		for store, value in pairs(self.cloud_store) do
+			mod_storage:set_string(store, minetest.serialize(value))
+		end
+		self.cloud_store = nil
+	end
 end
 
 -- Get given or current theme
@@ -108,18 +116,20 @@ end
 function os_class:set_app(appname)
 	local launcher = self.custom_launcher or "launcher"
 	local newapp = appname or launcher
-
 	if newapp == launcher then
 		self:appstack_free()
 	elseif self.appdata.os.current_app and
 			self.appdata.os.current_app ~= launcher and
 			self.appdata.os.current_app ~= newapp then
-		os_class:appstack_add(self.appdata.os.current_app)
+		self:appstack_add(self.appdata.os.current_app)
 	end
 
 	self.appdata.os.current_app = newapp
 	local app = self:get_app(newapp)
-	self.meta:set_string('formspec', app:get_formspec())
+	local formspec = app:get_formspec()
+	if formspec ~= false then
+		self.meta:set_string('formspec', formspec)
+	end
 	self:save()
 end
 
@@ -130,10 +140,22 @@ function os_class:receive_fields(fields, sender)
 	app:receive_fields(fields, sender)
 	self.appdata.os.last_player = sender:get_player_name()
 	if self.appdata.os.current_app == appname then
-		self.meta:set_string('formspec', app:get_formspec())
+		local formspec = app:get_formspec()
+		if formspec ~= false then
+			self.meta:set_string('formspec', formspec)
+		end
 	end
 	self:save()
 end
+
+-- Get mod storage as (=internet / cloud)
+function os_class:connect_to_cloud(store_name)
+	self.cloud_store = self.cloud_store or {}
+	self.cloud_store[store_name] = self.cloud_store[store_name] or
+			minetest.deserialize(mod_storage:get_string(store_name)) or {}
+	return self.cloud_store[store_name]
+end
+
 -----------------------------------------------------
 -- Get Operating system object
 -----------------------------------------------------

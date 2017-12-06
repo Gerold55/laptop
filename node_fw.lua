@@ -8,6 +8,7 @@ local function after_place_node(pos, placer, itemstack, pointed_thing)
 		os.appdata = appdata
 		os.appdata.launcher = os.appdata.launcher or {}
 		os.appdata.os = os.appdata.os or {}
+		os.appdata.os.stack = os.appdata.os.stack or {}
 		os:save()
 	end
 end
