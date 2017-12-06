@@ -46,7 +46,6 @@ end
 
 -- Save the data
 function os_class:save()
-	self.appdata.os.custom_launcher = self.custom_launcher
 	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
 	if self.cloud_store then
 		for store, value in pairs(self.cloud_store) do
@@ -114,7 +113,7 @@ end
 
 -- Activate the app
 function os_class:set_app(appname)
-	local launcher = self.custom_launcher or "launcher"
+	local launcher = self.hwdef.custom_launcher or "launcher"
 	local newapp = appname or launcher
 	if newapp == launcher then
 		self:appstack_free()
@@ -135,7 +134,7 @@ end
 
 -- Handle input processing
 function os_class:receive_fields(fields, sender)
-	local appname = self.appdata.os.current_app or self.custom_launcher or "launcher"
+	local appname = self.appdata.os.current_app or self.hwdef.custom_launcher or "launcher"
 	local app = self:get_app(appname)
 	app:receive_fields(fields, sender)
 	self.appdata.os.last_player = sender:get_player_name()
@@ -163,12 +162,13 @@ function laptop.os_get(pos)
 	local self = setmetatable({}, os_class)
 	self.__index = os_class
 	self.pos = pos
+	self.node = minetest.get_node(pos)
+	self.hwdef = laptop.node_config[self.node.name]
 	self.meta = minetest.get_meta(pos)
 	self.appdata = minetest.deserialize(self.meta:get_string('laptop_appdata')) or {}
 	self.appdata.launcher = self.appdata.launcher or {}
 	self.appdata.os = self.appdata.os or {}
 	self.appdata.os.stack = self.appdata.os.stack or {}
-	self.custom_launcher = self.appdata.os.custom_launcher
 	self.theme = self:get_theme()
 	return self
 end
