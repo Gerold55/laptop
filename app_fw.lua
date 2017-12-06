@@ -20,7 +20,7 @@ function app_class:get_formspec()
 		return false
 	end
 
-	local launcher = self.os:get_app(self.hwdef.custom_launcher or "launcher")
+	local launcher = self.os:get_app(self.os.hwdef.custom_launcher or "launcher")
 	local window_formspec = ""
 	if launcher.appwindow_formspec_func then
 		window_formspec = launcher.appwindow_formspec_func(launcher, self, self.os)
