@@ -1,7 +1,3 @@
-Laptop created by GamingAssociation39
-
-A laptop that has working apps(WIP)
-
-Old Models by GA
-New Models by Cross_over
-Icons made by TobyPlowy
+The Laptop mod is a group collaboration between Bell07, Toby109tt, Cross_over and Yours truly lol.
+We aim to make a working laptop inside of MineTest.
+There is multiple different computers to choose from and to use.
