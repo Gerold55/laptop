@@ -41,7 +41,6 @@ Usable from node functions, from apps or outsite
 - `os:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
 - `os:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
 - `os:set_theme(theme)`- Activate theme
-- `os.custom_launcher` - Replacement for default "launcher" app. Can be set/changed in node constructor or anytime at runtime
 
 
 ## App Definition

@@ -33,8 +33,7 @@ local function on_construct(pos)
 	local os = laptop.os_get(pos)
 	local node = minetest.get_node(pos)
 	local hwdef = laptop.node_config[node.name]
-	os.custom_launcher = hwdef.custom_launcher
-	if hwdef.custom_theme then
+	if hwdef.custom_theme then -- initial only
 		os:set_theme(hwdef.custom_theme)
 	end
 	if hwdef.hw_state then

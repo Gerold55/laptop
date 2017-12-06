@@ -264,6 +264,7 @@ laptop.register_hardware("laptop:monitor3", {
 	description = "MT Desktop vintage 3.0",
 	infotext = "MT Desktop vintage 3.0",
 	sequence = { "off", "on"},
+	custom_launcher = "launcher_insert_floppy",
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
@@ -289,7 +290,7 @@ laptop.register_hardware("laptop:monitor3", {
 			}
 		},
 		["off"] = {
-			hw_state = "power_on",
+			hw_state = "power_off",
 			tiles = {
 				"laptop_k_top.png^laptop_t_top.png^laptop_p_top.png^laptop_m_top.png",
 				"laptop_k_bottom.png^laptop_t_bottom.png^laptop_p_bottom.png^laptop_m_bottom.png",
