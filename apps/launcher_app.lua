@@ -20,7 +20,7 @@ laptop.register_app("launcher", {
 		for i, e in ipairs(appslist_sorted) do
 			local x = math.floor((i-1) / c_row_count)*2 + 1
 			local y = ((i-1) % c_row_count)*2 + 1
-			out = out .. 'image_button['..x..','..y..';1,1;'..(e.def.app_icon or 'logo.png')..';'..e.name..';]'..
+			out = out .. 'image_button['..x..','..y..';1,1;'..os.theme.app_button..'^'..(e.def.app_icon or 'logo.png')..';'..e.name..';]'..
 						'label['..(x-0.3)..','..(y+1)..';'..e.def.app_name..']'..
 						'tooltip['..e.name..';'..(e.def.app_info or e.name)..']'    --;<bgcolor>;<fontcolor>]'
 		end
