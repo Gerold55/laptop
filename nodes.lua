@@ -7,120 +7,117 @@ laptop.register_hardware("laptop:core", {
 		["open"] = {
 			hw_state = "power_off",
 			tiles = {
-				"laptop_laptop_core_tp_off.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_laptop_core_rt.png",
-				"laptop_laptop_core_lt.png",
-				"laptop_laptop_core_bk.png",
-				"laptop_laptop_core_ft.png"
-			},
-			node_box = {
-				type = "fixed",
-				fixed = {
-					{-0.4375, -0.5, -0.4375, 0.4375, -0.375, 0.4375}, -- NodeBox1
-					{-0.4375, -0.375, 0.3125, 0.4375, 0.375, 0.4375}, -- NodeBox2
-				}
+				"laptop_lap_car_open_top.png",
+				"laptop_lap_car_sc_open_bottom.png^laptop_lap_car_bottom.png",
+				"laptop_lap_car_open_right.png",
+				"laptop_lap_car_open_left.png",
+				"laptop_lap_car_sc_open_bottom.png^laptop_lap_car_open_back.png",
+				"laptop_lap_car_open_front.png^laptop_lap_car_sc_open_front.png",
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = 'facedir',
+			node_box = {
+				type = "fixed",
+				fixed = {
+					{-0.4375, -0.5, -0.4375, 0.4375, -0.4375, 0.375}, -- base_open
+					{-0.4375, -0.4375, 0.375, 0.4375, 0.3125, 0.4375}, -- sc_open
+				}
+			}
 		},
 		["open_on"] = {
 			hw_state = "resume",
 			tiles = {
-				"laptop_laptop_core_tp.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_laptop_core_rt.png",
-				"laptop_laptop_core_lt.png",
-				"laptop_laptop_core_bk.png",
-				"laptop_laptop_core_ft_on.png"
-			},
-			node_box = {
-				type = "fixed",
-				fixed = {
-					{-0.4375, -0.5, -0.4375, 0.4375, -0.375, 0.4375}, -- NodeBox1
-					{-0.4375, -0.375, 0.3125, 0.4375, 0.375, 0.4375}, -- NodeBox2
-				}
+				"laptop_lap_car_open_on_top.png",
+				"laptop_lap_car_sc_open_bottom.png^laptop_lap_car_bottom.png",
+				"laptop_lap_car_open_right.png",
+				"laptop_lap_car_open_left.png",
+				"laptop_lap_car_sc_open_bottom.png^laptop_lap_car_open_back.png",
+				"laptop_lap_car_open_front.png^laptop_lap_car_sc_open_on_front.png",
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
-		},
+			paramtype2 = 'facedir',
+			node_box = {
+				type = "fixed",
+				fixed = {
+					{-0.4375, -0.5, -0.4375, 0.4375, -0.4375, 0.375}, -- base_open
+					{-0.4375, -0.4375, 0.375, 0.4375, 0.3125, 0.4375}, -- sc_open
+				}
+				}
+			},
 		["closed"] = {
 			hw_state = "power_off",
 			tiles = {
-				"laptop_laptop_core_bk_off.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_laptop_core_rt_off.png",
-				"laptop_laptop_core_lt_off.png",
-				"laptop_laptop_core_r_off.png",
-				"laptop_laptop_core_ft_off.png"
-			},
-			node_box = {
-				type = "fixed",
-				fixed = {
-					{-0.4375, -0.5, -0.4375, 0.4375, -0.375, 0.4375}, -- NodeBox1
-					{-0.4375, -0.375, -0.4375, 0.4375, -0.25, 0.4375}, -- NodeBox2
-				}
+				"laptop_lap_car_closed_top.png",
+				"laptop_lap_car_bottom.png",
+				"laptop_lap_car_closed_right.png",
+				"laptop_lap_car_closed_left.png",
+				"laptop_lap_car_closed_back.png",
+				"laptop_lap_car_closed_front.png",
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = 'facedir',
+			node_box = {
+				type = "fixed",
+				fixed = {
+					{-0.4375, -0.5, -0.4375, 0.4375, -0.375, 0.375}, -- base_closed
+				}
+			}
 		}
 	}
 })
 
-laptop.register_hardware("laptop:monitor", {
-	description = "MT Desktop",
-	infotext = "MT Desktop",
+laptop.register_hardware("laptop:cube", {
+	description = "CUBE",
+	infotext = "CUBE",
 	sequence = { "off", "on"},
 	custom_theme = "red",
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
 			tiles = {
-				"laptop_monitor_core_bt.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_monitor_core_rt.png",
-				"laptop_monitor_core_lt.png",
-				"laptop_monitor_core_bk.png",
-				"laptop_monitor_core_ft_on.png"
+				"laptop_cube_monitor_top.png^laptop_cube_tower_top.png",
+				"laptop_cube_monitor_bottom.png^laptop_cube_tower_bottom.png",
+				"laptop_cube_monitor_right.png^laptop_cube_tower_right.png",
+				"laptop_cube_monitor_left.png^laptop_cube_tower_left.png",
+				"laptop_cube_monitor_back.png^laptop_cube_tower_back.png",
+				"laptop_cube_monitor_front_on.png^laptop_cube_tower_front_on.png"
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
 			paramtype2 = "facedir",
 			node_box = {
-				type = "fixed",
-				fixed = {
-					{-0.4375, -0.5, -0.25, 0.4375, -0.4375, 0.25}, -- NodeBox4
-					{-0.125, -0.4375, -0.0625, 0.125, -0.375, 0.0625}, -- NodeBox7
-					{-0.4375, -0.375, -0.125, 0.4375, 0.375, 0.125}, -- NodeBox8
-					{-0.4375, -0.5, -0.5, 0.25, -0.4375, -0.3125}, -- NodeBox9
-					{0.3125, -0.5, -0.5, 0.4375, -0.4375, -0.3125}, -- NodeBox10
+					type = "fixed",
+					fixed = {
+					{-0.5, -0.5, -0.1875, 0.5, -0.1875, 0.5}, -- cube tower
+					{-0.5, -0.5, -0.5, 0.1875, -0.4375, -0.25}, -- cube keyboard
+					{0.25, -0.5, -0.5, 0.4375, -0.4375, -0.25}, -- cube mouse
+					{-0.3125, -0.5, -0.125, 0.3125, 0.5, 0.4375}, -- cube monitor
 				}
 			},
 		},
 		["off"] = {
 			hw_state = "power_off",
 			tiles = {
-				"laptop_monitor_core_bt.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_monitor_core_rt.png",
-				"laptop_monitor_core_lt.png",
-				"laptop_monitor_core_bk.png",
-				"laptop_monitor_core_ft.png"
+				"laptop_cube_monitor_top.png^laptop_cube_tower_top.png",
+				"laptop_cube_monitor_bottom.png^laptop_cube_tower_bottom.png",
+				"laptop_cube_monitor_right.png^laptop_cube_tower_right.png",
+				"laptop_cube_monitor_left.png^laptop_cube_tower_left.png",
+				"laptop_cube_monitor_back.png^laptop_cube_tower_back.png",
+				"laptop_cube_monitor_front.png^laptop_cube_tower_front.png"
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
 			paramtype2 = "facedir",
 			node_box = {
-				type = "fixed",
-				fixed = {
-					{-0.4375, -0.5, -0.25, 0.4375, -0.4375, 0.25}, -- NodeBox4
-					{-0.125, -0.4375, -0.0625, 0.125, -0.375, 0.0625}, -- NodeBox7
-					{-0.4375, -0.375, -0.125, 0.4375, 0.375, 0.125}, -- NodeBox8
-					{-0.4375, -0.5, -0.5, 0.25, -0.4375, -0.3125}, -- NodeBox9
-					{0.3125, -0.5, -0.5, 0.4375, -0.4375, -0.3125}, -- NodeBox10
+					type = "fixed",
+					fixed = {
+					{-0.5, -0.5, -0.1875, 0.5, -0.1875, 0.5}, -- cube tower
+					{-0.5, -0.5, -0.5, 0.1875, -0.4375, -0.25}, -- cube keyboard
+					{0.25, -0.5, -0.5, 0.4375, -0.4375, -0.25}, -- cube mouse
+					{-0.3125, -0.5, -0.125, 0.3125, 0.5, 0.4375}, -- cube monitor
 				}
 			}
 		}
@@ -135,12 +132,12 @@ laptop.register_hardware("laptop:monitor2", {
 		["on"] = {
 			hw_state = "power_on",
 			tiles = {
-				"laptop_monitor2_core_bt.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_monitor_core_rt.png",
-				"laptop_monitor_core_lt.png",
-				"laptop_monitor2_core_bk.png",
-				"laptop_monitor2_core_ft_on.png"
+				"laptop_fruit_stand_top.png",
+				"laptop_fruit_base.png",
+				"laptop_fruit_base.png",
+				"laptop_fruit_base.png",
+				"laptop_fruit_lcd_back.png",
+				"laptop_lcd_fruit_on.png"
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
@@ -148,27 +145,23 @@ laptop.register_hardware("laptop:monitor2", {
 			node_box = {
 				type = "fixed",
 				fixed = {
-					{-0.4375, -0.3125, 0, 0.4375, 0.375, 0.0625}, -- NodeBox1
-					{-0.4375, -0.3125, -0.0625, 0.4375, -0.25, 0}, -- NodeBox2
-					{-0.4375, -0.25, -0.0625, -0.375, 0.3125, 0}, -- NodeBox3
-					{-0.4375, 0.3125, -0.0625, 0.4375, 0.375, 0}, -- NodeBox4
-					{0.375, -0.25, -0.0625, 0.4375, 0.3125, 0}, -- NodeBox5
-					{-0.125, -0.4375, 0, 0.125, -0.3125, 0.0625}, -- NodeBox6
-					{-0.1875, -0.5, -0.0625, 0.1875, -0.4375, 0.125}, -- NodeBox7
-					{-0.5, -0.5, -0.5, 0.25, -0.4375, -0.1875}, -- NodeBox8
-					{0.3125, -0.5, -0.5, 0.5, -0.4375, -0.1875}, -- NodeBox9
+					{-0.5, -0.5, -0.125, 0.5, -0.4375, 0.375}, -- NodeBox1
+					{-0.0625, -0.4375, 0.125, 0.0625, 0.0625, 0.25}, -- NodeBox2
+					{-0.5, -0.1875, 0, 0.5, 0.5, 0.125}, -- NodeBox3
+					{-0.5, -0.5, -0.5, 0.1875, -0.4375, -0.25}, -- NodeBox4
+					{0.25, -0.5, -0.5, 0.4375, -0.4375, -0.25}, -- NodeBox5
 				}
 			}
 		},
 		["off"] = {
 			hw_state = "power_off",
 			tiles = {
-				"laptop_monitor2_core_bt.png",
-				"laptop_laptop_core_bt.png",
-				"laptop_monitor_core_rt.png",
-				"laptop_monitor_core_lt.png",
-				"laptop_monitor2_core_bk.png",
-				"laptop_monitor2_core_ft.png"
+				"laptop_fruit_stand_top.png",
+				"laptop_fruit_base.png",
+				"laptop_fruit_base.png",
+				"laptop_fruit_base.png",
+				"laptop_fruit_lcd_back.png",
+				"laptop_lcd_fruit.png"
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
@@ -176,15 +169,11 @@ laptop.register_hardware("laptop:monitor2", {
 			node_box = {
 				type = "fixed",
 				fixed = {
-					{-0.4375, -0.3125, 0, 0.4375, 0.375, 0.0625}, -- NodeBox1
-					{-0.4375, -0.3125, -0.0625, 0.4375, -0.25, 0}, -- NodeBox2
-					{-0.4375, -0.25, -0.0625, -0.375, 0.3125, 0}, -- NodeBox3
-					{-0.4375, 0.3125, -0.0625, 0.4375, 0.375, 0}, -- NodeBox4
-					{0.375, -0.25, -0.0625, 0.4375, 0.3125, 0}, -- NodeBox5
-					{-0.125, -0.4375, 0, 0.125, -0.3125, 0.0625}, -- NodeBox6
-					{-0.1875, -0.5, -0.0625, 0.1875, -0.4375, 0.125}, -- NodeBox7
-					{-0.5, -0.5, -0.5, 0.25, -0.4375, -0.1875}, -- NodeBox8
-					{0.3125, -0.5, -0.5, 0.5, -0.4375, -0.1875}, -- NodeBox9
+					{-0.5, -0.5, -0.125, 0.5, -0.4375, 0.375}, -- NodeBox1
+					{-0.0625, -0.4375, 0.125, 0.0625, 0.0625, 0.25}, -- NodeBox2
+					{-0.5, -0.1875, 0, 0.5, 0.5, 0.125}, -- NodeBox3
+					{-0.5, -0.5, -0.5, 0.1875, -0.4375, -0.25}, -- NodeBox4
+					{0.25, -0.5, -0.5, 0.4375, -0.4375, -0.25}, -- NodeBox5
 				}
 			}
 		}
