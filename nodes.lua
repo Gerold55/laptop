@@ -73,7 +73,7 @@ laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
 	sequence = { "off", "on"},
-	custom_theme = "red",
+	custom_theme = "Red",
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
