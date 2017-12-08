@@ -43,9 +43,9 @@ laptop.register_hardware("laptop:core", {
 				fixed = {
 					{-0.4375, -0.5, -0.4375, 0.4375, -0.4375, 0.375}, -- base_open
 					{-0.4375, -0.4375, 0.375, 0.4375, 0.3125, 0.4375}, -- sc_open
-				}
-				}
-			},
+				  }
+			       }
+			    },
 		["closed"] = {
 			hw_state = "power_off",
 			tiles = {
