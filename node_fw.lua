@@ -4,12 +4,12 @@ laptop.node_config = {}
 local function after_place_node(pos, placer, itemstack, pointed_thing)
 	local appdata = minetest.deserialize(itemstack:get_meta():get_string("laptop_appdata"))
 	if appdata then
-		local os = laptop.os_get(pos)
-		os.appdata = appdata
-		os.appdata.launcher = os.appdata.launcher or {}
-		os.appdata.os = os.appdata.os or {}
-		os.appdata.os.stack = os.appdata.os.stack or {}
-		os:save()
+		local mtos = laptop.os_get(pos)
+		mtos.appdata = appdata
+		mtos.appdata.launcher = mtos.appdata.launcher or {}
+		mtos.appdata.os = mtos.appdata.os or {}
+		mtos.appdata.os.stack = mtos.appdata.os.stack or {}
+		mtos:save()
 	end
 end
 
@@ -30,38 +30,38 @@ local function after_dig_node(pos, oldnode, oldmetadata, digger)
 end
 
 local function on_construct(pos)
-	local os = laptop.os_get(pos)
+	local mtos = laptop.os_get(pos)
 	local node = minetest.get_node(pos)
 	local hwdef = laptop.node_config[node.name]
 	if hwdef.custom_theme then -- initial only
-		os:set_theme(hwdef.custom_theme)
+		mtos:set_theme(hwdef.custom_theme)
 	end
 	if hwdef.hw_state then
-		os[hwdef.hw_state](os)
+		mtos[hwdef.hw_state](mtos)
 	else
-		os:power_off()
+		mtos:power_off()
 	end
-	os:set_infotext(hwdef.hw_infotext)
+	mtos:set_infotext(hwdef.hw_infotext)
 end
 
 local function on_punch(pos, node, puncher)
-	local os = laptop.os_get(pos)
+	local mtos = laptop.os_get(pos)
 	local hwdef = laptop.node_config[node.name]
 	if hwdef.next_node then
 		local hwdef_next = laptop.node_config[hwdef.next_node]
 		if hwdef_next.hw_state then
-			os[hwdef_next.hw_state](os, hwdef.next_node)
+			mtos[hwdef_next.hw_state](mtos, hwdef.next_node)
 		else
-			os:swap_node(hwdef.next_node)
-			os:save()
+			mtos:swap_node(hwdef.next_node)
+			mtos:save()
 		end
-		os:set_infotext(hwdef_next.hw_infotext)
+		mtos:set_infotext(hwdef_next.hw_infotext)
 	end
 end
 
 local function on_receive_fields(pos, formname, fields, sender)
-	local os = laptop.os_get(pos)
-	os:receive_fields(fields, sender)
+	local mtos = laptop.os_get(pos)
+	mtos:receive_fields(fields, sender)
 end
 
 function laptop.register_hardware(name, hwdef)
