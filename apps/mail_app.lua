@@ -68,14 +68,21 @@ laptop.register_app("mail", {
 			formspec = formspec .. ",,No mail :(]"
 		end
 
-		formspec = formspec .. "button[0,9;1.5,0.5;new;New Message]"..
-				"button[1.5,9;1.5,0.5;continue;Continue last mail]"
+		formspec = formspec .. "image_button[0,9;1,1;laptop_email_new.png;new;]tooltip[new;New message]"
+		if account.newmessage then
+			formspec = formspec .. "image_button[1,9;1,1;laptop_email_edit.png;continue;]tooltip[continue;Continue last message]"
+		end
+
 		if account.selectedmessage then
-		formspec = formspec .. "button[3,9;1.5,0.5;reply;Reply]"..
-				"button[4.5,9;1.5,0.5;forward;Forward]"..
-				"button[6,9;1.5,0.5;delete;Delete]"..
-				"button[8,9;1.5,0.5;markread;Mark Read]"..
-				"button[9.5,9;1.5,0.5;markunread;Mark Unread]"
+			formspec = formspec ..
+					"image_button[2.7,9;1,1;laptop_email_reply.png;reply;]tooltip[reply;Reply]"..
+					"image_button[3.7,9;1,1;laptop_email_forward.png;forward;]tooltip[forward;Forward]"..
+					"image_button[4.7,9;1,1;laptop_email_trash.png;delete;]tooltip[delete;Delete]"
+			if not account.selectedmessage.is_read then
+				formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
+			else
+				formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
+			end
 			local sender = minetest.formspec_escape(account.selectedmessage.sender) or ""
 			local subject = minetest.formspec_escape(account.selectedmessage.subject) or ""
 			local body = minetest.formspec_escape(account.selectedmessage.body) or ""
@@ -95,7 +102,7 @@ laptop.register_app("mail", {
 
 		-- Set read status if 2 seconds selected
 		if account.selected_inbox_index and account.selectedmessage and
-				account.selected_inbox_timestamp and (account.selected_inbox_timestamp - os.time()) > 2 then
+				account.selected_inbox_timestamp and (os.time() - account.selected_inbox_timestamp) > 1 then
 			account.selectedmessage.is_read = true
 		end
 
@@ -108,7 +115,6 @@ laptop.register_app("mail", {
 				account.selected_inbox_timestamp = os.time()
 			else
 				account.selected_inbox_index = nil
-				account.selected_inbox_timestamp = nil
 			end
 
 		elseif fields.new then
@@ -119,6 +125,7 @@ laptop.register_app("mail", {
 		elseif account.selected_inbox_index then
 			if fields.delete then 
 				table.remove(inbox, account.selected_inbox_index)
+				account.selectedmessage = nil
 			elseif fields.reply then
 				account.newmessage = {}
 				account.newmessage.receiver = account.selectedmessage.sender
@@ -134,6 +141,7 @@ laptop.register_app("mail", {
 				account.selectedmessage.is_read = true
 			elseif fields.markunread then
 				account.selectedmessage.is_read = false
+				account.selected_inbox_timestamp = nil -- Stop timer
 			end
 		end
 	end
