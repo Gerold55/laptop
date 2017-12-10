@@ -5,3 +5,4 @@ There is multiple different computers to choose from and to use.
 Apps Included So Far:
 Notepad
 Settings
+Email (Coming Soon) (Still In Beta)
