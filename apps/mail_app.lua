@@ -16,11 +16,12 @@ laptop.register_app("mail", {
 			return false
 		end
 		local account = cloud[mtos.appdata.os.last_player]
+		account.selected_box = account.selected_box or "inbox"
+		account.selected_index = nil -- will be new determinated by selectedmessage
+		local box = account[account.selected_box] -- inbox or outbox
 
 		local formspec =
 				"label[4,-0.31;Welcome "..mtos.appdata.os.last_player.."]"..
-
---				"textlist[0,0.5;7.5,8.2;message;"
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
 						"color;"..	-- subject and date color
@@ -29,14 +30,15 @@ laptop.register_app("mail", {
 						"text,padding=1.5,align=right]".. -- date
 				"table[0,0.5;7.5,8.2;message;"
 
-		account.selected_inbox_index = nil
-		if account.inbox[1] then
-			for idx,message in ipairs(account.inbox) do
+		if box and box[1] then
+			for idx,message in ipairs(box) do
 				if idx > 1 then
 					formspec = formspec..','
 				end
 				-- set read/unread status
-				if not message.is_read then
+				if account.selected_box == "sentbox" then
+					formspec = formspec .. "1,#88FF88," -- unread
+				elseif not message.is_read then
 					formspec = formspec .. "1,#FF8888," -- unread
 				else
 					formspec = formspec .. "2,#FFFFFF," -- read
@@ -51,42 +53,62 @@ laptop.register_app("mail", {
 					formspec = formspec .. minetest.formspec_escape(message.subject) .. ","
 				end
 
-				-- set sender and date
-				formspec = formspec..
-						minetest.formspec_escape(message.sender or "") ..","..  -- body
-						os.date("%c", message.time) -- timestamp
+				-- set sender or receiver
+				if account.selected_box == "inbox" then
+					formspec = formspec..minetest.formspec_escape(message.sender or "") ..","  -- body
+				else
+					formspec = formspec..minetest.formspec_escape(message.receiver or "") ..","  -- body
+				end
+
+				-- set date
+				formspec = formspec .. os.date("%c", message.time) -- timestamp
+
+				-- handle marked line
 				if account.selectedmessage and
 						message.sender == account.selectedmessage.sender and
 						message.subject == account.selectedmessage.subject and
 						message.time == account.selectedmessage.time and
 						message.body == account.selectedmessage.body then
-					account.selected_inbox_index = idx
+					account.selected_index = idx
 				end
 			end
-			formspec = formspec .. ";"..(account.selected_inbox_index or "").."]"
+			formspec = formspec .. ";"..(account.selected_index or "").."]"
 		else
 			formspec = formspec .. ",,No mail :(]"
 		end
 
-		formspec = formspec .. "image_button[0,9;1,1;laptop_email_new.png;new;]tooltip[new;New message]"
+		-- toggle inbox/sentbox
+		if account.selected_box == "inbox" then
+			formspec = formspec .. "image_button[0,9;1.5,1;"..mtos.theme.minor_button..";switch_sentbox;Sentbox]tooltip[switch_sentbox;Show sent messages]"
+		else
+			formspec = formspec .. "image_button[0,9;1.5,1;"..mtos.theme.minor_button..";switch_inbox;Inbox]tooltip[switch_inbox;Show received messages]"
+		end
+
+		formspec = formspec .. "image_button[1.7,9;1,1;laptop_email_new.png;new;]tooltip[new;New message]"
 		if account.newmessage then
-			formspec = formspec .. "image_button[1,9;1,1;laptop_email_edit.png;continue;]tooltip[continue;Continue last message]"
+			formspec = formspec .. "image_button[2.7,9;1,1;laptop_email_edit.png;continue;]tooltip[continue;Continue last message]"
 		end
 
 		if account.selectedmessage then
 			formspec = formspec ..
-					"image_button[2.7,9;1,1;laptop_email_reply.png;reply;]tooltip[reply;Reply]"..
-					"image_button[3.7,9;1,1;laptop_email_forward.png;forward;]tooltip[forward;Forward]"..
-					"image_button[4.7,9;1,1;laptop_email_trash.png;delete;]tooltip[delete;Delete]"
-			if not account.selectedmessage.is_read then
-				formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
-			else
-				formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
+					"image_button[3.7,9;1,1;laptop_email_reply.png;reply;]tooltip[reply;Reply]"..
+					"image_button[4.7,9;1,1;laptop_email_forward.png;forward;]tooltip[forward;Forward]"..
+					"image_button[5.7,9;1,1;laptop_email_trash.png;delete;]tooltip[delete;Delete]"
+			if account.selected_box == "inbox" then
+				if not account.selectedmessage.is_read then
+					formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
+				else
+					formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
+				end
 			end
-			local sender = minetest.formspec_escape(account.selectedmessage.sender) or ""
-			local subject = minetest.formspec_escape(account.selectedmessage.subject) or ""
-			local body = minetest.formspec_escape(account.selectedmessage.body) or ""
-			formspec = formspec .. "label[8,0.5;From: "..sender.."]label[8,1;Subject: "..subject.."]textarea[8.25,1.5;7,8.35;body;;"..body.."]"
+			if account.selected_box == "inbox" then
+				formspec = formspec .. "label[8,0.5;From: "..(minetest.formspec_escape(account.selectedmessage.sender) or "").."]"
+			else
+				formspec = formspec .. "label[8,0.5;To: "..(minetest.formspec_escape(account.selectedmessage.receiver) or "").."]"
+			end
+
+			formspec = formspec .. "label[8,1;Subject: "..(minetest.formspec_escape(account.selectedmessage.subject) or "")..
+					"]textarea[8.25,1.5;7,8.35;body;;"..(minetest.formspec_escape(account.selectedmessage.body) or "").."]"
 		end
 		return formspec
 	end,
@@ -98,33 +120,39 @@ laptop.register_app("mail", {
 
 		local cloud = app:get_cloud_storage_ref("mail")
 		local account = cloud[mtos.appdata.os.last_player]
-		local inbox = account.inbox
+		account.selected_box = account.selected_box or "inbox"
+		local box = account[account.selected_box] -- inbox or outbox
 
 		-- Set read status if 2 seconds selected
-		if account.selected_inbox_index and account.selectedmessage and
-				account.selected_inbox_timestamp and (os.time() - account.selected_inbox_timestamp) > 1 then
+		if account.selected_index and account.selectedmessage and account.selected_box == "inbox" and
+				account.selected_timestamp and (os.time() - account.selected_timestamp) > 1 then
 			account.selectedmessage.is_read = true
 		end
 
+		-- process input
 		if fields.message then
 			local event = minetest.explode_table_event(fields.message)
-
-			account.selectedmessage = inbox[event.row]
+			account.selectedmessage = box[event.row]
 			if account.selectedmessage then
-				account.selected_inbox_index = event.row
-				account.selected_inbox_timestamp = os.time()
+				account.selected_index = event.row
+				account.selected_timestamp = os.time()
 			else
-				account.selected_inbox_index = nil
+				account.selected_index = nil
 			end
-
 		elseif fields.new then
 			account.newmessage = {}
 			mtos:set_app("mail:compose")
 		elseif fields.continue then
 			mtos:set_app("mail:compose")
-		elseif account.selected_inbox_index then
+		elseif fields.switch_sentbox then
+			account.selected_box = "sentbox"
+			account.selectedmessage = nil
+		elseif fields.switch_inbox then
+			account.selected_box = "inbox"
+			account.selectedmessage = nil
+		elseif account.selected_index then
 			if fields.delete then 
-				table.remove(inbox, account.selected_inbox_index)
+				table.remove(box, account.selected_index)
 				account.selectedmessage = nil
 			elseif fields.reply then
 				account.newmessage = {}
@@ -141,7 +169,7 @@ laptop.register_app("mail", {
 				account.selectedmessage.is_read = true
 			elseif fields.markunread then
 				account.selectedmessage.is_read = false
-				account.selected_inbox_timestamp = nil -- Stop timer
+				account.selected_timestamp = nil -- Stop timer
 			end
 		end
 	end
@@ -161,7 +189,7 @@ laptop.register_view("mail:newplayer", {
 			local cloud = app:get_cloud_storage_ref("mail")
 			cloud[mtos.appdata.os.last_player] = {
 				inbox = {},
-				sentbox = {} --TODO 
+				sentbox = {}
 			}
 			app:back_app()
 		elseif fields.os_back then
