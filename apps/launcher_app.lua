@@ -24,7 +24,7 @@ laptop.register_app("launcher", {
 						'label['..(x-0.3)..','..(y+1)..';'..e.def.app_name..']'..
 						'tooltip['..e.name..';'..(e.def.app_info or e.name)..']'    --;<bgcolor>;<fontcolor>]'
 		end
-		out = out..'label[12,9.8;'..tostring(os.date("%c"))..']'
+		out = out.."image_button[11,9.8;4,0.7;menu_bg.png;os_clock;"..tostring(os.date("%c")).."]"
 		return out
 	end,
 	appwindow_formspec_func = function(launcher_app, app, mtos)
