@@ -1,6 +1,6 @@
 laptop.register_hardware("laptop:core", {
-	description = "MineTest Core",
-	infotext = 'MineTest Core',
+	description = "CP Core",
+	infotext = 'CP Core',
 	sequence = { "closed", "open", "open_on" },
 
 	node_defs = {
@@ -70,8 +70,8 @@ laptop.register_hardware("laptop:core", {
 })
 
 laptop.register_hardware("laptop:cube", {
-	description = "CUBE",
-	infotext = "CUBE",
+	description = "CUBE PC",
+	infotext = "CUBE PC",
 	sequence = { "off", "on"},
 	custom_theme = "red",
 	node_defs = {
@@ -125,8 +125,8 @@ laptop.register_hardware("laptop:cube", {
 })
 
 laptop.register_hardware("laptop:monitor2", {
-	description = "MT Desktop 2.0",
-	infotext = "MT Desktop 2.0",
+	description = "Fruit Zero",
+	infotext = "Fruit Zero",
 	sequence = { "off", "on"},
 	node_defs = {
 		["on"] = {
@@ -250,8 +250,8 @@ minetest.register_craft({
 
 --Old PC--
 laptop.register_hardware("laptop:monitor3", {
-	description = "MT Desktop vintage 3.0",
-	infotext = "MT Desktop vintage 3.0",
+	description = "Pentium 3",
+	infotext = "Pentium 3",
 	sequence = { "off", "on"},
 	custom_launcher = "launcher_insert_floppy",
 	node_defs = {
