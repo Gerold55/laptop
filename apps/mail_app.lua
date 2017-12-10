@@ -16,42 +16,66 @@ laptop.register_app("mail", {
 			return false
 		end
 		local account = cloud[mtos.appdata.os.last_player]
-		
+
 		local formspec =
 				"label[4,-0.31;Welcome "..mtos.appdata.os.last_player.."]"..
-				"button[0,9;1.5,0.5;new;New Message]"..
-				"button[1.5,9;1.5,0.5;continue;Continue last mail]"..
-				"button[3,9;1.5,0.5;reply;Reply]"..
+
+--				"textlist[0,0.5;7.5,8.2;message;"
+				"tablecolumns[" ..
+						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
+						"color;"..	-- subject and date color
+						"text;".. -- subject
+						"text,padding=1.5;".. -- sender
+						"text,padding=1.5,align=right]".. -- date
+				"table[0,0.5;7.5,8.2;message;"
+
+		account.selected_inbox_index = nil
+		if account.inbox[1] then
+			for idx,message in ipairs(account.inbox) do
+				if idx > 1 then
+					formspec = formspec..','
+				end
+				-- set read/unread status
+				if not message.is_read then
+					formspec = formspec .. "1,#FF8888," -- unread
+				else
+					formspec = formspec .. "2,#FFFFFF," -- read
+				end
+
+				-- set subject
+				if not message.subject or message.subject == "" then
+					formspec = formspec .. "(No subject),"
+				elseif string.len(message.subject) > 30 then
+					formspec = formspec .. minetest.formspec_escape(string.sub(message.subject,1,27)) .. "...,"
+				else
+					formspec = formspec .. minetest.formspec_escape(message.subject) .. ","
+				end
+
+				-- set sender and date
+				formspec = formspec..
+						minetest.formspec_escape(message.sender or "") ..","..  -- body
+						os.date("%c", message.time) -- timestamp
+				if account.selectedmessage and
+						message.sender == account.selectedmessage.sender and
+						message.subject == account.selectedmessage.subject and
+						message.time == account.selectedmessage.time and
+						message.body == account.selectedmessage.body then
+					account.selected_inbox_index = idx
+				end
+			end
+			formspec = formspec .. ";"..(account.selected_inbox_index or "").."]"
+		else
+			formspec = formspec .. ",,No mail :(]"
+		end
+
+		formspec = formspec .. "button[0,9;1.5,0.5;new;New Message]"..
+				"button[1.5,9;1.5,0.5;continue;Continue last mail]"
+		if account.selectedmessage then
+		formspec = formspec .. "button[3,9;1.5,0.5;reply;Reply]"..
 				"button[4.5,9;1.5,0.5;forward;Forward]"..
 				"button[6,9;1.5,0.5;delete;Delete]"..
 				"button[8,9;1.5,0.5;markread;Mark Read]"..
-				"button[9.5,9;1.5,0.5;markunread;Mark Unread]"..
-				"textlist[0,0.5;7.5,8.2;message;"
-
-		if account.inbox[1] then
-			for idx,message in ipairs(account.inbox) do
-				if idx ~= 1 then formspec = formspec .. "," end
-				if not message.is_read then
-					formspec = formspec .. "#FF8888"
-				end
-				formspec = formspec..os.date("%c", message.time)
-				formspec = formspec .. " : " .. minetest.formspec_escape(message.sender or "") .. " : "
-				if message.subject and message.subject ~= "" then
-					if string.len(message.subject) > 30 then
-						formspec = formspec .. minetest.formspec_escape(string.sub(message.subject,1,27)).. "..."
-					else
-						formspec = formspec .. minetest.formspec_escape(message.subject)
-					end
-				else
-					formspec = formspec .. "(No subject)"
-				end
-			end
-			formspec = formspec .. "]"
-		else
-			formspec = formspec .. "No mail :(]"
-		end
-
-		if account.selectedmessage then
+				"button[9.5,9;1.5,0.5;markunread;Mark Unread]"
 			local sender = minetest.formspec_escape(account.selectedmessage.sender) or ""
 			local subject = minetest.formspec_escape(account.selectedmessage.subject) or ""
 			local body = minetest.formspec_escape(account.selectedmessage.body) or ""
@@ -69,21 +93,32 @@ laptop.register_app("mail", {
 		local account = cloud[mtos.appdata.os.last_player]
 		local inbox = account.inbox
 
+		-- Set read status if 2 seconds selected
+		if account.selected_inbox_index and account.selectedmessage and
+				account.selected_inbox_timestamp and (account.selected_inbox_timestamp - os.time()) > 2 then
+			account.selectedmessage.is_read = true
+		end
+
 		if fields.message then
-			local event = minetest.explode_textlist_event(fields.message)
-			account.selectedmessage = inbox[event.index]
-			account.selectedindex = event.index
-			if event.type == "DCL" and account.selectedmessage then
-				account.selectedmessage.is_read = true
+			local event = minetest.explode_table_event(fields.message)
+
+			account.selectedmessage = inbox[event.row]
+			if account.selectedmessage then
+				account.selected_inbox_index = event.row
+				account.selected_inbox_timestamp = os.time()
+			else
+				account.selected_inbox_index = nil
+				account.selected_inbox_timestamp = nil
 			end
+
 		elseif fields.new then
 			account.newmessage = {}
 			mtos:set_app("mail:compose")
 		elseif fields.continue then
 			mtos:set_app("mail:compose")
-		elseif account.selectedindex then
+		elseif account.selected_inbox_index then
 			if fields.delete then 
-				table.remove(inbox, account.selectedindex)
+				table.remove(inbox, account.selected_inbox_index)
 			elseif fields.reply then
 				account.newmessage = {}
 				account.newmessage.receiver = account.selectedmessage.sender
