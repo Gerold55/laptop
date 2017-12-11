@@ -16,7 +16,7 @@ laptop.register_app("calculator", {
 			"text,align=right,padding=1.5,width=6;".. -- first value
 			"text,align=right,padding=1.5;".. -- operator
 			"text,align=right,padding=1.5,width=6]".. -- last value
-			"table[1,1;7,2;tab;"
+			"table[0.9,0.8;7,2;tab;"
 
 		for idx,entry in ipairs(data.tab) do
 			if idx > 1 then
@@ -26,27 +26,27 @@ laptop.register_app("calculator", {
 		end
 
 		formspec = formspec .. ";"..#data.tab.."]"..
-				"image_button[1,3;1,1;"..mtos.theme.minor_button..";number;1]"..
-				"image_button[2,3;1,1;"..mtos.theme.minor_button..";number;2]"..
-				"image_button[3,3;1,1;"..mtos.theme.minor_button..";number;3]"..
-				"image_button[1,4;1,1;"..mtos.theme.minor_button..";number;4]"..
-				"image_button[2,4;1,1;"..mtos.theme.minor_button..";number;5]"..
-				"image_button[3,4;1,1;"..mtos.theme.minor_button..";number;6]"..
-				"image_button[1,5;1,1;"..mtos.theme.minor_button..";number;7]"..
-				"image_button[2,5;1,1;"..mtos.theme.minor_button..";number;8]"..
-				"image_button[3,5;1,1;"..mtos.theme.minor_button..";number;9]"..
-				"image_button[1,6;1,1;"..mtos.theme.minor_button..";number;0]"..
-				"image_button[2,6;1,1;"..mtos.theme.minor_button..";number;.]"..
+				mtos.theme:get_button('1,3;1,1', "minor", 'number', '1') ..
+				mtos.theme:get_button('2,3;1,1', "minor", 'number', '2') ..
+				mtos.theme:get_button('3,3;1,1', "minor", 'number', '3') ..
+				mtos.theme:get_button('1,4;1,1', "minor", 'number', '4') ..
+				mtos.theme:get_button('2,4;1,1', "minor", 'number', '5') ..
+				mtos.theme:get_button('3,4;1,1', "minor", 'number', '6') ..
+				mtos.theme:get_button('1,5;1,1', "minor", 'number', '7') ..
+				mtos.theme:get_button('2,5;1,1', "minor", 'number', '8') ..
+				mtos.theme:get_button('3,5;1,1', "minor", 'number', '9') ..
+				mtos.theme:get_button('1,6;1,1', "minor", 'number', '0') ..
+				mtos.theme:get_button('2,6;1,1', "minor", 'number', '.') ..
 
-				"image_button[5,3;1,1;"..mtos.theme.minor_button..";operator;+]"..
-				"image_button[5,4;1,1;"..mtos.theme.minor_button..";operator;-]"..
-				"image_button[5,5;1,1;"..mtos.theme.minor_button..";operator;/]"..
-				"image_button[5,6;1,1;"..mtos.theme.minor_button..";operator;*]"..
-				"image_button[6,6;2,1;"..mtos.theme.minor_button..";operator;=]"..
+				mtos.theme:get_button('5,3;1,1', "minor", 'operator', '+') ..
+				mtos.theme:get_button('5,4;1,1', "minor", 'operator', '-') ..
+				mtos.theme:get_button('5,5;1,1', "minor", 'operator', '/') ..
+				mtos.theme:get_button('5,6;1,1', "minor", 'operator', '*') ..
+				mtos.theme:get_button('6,6;2,1', "minor", 'operator', '=') ..
 
-				"image_button[6,3;2,1;"..mtos.theme.minor_button..";del_char;DEL-1]"..
-				"image_button[6,4;2,1;"..mtos.theme.minor_button..";del_line;DEL-L]"..
-				"image_button[6,5;2,1;"..mtos.theme.minor_button..";del_all;DEL-A]"
+				mtos.theme:get_button('6,3;2,1', "minor", 'del_char', 'DEL-1') ..
+				mtos.theme:get_button('6,4;2,1', "minor", 'del_line', 'DEL-L') ..
+				mtos.theme:get_button('6,5;2,1', "minor", 'del_all', 'DEL-A')
 		return formspec
 	end,
 
@@ -56,7 +56,7 @@ laptop.register_app("calculator", {
 
 		if fields.number then
 			-- simple number entry
-			entry.var2 = (entry.var2 or "")..fields.number
+			entry.var2 = (entry.var2 or "")..minetest.strip_colors(fields.number)
 		elseif fields.del_char then
 			-- delete char
 			if entry.var2 and entry.var2 ~= "" then
@@ -92,6 +92,7 @@ laptop.register_app("calculator", {
 		elseif fields.del_all then
 			data.tab = nil
 		elseif fields.operator then
+			fields.operator = minetest.strip_colors(fields.operator)
 			local entry = data.tab[#data.tab]
 			-- no previous operator
 			if not entry.operator then
@@ -117,6 +118,9 @@ laptop.register_app("calculator", {
 					result = tonumber(entry.var1) * tonumber(entry.var2)
 				elseif entry.operator == '=' then
 					result = tonumber(entry.var2)
+				end
+				if not result then
+					result = 0
 				end
 				if fields.operator == '=' then
 					table.insert(data.tab, {var2 = tostring(result)})

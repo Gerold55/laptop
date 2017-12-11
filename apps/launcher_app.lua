@@ -33,7 +33,7 @@ laptop.register_app("launcher", {
 			formspec = formspec..'background[0,0;15,10;'..mtos.theme.app_bg..';true]'
 		end
 		if #mtos.appdata.os.stack > 0 then
-			formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..mtos.theme.back_button..';os_back;<]' --TODO: if stack exists
+			formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..mtos.theme.back_button..';os_back;<]'
 		end
 		if app.app_info then
 			if #mtos.appdata.os.stack > 0 then

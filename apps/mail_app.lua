@@ -79,35 +79,35 @@ laptop.register_app("mail", {
 
 		-- toggle inbox/sentbox
 		if account.selected_box == "inbox" then
-			formspec = formspec .. "image_button[0,9;1.5,1;"..mtos.theme.minor_button..";switch_sentbox;Sentbox]tooltip[switch_sentbox;Show sent messages]"
+			formspec = formspec .. mtos.theme:get_button('0,9;1.5,1', 'minor', 'switch_sentbox', 'Sentbox', 'Show sent messages')
 		else
-			formspec = formspec .. "image_button[0,9;1.5,1;"..mtos.theme.minor_button..";switch_inbox;Inbox]tooltip[switch_inbox;Show received messages]"
+			formspec = formspec .. mtos.theme:get_button('0,9;1.5,1', 'minor', 'switch_inbox', 'Inbox', 'Show received messages')
 		end
 
-		formspec = formspec .. "image_button[1.7,9;1,1;laptop_email_new.png;new;]tooltip[new;New message]"
+		formspec = formspec .. "image_button[1.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_new.png;new;]tooltip[new;New message]"
 		if account.newmessage then
-			formspec = formspec .. "image_button[2.7,9;1,1;laptop_email_edit.png;continue;]tooltip[continue;Continue last message]"
+			formspec = formspec .. "image_button[2.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_edit.png;continue;]tooltip[continue;Continue last message]"
 		end
 
 		if account.selectedmessage then
 			formspec = formspec ..
-					"image_button[3.7,9;1,1;laptop_email_reply.png;reply;]tooltip[reply;Reply]"..
-					"image_button[4.7,9;1,1;laptop_email_forward.png;forward;]tooltip[forward;Forward]"..
-					"image_button[5.7,9;1,1;laptop_email_trash.png;delete;]tooltip[delete;Delete]"
+					"image_button[3.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_reply.png;reply;]tooltip[reply;Reply]"..
+					"image_button[4.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_forward.png;forward;]tooltip[forward;Forward]"..
+					"image_button[5.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_trash.png;delete;]tooltip[delete;Delete]"
 			if account.selected_box == "inbox" then
 				if not account.selectedmessage.is_read then
-					formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
+					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
 				else
-					formspec = formspec .. "image_button[6.7,9;1,1;laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
+					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
 				end
 			end
 			if account.selected_box == "inbox" then
-				formspec = formspec .. "label[8,0.5;From: "..(minetest.formspec_escape(account.selectedmessage.sender) or "").."]"
+				formspec = formspec .. mtos.theme:get_label('8,0.5', "From: "..(account.selectedmessage.sender or ""))
 			else
-				formspec = formspec .. "label[8,0.5;To: "..(minetest.formspec_escape(account.selectedmessage.receiver) or "").."]"
+				formspec = formspec .. mtos.theme:get_label('8,0.5', "To: "..(account.selectedmessage.receiver or ""))
 			end
 
-			formspec = formspec .. "label[8,1;Subject: "..(minetest.formspec_escape(account.selectedmessage.subject) or "")..
+			formspec = formspec .. mtos.theme:get_label('8,1', "Subject: "..(account.selectedmessage.subject or ""))..
 					"]textarea[8.25,1.5;7,8.35;body;;"..(minetest.formspec_escape(account.selectedmessage.body) or "").."]"
 		end
 		return formspec
@@ -120,6 +120,10 @@ laptop.register_app("mail", {
 
 		local cloud = app:get_cloud_storage_ref("mail")
 		local account = cloud[mtos.appdata.os.last_player]
+		if not account then
+			mtos:set_app() -- wrong player. Back to launcher
+			return
+		end
 		account.selected_box = account.selected_box or "inbox"
 		local box = account[account.selected_box] -- inbox or outbox
 
@@ -177,8 +181,8 @@ laptop.register_app("mail", {
 
 laptop.register_view("mail:newplayer", {
 	formspec_func = function(app, mtos)
-		return "label[1,3;No mail account for player "..mtos.appdata.os.last_player.. " found. Do you like to create a new account?]"..
-				"image_button[1,4;3,1;"..mtos.theme.major_button..';create;Create account]'
+		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.appdata.os.last_player.. " found. Do you like to create a new account?")..
+				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create account')
 	end,
 	receive_fields_func = function(app, mtos, fields, sender)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
@@ -209,7 +213,7 @@ laptop.register_view("mail:compose", {
 		local formspec = "field[0.25,1;4,1;receiver;To:;%s]field[0.25,2;4,1;subject;Subject:;%s]textarea[0.25,3;8,4;body;;%s]button[5,8;2,1;send;Send]"
 		formspec = string.format(formspec,minetest.formspec_escape(message.receiver or ""),minetest.formspec_escape(message.subject or ""),minetest.formspec_escape(message.body or ""))
 		if message.receiver and not cloud[message.receiver] then
-			formspec = formspec.."label[7,8;invalid receiver player]"
+			formspec = formspec..mtos.theme:get_label('7,8', "invalid receiver player")
 		end
 		return formspec
 	end,

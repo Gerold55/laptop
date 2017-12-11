@@ -4,7 +4,7 @@ laptop.register_app("demo1", {
 	app_icon = "laptop_setting_wrench.png",
 	app_info = "The first and simple demo app",
 	formspec_func = function(app, mtos)
-		return 'image_button[5,5;3,1;'..mtos.theme.major_button..';next;Second screen]'
+		return mtos.theme:get_button('5,5;3,1', 'major', 'next', 'Second screen')
 	end,
 	receive_fields_func = function(app, mtos, fields, sender)
 		if fields.next then
@@ -16,7 +16,7 @@ laptop.register_app("demo1", {
 laptop.register_view("demo1_view2", {
 	app_info = "Second screen in Demo App 1",
 	formspec_func = function(app, mtos)
-		return "label[1,5;Use the framework buttons to navigate back or cancel]"
+		return mtos.theme:get_label('1,5', "Use the framework buttons to navigate back or cancel")
 	end,
 	receive_fields_func = function(app, mtos, fields, sender)
 	end
