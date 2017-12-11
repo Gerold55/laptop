@@ -72,6 +72,7 @@ Definitiontable:
 - `exit_button` Exit button image
 - `major_button` Major (highlighted) button image
 - `minor_button` Minor button image
+- `textcolor` Default text color for buttons and labels. For buttons the major_textcolor and minor_textcolor supported
 
 ## Theme methods
 `function laptop.get_theme(theme_name)`
