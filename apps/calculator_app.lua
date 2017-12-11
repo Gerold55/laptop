@@ -13,10 +13,10 @@ laptop.register_app("calculator", {
 		end
 
 		local formspec = "tablecolumns[" ..
-			"text,align=right,padding=1.5,width=6;".. -- first value
+			"text,align=right,padding=1.5,width=10;".. -- first value
 			"text,align=right,padding=1.5;".. -- operator
-			"text,align=right,padding=1.5,width=6]".. -- last value
-			"table[0.9,0.8;7,2;tab;"
+			"text,align=right,padding=1.5,width=10]".. -- last value
+			"table[3.9,0.8;7,2;tab;"
 
 		for idx,entry in ipairs(data.tab) do
 			if idx > 1 then
@@ -26,27 +26,27 @@ laptop.register_app("calculator", {
 		end
 
 		formspec = formspec .. ";"..#data.tab.."]"..
-				mtos.theme:get_button('1,3;1,1', "minor", 'number', '1') ..
-				mtos.theme:get_button('2,3;1,1', "minor", 'number', '2') ..
-				mtos.theme:get_button('3,3;1,1', "minor", 'number', '3') ..
-				mtos.theme:get_button('1,4;1,1', "minor", 'number', '4') ..
-				mtos.theme:get_button('2,4;1,1', "minor", 'number', '5') ..
-				mtos.theme:get_button('3,4;1,1', "minor", 'number', '6') ..
-				mtos.theme:get_button('1,5;1,1', "minor", 'number', '7') ..
-				mtos.theme:get_button('2,5;1,1', "minor", 'number', '8') ..
-				mtos.theme:get_button('3,5;1,1', "minor", 'number', '9') ..
-				mtos.theme:get_button('1,6;1,1', "minor", 'number', '0') ..
-				mtos.theme:get_button('2,6;1,1', "minor", 'number', '.') ..
+				mtos.theme:get_button('4,3;1,1', "minor", 'number', '1') ..
+				mtos.theme:get_button('5,3;1,1', "minor", 'number', '2') ..
+				mtos.theme:get_button('6,3;1,1', "minor", 'number', '3') ..
+				mtos.theme:get_button('4,4;1,1', "minor", 'number', '4') ..
+				mtos.theme:get_button('5,4;1,1', "minor", 'number', '5') ..
+				mtos.theme:get_button('6,4;1,1', "minor", 'number', '6') ..
+				mtos.theme:get_button('4,5;1,1', "minor", 'number', '7') ..
+				mtos.theme:get_button('5,5;1,1', "minor", 'number', '8') ..
+				mtos.theme:get_button('6,5;1,1', "minor", 'number', '9') ..
+				mtos.theme:get_button('4,6;1,1', "minor", 'number', '0') ..
+				mtos.theme:get_button('5,6;1,1', "minor", 'number', '.') ..
 
-				mtos.theme:get_button('5,3;1,1', "minor", 'operator', '+') ..
-				mtos.theme:get_button('5,4;1,1', "minor", 'operator', '-') ..
-				mtos.theme:get_button('5,5;1,1', "minor", 'operator', '/') ..
-				mtos.theme:get_button('5,6;1,1', "minor", 'operator', '*') ..
-				mtos.theme:get_button('6,6;2,1', "minor", 'operator', '=') ..
+				mtos.theme:get_button('8,3;1,1', "minor", 'operator', '+') ..
+				mtos.theme:get_button('8,4;1,1', "minor", 'operator', '-') ..
+				mtos.theme:get_button('8,5;1,1', "minor", 'operator', '/') ..
+				mtos.theme:get_button('8,6;1,1', "minor", 'operator', '*') ..
+				mtos.theme:get_button('9,6;2,1', "minor", 'operator', '=') ..
 
-				mtos.theme:get_button('6,3;2,1', "minor", 'del_char', 'DEL-1') ..
-				mtos.theme:get_button('6,4;2,1', "minor", 'del_line', 'DEL-L') ..
-				mtos.theme:get_button('6,5;2,1', "minor", 'del_all', 'DEL-A')
+				mtos.theme:get_button('9,3;2,1', "minor", 'del_char', 'DEL-1') ..
+				mtos.theme:get_button('9,4;2,1', "minor", 'del_line', 'DEL-L') ..
+				mtos.theme:get_button('9,5;2,1', "minor", 'del_all', 'DEL-A')
 		return formspec
 	end,
 
