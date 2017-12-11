@@ -7,6 +7,13 @@ laptop.class_lib.os = os_class
 
 local mod_storage = minetest.get_mod_storage()
 
+-- Setup internal inventory slot
+function os_class:get_node_inventory()
+	local inv = self.meta:get_inventory()
+	inv:set_size("main", 1) -- 1 disk supported
+	return inv
+end
+
 -- Swap the node
 function os_class:swap_node(new_node_name)
 	local node = minetest.get_node(self.pos)

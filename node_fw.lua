@@ -2,29 +2,29 @@
 laptop.node_config = {}
 
 local function after_place_node(pos, placer, itemstack, pointed_thing)
-	local appdata = minetest.deserialize(itemstack:get_meta():get_string("laptop_appdata"))
-	if appdata then
-		local mtos = laptop.os_get(pos)
-		mtos.appdata = appdata
-		mtos.appdata.launcher = mtos.appdata.launcher or {}
-		mtos.appdata.os = mtos.appdata.os or {}
-		mtos.appdata.os.stack = mtos.appdata.os.stack or {}
-		mtos:save()
+	local save = minetest.deserialize(itemstack:get_meta():get_string("laptop_metadata"))
+	if save then
+		local meta = minetest.get_meta(pos)
+		meta:from_table(save.fields)
+		meta:get_inventory():set_list("main", save.invlist)
 	end
 end
 
 local function after_dig_node(pos, oldnode, oldmetadata, digger)
-	local appdata = oldmetadata.fields['laptop_appdata']
-	if appdata then
-		local item_name = minetest.registered_items[oldnode.name].drop or oldnode.name
-		local inventory = digger:get_inventory()
-		for idx = inventory:get_size("main"), 1, -1 do
-			local stack = inventory:get_stack("main", idx)
-			if stack:get_name() == item_name and stack:get_meta():get_string("laptop_appdata") == "" then
-				stack:get_meta():set_string("laptop_appdata", appdata)
-				digger:get_inventory():set_stack("main", idx, stack)
-				break
-			end
+	local save = { fields = oldmetadata.fields, invlist = {} }
+	if oldmetadata.inventory and oldmetadata.inventory.main then
+		for _, stack in ipairs(oldmetadata.inventory.main) do
+			table.insert(save.invlist, stack:to_string())
+		end
+	end
+
+	local item_name = minetest.registered_items[oldnode.name].drop or oldnode.name
+	local inventory = digger:get_inventory()
+	for idx, stack in ipairs(inventory:get_list("main")) do
+		if stack:get_name() == item_name and stack:get_meta():get_string("laptop_metadata") == "" then
+			stack:get_meta():set_string("laptop_metadata", minetest.serialize(save))
+			digger:get_inventory():set_stack("main", idx, stack)
+			break
 		end
 	end
 end
@@ -45,6 +45,7 @@ local function on_construct(pos)
 end
 
 local function on_punch(pos, node, puncher)
+	-- TODO: Check if wielded item is an removable. Replace stack in this case
 	local mtos = laptop.os_get(pos)
 	local hwdef = laptop.node_config[node.name]
 	if hwdef.next_node then
@@ -66,32 +67,32 @@ end
 
 local function allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("allow_metadata_inventory_move", false, player, from_list, from_index, to_list, to_index, count)
+	return mtos:pass_to_app("allow_metadata_inventory_move", false, player, from_list, from_index, to_list, to_index, count) or 0
 end
 
 local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("allow_metadata_inventory_put", false, player, listname, index, stack)
+	return mtos:pass_to_app("allow_metadata_inventory_put", false, player, listname, index, stack) or 0
 end
 
 local function allow_metadata_inventory_take(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("allow_metadata_inventory_take", false, player, listname, index, stack)
+	return mtos:pass_to_app("allow_metadata_inventory_take", false, player, listname, index, stack) or 0
 end
 
 local function on_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("on_metadata_inventory_move", true, player, from_list, from_index, to_list, to_index, count)
+	mtos:pass_to_app("on_metadata_inventory_move", true, player, from_list, from_index, to_list, to_index, count)
 end
 
 local function on_metadata_inventory_put(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("on_metadata_inventory_put", true, player, listname, index, stack)
+	mtos:pass_to_app("on_metadata_inventory_put", true, player, listname, index, stack)
 end
 
 local function on_metadata_inventory_take(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("on_metadata_inventory_take", true, player, listname, index, stack)
+	mtos:pass_to_app("on_metadata_inventory_take", true, player, listname, index, stack)
 end
 
 function laptop.register_hardware(name, hwdef)
