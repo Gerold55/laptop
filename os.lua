@@ -124,18 +124,19 @@ function os_class:set_app(appname)
 end
 
 -- Handle input processing
-function os_class:receive_fields(fields, sender)
+function os_class:pass_to_app(method, reshow, sender, ...)
 	local appname = self.appdata.os.current_app or self.hwdef.custom_launcher or "launcher"
 	local app = self:get_app(appname)
-	app:receive_fields(fields, sender)
+	local ret = app:receive_data(method, reshow, sender, ...)
 	self.appdata.os.last_player = sender:get_player_name()
-	if self.appdata.os.current_app == appname then
+	if self.appdata.os.current_app == appname and reshow then
 		local formspec = app:get_formspec()
 		if formspec ~= false then
 			self.meta:set_string('formspec', formspec)
 		end
 	end
 	self:save()
+	return ret
 end
 
 -- Get mod storage as (=internet / cloud)

@@ -38,7 +38,6 @@ Usable from node functions, from apps or outsite
 - `mtos:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `mtos:get_app(appname)`- Get the app instance
 - `mtos:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
-- `mtos:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
 - `mtos:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
 - `mtos:set_theme(theme)`- Activate theme
 
@@ -52,7 +51,7 @@ Usable from node functions, from apps or outsite
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
 - `formspec_func(app, mtos)` - Function, should return the app formspec (mandatory) During definition the "app" and the "mtos" are available
 - `appwindow_formspec_func(launcher_app, app, mtos)`- Only custom launcher app: App background / Window decorations and buttons
-- `receive_fields_func(app, mtos, fields, sender)` Function for input processing. The "app" and the "mtos" are available inside the call
+- `receive_fields_func(app, mtos, sender, fields)` Function for input processing. The "app" and the "mtos" are available inside the call
 `laptop.register_view(internal_shortname, { definitiontable })` - add a new app or view
 same as register_app, but the view flag is set. app_name and app_icon not necessary
 

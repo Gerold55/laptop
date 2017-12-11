@@ -113,7 +113,7 @@ laptop.register_app("mail", {
 		end
 		return formspec
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
@@ -185,7 +185,7 @@ laptop.register_view("mail:newplayer", {
 		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.appdata.os.last_player.. " found. Do you like to create a new account?")..
 				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create account')
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
@@ -222,7 +222,7 @@ laptop.register_view("mail:compose", {
 		end
 		return formspec
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return

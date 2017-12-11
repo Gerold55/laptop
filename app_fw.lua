@@ -29,16 +29,20 @@ function app_class:get_formspec()
 end
 
 -- internally used: process input
-function app_class:receive_fields(fields, sender)
+function app_class:receive_data(method, reshow, sender, ...)
 	local ret
-	if self.receive_fields_func then
-		ret = self.receive_fields_func(self, self.os, fields, sender)
+
+	if self[method] then
+		ret = self[method](self, self.os, sender, ...)
 	end
 
-	if fields.os_back then
-		self:back_app()
-	elseif fields.os_exit then
-		self:exit_app()
+	if method == "receive_fields_func" then
+		fields = ...
+		if fields.os_back then
+			self:back_app()
+		elseif fields.os_exit then
+			self:exit_app()
+		end
 	end
 	return ret
 end

@@ -46,7 +46,7 @@ laptop.register_app("launcher_settings", {
 		return formspec
 	end,
 
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		local settings_data = app:get_storage_ref()
 
 		if fields.sel_theme then
