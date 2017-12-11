@@ -6,7 +6,7 @@ laptop.register_app("demo1", {
 	formspec_func = function(app, mtos)
 		return mtos.theme:get_button('5,5;3,1', 'major', 'next', 'Second screen')
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if fields.next then
 			mtos:set_app("demo1_view2")
 		end
@@ -18,7 +18,7 @@ laptop.register_view("demo1_view2", {
 	formspec_func = function(app, mtos)
 		return mtos.theme:get_label('1,5', "Use the framework buttons to navigate back or cancel")
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 	end
 })
 
@@ -32,7 +32,7 @@ laptop.register_app("demo2", {
 		return 'button[3,1;5,1;count;Click: '..data.counter..']'..
 				'button[3,3;5,1;back;Back to launcher]'
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if fields.count then
 			local data = app:get_storage_ref()
 			data.counter = data.counter + 1

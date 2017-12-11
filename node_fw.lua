@@ -61,7 +61,37 @@ end
 
 local function on_receive_fields(pos, formname, fields, sender)
 	local mtos = laptop.os_get(pos)
-	mtos:receive_fields(fields, sender)
+	mtos:pass_to_app("receive_fields_func", true, sender, fields)
+end
+
+local function allow_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
+	local mtos = laptop.os_get(pos)
+	return mtos:pass_to_app("allow_metadata_inventory_move", false, player, from_list, from_index, to_list, to_index, count)
+end
+
+local function allow_metadata_inventory_put(pos, listname, index, stack, player)
+	local mtos = laptop.os_get(pos)
+	return mtos:pass_to_app("allow_metadata_inventory_put", false, player, listname, index, stack)
+end
+
+local function allow_metadata_inventory_take(pos, listname, index, stack, player)
+	local mtos = laptop.os_get(pos)
+	return mtos:pass_to_app("allow_metadata_inventory_take", false, player, listname, index, stack)
+end
+
+local function on_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)
+	local mtos = laptop.os_get(pos)
+	return mtos:pass_to_app("on_metadata_inventory_move", true, player, from_list, from_index, to_list, to_index, count)
+end
+
+local function on_metadata_inventory_put(pos, listname, index, stack, player)
+	local mtos = laptop.os_get(pos)
+	return mtos:pass_to_app("on_metadata_inventory_put", true, player, listname, index, stack)
+end
+
+local function on_metadata_inventory_take(pos, listname, index, stack, player)
+	local mtos = laptop.os_get(pos)
+	return mtos:pass_to_app("on_metadata_inventory_take", true, player, listname, index, stack)
 end
 
 function laptop.register_hardware(name, hwdef)
@@ -89,6 +119,12 @@ function laptop.register_hardware(name, hwdef)
 		def.on_punch = on_punch
 		def.on_construct = on_construct
 		def.on_receive_fields = on_receive_fields
+		def.allow_metadata_inventory_move = allow_metadata_inventory_move
+		def.allow_metadata_inventory_put = allow_metadata_inventory_put
+		def.allow_metadata_inventory_take = allow_metadata_inventory_take
+		def.on_metadata_inventory_move = on_metadata_inventory_move
+		def.on_metadata_inventory_put = on_metadata_inventory_put
+		def.on_metadata_inventory_take = on_metadata_inventory_take
 		minetest.register_node(nodename, def)
 
 		-- set node configuration for hooks
