@@ -75,6 +75,7 @@ laptop.register_hardware("laptop:cube", {
 	infotext = "CUBE PC",
 	sequence = { "off", "on"},
 	custom_theme = "Red",
+	allowed_removable_groups = { "laptop_removable_floppy" },
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
@@ -258,6 +259,7 @@ laptop.register_hardware("laptop:monitor3", {
 	infotext = "Pentium 3",
 	sequence = { "off", "on"},
 	custom_launcher = "launcher_insert_floppy",
+	allowed_removable_groups = { "laptop_removable_floppy" },
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
