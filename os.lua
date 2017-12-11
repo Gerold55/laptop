@@ -58,16 +58,7 @@ end
 -- Get given or current theme
 function os_class:get_theme(theme)
 	local theme_sel = theme or self.appdata.os.theme
-	local ret = table.copy(laptop.themes.default)
-	if theme_sel and laptop.themes[theme_sel] then
-		for k,v in pairs(laptop.themes[theme_sel]) do
-			ret[k] = v
-		end
-		ret.name = theme_sel
-	else
-		ret.name = "default"
-	end
-	return ret
+	return laptop.get_theme(theme_sel)
 end
 
 -- Set current theme

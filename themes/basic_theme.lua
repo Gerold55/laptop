@@ -6,4 +6,5 @@ laptop.register_theme("Basic", {
 	back_button = "blank.png",
 	exit_button = "blank.png",
 	app_button = "blank.png",
+	textcolor = "#FFFFFF",
 })

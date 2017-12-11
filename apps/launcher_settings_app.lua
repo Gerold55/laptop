@@ -12,15 +12,15 @@ laptop.register_app("launcher_settings", {
 	app_icon = "laptop_setting_wrench.png",
 	app_info = "Change the computer's settings.",
 
-	formspec_func = function(app, os)
+	formspec_func = function(app, mtos)
 		local settings_data = app:get_storage_ref()
 
 		-- Change background setting
-		local current_theme_name = settings_data.selected_theme or os:get_theme().name or "default"
-		local current_theme = os:get_theme(current_theme_name)
+		local current_theme_name = settings_data.selected_theme or mtos:get_theme().name or "default"
+		local current_theme = mtos:get_theme(current_theme_name)
 		local current_idx
 
-		local formspec = "label[0,0.5;Select theme]"
+		local formspec = mtos.theme:get_label('0,0.5', "Select theme")
 
 		local formspec = formspec.."textlist[0,1;5,2;sel_theme;"
 		for i, theme in ipairs(themes_tab) do
@@ -41,12 +41,12 @@ laptop.register_app("launcher_settings", {
 			formspec = formspec.."image[5.5,1;5,3.75;"..current_theme.launcher_bg.."]"
 		end
 
-		formspec = formspec..'image_button[-0.14,3;3,1;'..current_theme.major_button..';theme_apply;Apply]'
+		formspec = formspec .. mtos.theme:get_button('0,3.2;2.5,0.6', 'major', 'theme_apply', 'Apply', 'Apply theme')
 
 		return formspec
 	end,
 
-	receive_fields_func = function(app, os, fields, sender)
+	receive_fields_func = function(app, mtos, fields, sender)
 		local settings_data = app:get_storage_ref()
 
 		if fields.sel_theme then
@@ -56,9 +56,8 @@ laptop.register_app("launcher_settings", {
 		end
 
 		if fields.theme_apply and settings_data.selected_theme then
-			os:set_theme(settings_data.selected_theme)
+			mtos:set_theme(settings_data.selected_theme)
 			settings_data.selected_theme = nil
-			app:exit_app()
 		end
 	end
 })

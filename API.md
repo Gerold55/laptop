@@ -21,26 +21,26 @@
 
 
 - `laptop.os_get(pos)` - Get an OS object. Usefull in on_construct or on_punch to initialize or do anything with OS
-  Needed in on_receive_fields to be able to call os:receive_fields(fields, sender) for interactive apps
+  Needed in on_receive_fields to be able to call mtos:receive_fields(fields, sender) for interactive apps
 - `laptop.after_place_node` / `laptop.after_dig_node` - (optional) can be used directly for node definition. Move laptop apps data to ItemStack if digged and restored back if placed again. So you can take along your laptop. Note: you need to set `stack_max = 1` because the data can be stored per stack only, not per item.
 
 
 ## Operating system calls
 Usable from node functions, from apps or outsite
 
-`local os = laptop.os_get(pos)` - Get the Operating system object. pos is the node position
+`local mtos = laptop.os_get(pos)` - Get the Operating system object. pos is the node position
 
-- `os:power_on(new_node_name)` - Activate the app "launcher" and if given swap node to new_node_name
-- `os:resume(new_node_name)` - Restore the last running app after power_off. if given swap node to new_node_name
-- `os:power_off(new_node_name)` - Remove the formspec and if given swap node to new_node_name
-- `os:swap_node(new_node_name)`- Swap the node only without any changes on OS
-- `os:set_infotext(infotext)` - Set the mouseover infotext for laptop node
-- `os:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
-- `os:get_app(appname)`- Get the app instance
-- `os:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
-- `os:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
-- `os:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
-- `os:set_theme(theme)`- Activate theme
+- `mtos:power_on(new_node_name)` - Activate the app "launcher" and if given swap node to new_node_name
+- `mtos:resume(new_node_name)` - Restore the last running app after power_off. if given swap node to new_node_name
+- `mtos:power_off(new_node_name)` - Remove the formspec and if given swap node to new_node_name
+- `mtos:swap_node(new_node_name)`- Swap the node only without any changes on OS
+- `mtos:set_infotext(infotext)` - Set the mouseover infotext for laptop node
+- `mtos:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
+- `mtos:get_app(appname)`- Get the app instance
+- `mtos:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
+- `mtos:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
+- `mtos:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
+- `mtos:set_theme(theme)`- Activate theme
 
 
 ## App Definition
@@ -50,14 +50,14 @@ Usable from node functions, from apps or outsite
 - `app_info` - Short app info visible in launcher tooltip
 - `fullscreen` - (boolean) Do not add app-background and window buttons
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
-- `formspec_func(app, os)` - Function, should return the app formspec (mandatory) During definition the "app" and the "os" are available
-- `appwindow_formspec_func(launcher_app, app, os)`- Only custom launcher app: App background / Window decorations and buttons
-- `receive_fields_func(app, os, fields, sender)` Function for input processing. The "app" and the "os" are available inside the call
+- `formspec_func(app, mtos)` - Function, should return the app formspec (mandatory) During definition the "app" and the "mtos" are available
+- `appwindow_formspec_func(launcher_app, app, mtos)`- Only custom launcher app: App background / Window decorations and buttons
+- `receive_fields_func(app, mtos, fields, sender)` Function for input processing. The "app" and the "mtos" are available inside the call
 `laptop.register_view(internal_shortname, { definitiontable })` - add a new app or view
 same as register_app, but the view flag is set. app_name and app_icon not necessary
 
 ## App Object
-`local app = os:get_app(appname)` - Give the app object internal_shortname, connected to given os. Not necessary in formspec_func or receive_fields_func because given trough interface
+`local app = mtos:get_app(appname)` - Give the app object internal_shortname, connected to given mtos. Not necessary in formspec_func or receive_fields_func because given trough interface
 - `data = app:get_storage_ref(appname)` - Returns a "persitant" data table from nodemeta (=hdd). The data in this table is not lost between formspec_func, receive_fields_func, apps-switch or on/off. Appname is optional to get data from other app
 - `data = app:get_cloud_storage_ref(appname)` - Returns a persistant table from modmeta (=internet)
 - `app:back_app() - Go back to previous app/view
@@ -72,3 +72,9 @@ Definitiontable:
 - `exit_button` Exit button image
 - `major_button` Major (highlighted) button image
 - `minor_button` Minor button image
+- `textcolor` Default text color for buttons and labels. For buttons the major_textcolor and minor_textcolor supported
+
+## Theme methods
+`function laptop.get_theme(theme_name)`
+- `theme:get_button(area, prefix, code, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an text
+- `theme:get_label(pos, text)` get a themed label text starting at pos 'x,y'
