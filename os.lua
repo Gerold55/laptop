@@ -129,7 +129,7 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 end
 
 -- Get Low-Level access to inventory slot
-function os_class:get_removable_data()
+function os_class:get_removable_data(media_type)
 	self.removable_data = nil
 	local inv = self.meta:get_inventory()
 	inv:set_size("main", 1) -- 1 disk supported
@@ -137,19 +137,28 @@ function os_class:get_removable_data()
 	if stack then
 		local def = stack:get_definition()
 		if def and def.name ~= "" then
-			local data = {
-				inv = inv,
-				def = def,
-				stack = stack,
-				meta = stack:get_meta()
-			}
-
-			data.label = data.meta:get_string("description")
-			if not data.label or data.label == "" then
-				data.label = def.description
+			local stackmeta = stack:get_meta()
+			local os_format = stackmeta:get_string("os_format")
+			if os_format == "" then
+				os_format = "none"
 			end
-			self.removable_data = data
-			return data
+			if not media_type or -- no parameter asked
+					def.groups["laptop_removable_"..media_type] or --usb or floppy
+					media_type == os_format then -- "none", "OldOS", "backup", "filesystem" 
+				local data = {
+					inv = inv,
+					def = def,
+					stack = stack,
+					meta = stackmeta,
+					os_format = os_format,
+				}
+				data.label = data.meta:get_string("description")
+				if not data.label or data.label == "" then
+					data.label = def.description
+				end
+				self.removable_data = data
+				return data
+			end
 		end
 	end
 end
@@ -173,9 +182,25 @@ function os_class:connect_to_cloud(store_name)
 	return self.cloud_store[store_name]
 end
 
+-- Connect to app storage on removable
+function os_class:connect_to_removable(store_name)
+	local data = self.removable_data or self:get_removable_data("data")
+	if not data then
+		self.removable_app_data = nil
+		return
+	end
+	self.removable_app_data = self.removable_app_data or {}
+	self.removable_app_data[store_name] = self.removable_app_data[store_name] or
+			minetest.deserialize(data.meta:get_string(store_name)) or {}
+	return self.cloud_store[store_name]
+end
+
 -- Save the data
 function os_class:save()
+	-- Nodemata (HDD)
 	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
+
+	-- Modmeta (Cloud)
 	if self.cloud_store then
 		for store, value in pairs(self.cloud_store) do
 			mod_storage:set_string(store, minetest.serialize(value))
@@ -183,15 +208,16 @@ function os_class:save()
 		self.cloud_store = nil
 	end
 
-	if self.removable_store then
-		local data = self:get_removable_data()
-		if data then
-			for store, value in pairs(self.removable_store) do
+	-- Itemstack meta (removable)
+	if self.removable_data then
+		if self.removable_app_data then
+			for store, value in pairs(self.removable_app_data) do
 				data.meta:set_string(store, minetest.serialize(value))
 			end
 		end
-		self.removable_store = nil
+		self:set_removable_data()
 	end
+	self.removable_data = nil
 end
 
 -----------------------------------------------------
