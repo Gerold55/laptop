@@ -41,7 +41,8 @@ Usable from node functions, from apps or outsite
 - `mtos:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `mtos:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
 - `mtos:set_theme(theme)`- Activate theme
-- `mtos:get_node_inventory()` - Access to the item in node inventory (low-level)
+- `mtos:get_removable_data()` - Access to the item in node inventory (low-level)
+- `mtos:set_removable_data()`- Store changes on low-level removable data
 
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
@@ -78,3 +79,11 @@ Definitiontable:
 `function laptop.get_theme(theme_name)`
 - `theme:get_button(area, prefix, code, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an text
 - `theme:get_label(pos, text)` get a themed label text starting at pos 'x,y'
+
+## Low-level Removable data
+`data = mtos:get_removable_data()`
+- `label` - Meda label. Item name by default
+- `def` - Registered item definition (read-only)
+- `inv` - node inventory
+- `stack` - The item stack
+- `meta` - Stack metadata
