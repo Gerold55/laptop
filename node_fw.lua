@@ -72,12 +72,22 @@ end
 
 local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("allow_metadata_inventory_put", false, player, listname, index, stack) or 0
+	local def = stack:get_definition()
+	local allowed_stacksize = 0
+	if def then
+		local supported = mtos.hwdef.removable_capability or {"usb", "floppy"}
+		for _, cap in ipairs(supported) do
+			if def.groups["laptop_removable_"..cap] then
+				allowed_stacksize = 1
+			end
+		end
+	end
+	return mtos:pass_to_app("allow_metadata_inventory_put", false, player, listname, index, stack) or allowed_stacksize
 end
 
 local function allow_metadata_inventory_take(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
-	return mtos:pass_to_app("allow_metadata_inventory_take", false, player, listname, index, stack) or 0
+	return mtos:pass_to_app("allow_metadata_inventory_take", false, player, listname, index, stack) or 1 -- by default removal allowed
 end
 
 local function on_metadata_inventory_move(pos, from_list, from_index, to_list, to_index, count, player)

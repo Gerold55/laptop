@@ -13,34 +13,53 @@ laptop.register_app("removable", {
 
 		local idata = mtos:get_removable_data()
 		if idata then
-			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description)..
-			"field[2,0.7;4,1;label;Label:;"..idata.label.."]"..
-			mtos.theme:get_button('5.7,0.55;1.5,0.7', 'minor', 'set_label', 'Rename', 'Rename the '..idata.def.description)
+			-- change label
+			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description).."field[2,0.7;4,1;label;Label:;"..idata.label.."]"..
+					mtos.theme:get_button('5.7,0.55;1.5,0.7', 'minor', 'set_label', 'Rename', 'Rename the '..idata.def.description)..
+					mtos.theme:get_label('0,1.7', "Format: "..idata.os_format).. -- format state
+			-- buttons
+					mtos.theme:get_button('0,3;1.5,0.7', 'minor', 'format', 'wipe', 'Wipe all data from disk')..
+					mtos.theme:get_button('0,4;1.5,0.7', 'minor', 'format', 'data', 'Format disk to store data')
+			if idata.def.groups.laptop_removable_usb then
+				formspec = formspec .. mtos.theme:get_button('2,3;1.5,0.7', 'minor', 'format', 'backup', 'Store backup to disk')
+			end
+			if idata.os_format == "backup" then
+				formspec = formspec .. mtos.theme:get_button('2,4;1.5,0.7', 'minor', 'restore', 'restore', 'Restore from backup disk')
+			end
+
+			-- format oldos
+			if idata.def.groups.laptop_removable_floppy then
+				formspec = formspec .. mtos.theme:get_button('4,3;1.5,0.7', 'minor', 'format', 'OldOS', 'Format disk to boot OldOS ')
+			end
 		end
 		return formspec
 	end,
-	-- check if the item is compatible to the computer
-	allow_metadata_inventory_put = function(app, mtos, sender, listname, index, stack)
-		local def = stack:get_definition()
-		if not def or not def.groups.laptop_removable then return end -- not supported
-		local removable = mtos.hwdef.allowed_removable_groups or { "laptop_removable" }
-		for _, v in ipairs(removable) do
-			if def.groups[v] then
-				return 1
-			end
-		end
-	end,
 
-	-- item removal always allowed from inventory
-	allow_metadata_inventory_take = function(app, mtos, sender, listname, index, stack)
-		return 1
-	end,
 
 	receive_fields_func = function(app, mtos, sender, fields)
 		local idata = mtos:get_removable_data()
 		if idata then
 			if fields.set_label then
 				idata.label = fields.label
+			elseif fields.format then
+				fields.format = minetest.strip_colors(fields.format)
+				idata.stack = ItemStack(idata.def.name)
+				idata.meta = idata.stack:get_meta()
+				if fields.format == 'wipe' then
+					idata.label = "" -- reset label on wipe
+				elseif fields.format == "data" then
+					idata.meta:set_string("os_format", "data")
+				elseif fields.format == "backup" then
+					idata.meta:set_string("os_format", "backup")
+					idata.meta:set_string("backup_data", mtos.meta:get_string('laptop_appdata'))
+				elseif fields.format == "OldOS" then
+					idata.meta:set_string("os_format", "OldOS")
+				end
+			elseif fields.restore then
+				mtos.appdata = minetest.deserialize(idata.meta:get_string("backup_data")) or {}
+				mtos.appdata.os.current_app = nil
+				mtos:save()
+				laptop.os_get(mtos.pos):power_on() --reboot
 			end
 			mtos:set_removable_data()
 		end

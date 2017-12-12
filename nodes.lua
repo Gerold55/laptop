@@ -2,7 +2,7 @@ laptop.register_hardware("laptop:core", {
 	description = "CP Core",
 	infotext = 'CP Core',
 	sequence = { "closed", "open", "open_on" },
-
+	removable_capability = { 'usb' },
 	node_defs = {
 		["open"] = {
 			hw_state = "power_off",
@@ -74,7 +74,7 @@ laptop.register_hardware("laptop:cube", {
 	infotext = "CUBE PC",
 	sequence = { "off", "on"},
 	custom_theme = "Red",
-	allowed_removable_groups = { "laptop_removable_floppy" },
+	removable_capability = { "floppy" },
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
@@ -255,7 +255,7 @@ laptop.register_hardware("laptop:monitor3", {
 	infotext = "Pentium 3",
 	sequence = { "off", "on"},
 	custom_launcher = "launcher_insert_floppy",
-	allowed_removable_groups = { "laptop_removable_floppy" },
+	removable_capability = { "floppy" },
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",

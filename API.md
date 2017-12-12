@@ -8,7 +8,7 @@
 - `hwdef.sequence = { "variant_1_name", "variant_2_name", "variant_3_name" }` On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.custom_theme` -  optional - custom initial theme name
-- `hwdef.allowed_removable_groups` - optional. allowed removable groups. Supported "laptop_removable" = all, "laptop_removable_floppy" or "laptop_removable_usb"
+- `hwdef.removable_capability` - optional. Table with compatible removable groups. Supported "floppy" or "usb". Default { "floppy", "usb" }
 - `hwdef.node_defs = {
 		variant_1_name = {
 			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
@@ -41,8 +41,8 @@ Usable from node functions, from apps or outsite
 - `mtos:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `mtos:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
 - `mtos:set_theme(theme)`- Activate theme
-- `mtos:get_removable_data()` - Access to the item in node inventory (low-level)
-- `mtos:set_removable_data()`- Store changes on low-level removable data
+- `mtos:get_removable_data(media_type)` - Access to the item in node inventory (low-level). if media_type is given (item type "usb" or "floppy", or os_format) the method returns only if the type matches
+- `mtos:set_removable_data()` - Store changes on low-level removable data
 
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
@@ -87,3 +87,4 @@ Definitiontable:
 - `inv` - node inventory
 - `stack` - The item stack
 - `meta` - Stack metadata
+- `os_format`- The format type: "none", "OldOS", "backup", "filesystem" (read-only)
