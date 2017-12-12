@@ -60,6 +60,16 @@ function os_class:save()
 		end
 		self.cloud_store = nil
 	end
+
+	if self.removable_store then
+		local stack = self:get_node_inventory():get_stack("main", 1)
+		if stack then
+			for store, value in pairs(self.removable_store) do
+				stack:get_meta():set_string(store, minetest.serialize(value))
+			end
+		end
+		self.removable_store = nil
+	end
 end
 
 -- Get given or current theme
@@ -152,6 +162,20 @@ function os_class:connect_to_cloud(store_name)
 	self.cloud_store[store_name] = self.cloud_store[store_name] or
 			minetest.deserialize(mod_storage:get_string(store_name)) or {}
 	return self.cloud_store[store_name]
+end
+
+-- Get item storage as (=floppy/usb)
+function os_class:connect_to_removable(store_name)
+	local stack = self:get_node_inventory():get_stack("main", 1)
+	if not stack then
+		self.removable_store = nil
+		return nil
+	end
+
+	self.removable_store = self.removable_store or {}
+	self.removable_store[store_name] = self.removable_store[store_name] or
+			minetest.deserialize(stack:get_meta():get_string(store_name))
+	return self.removable_store[store_name]
 end
 
 -----------------------------------------------------

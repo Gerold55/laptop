@@ -1,16 +1,18 @@
 laptop.register_app("removable", {
 	app_name = "Removable storage",
 	app_icon = "laptop_setting_wrench.png",
-	app_info = "Work with removable media.",
+	app_info = "Work with removable media",
 	formspec_func = function(app, mtos)
-		local inv = mtos:get_node_inventory()
+		local stack = mtos:get_node_inventory():get_stack("main", 1)
 		local formspec = 
 				"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;0,0.3;1,1;]" ..
 				"list[current_player;main;0,4.85;8,1;]" ..
 				"list[current_player;main;0,6.08;8,3;8]" ..
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
 				"listring[current_player;main]"
-
+		if stack then
+			formspec = formspec .. mtos.theme:get_label('2,0.3', stack:to_string())
+		end
 		return formspec
 	end,
 	-- check if the item is compatible to the computer
