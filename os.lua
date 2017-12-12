@@ -7,13 +7,6 @@ laptop.class_lib.os = os_class
 
 local mod_storage = minetest.get_mod_storage()
 
--- Setup internal inventory slot
-function os_class:get_node_inventory()
-	local inv = self.meta:get_inventory()
-	inv:set_size("main", 1) -- 1 disk supported
-	return inv
-end
-
 -- Swap the node
 function os_class:swap_node(new_node_name)
 	local node = minetest.get_node(self.pos)
@@ -49,27 +42,6 @@ end
 -- Set infotext for system
 function os_class:set_infotext(infotext)
 	self.meta:set_string('infotext', infotext)
-end
-
--- Save the data
-function os_class:save()
-	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
-	if self.cloud_store then
-		for store, value in pairs(self.cloud_store) do
-			mod_storage:set_string(store, minetest.serialize(value))
-		end
-		self.cloud_store = nil
-	end
-
-	if self.removable_store then
-		local stack = self:get_node_inventory():get_stack("main", 1)
-		if stack then
-			for store, value in pairs(self.removable_store) do
-				stack:get_meta():set_string(store, minetest.serialize(value))
-			end
-		end
-		self.removable_store = nil
-	end
 end
 
 -- Get given or current theme
@@ -156,6 +128,43 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 	return ret
 end
 
+-- Get Low-Level access to inventory slot
+function os_class:get_removable_data()
+	self.removable_data = nil
+	local inv = self.meta:get_inventory()
+	inv:set_size("main", 1) -- 1 disk supported
+	local stack = inv:get_stack("main", 1)
+	if stack then
+		local def = stack:get_definition()
+		if def and def.name ~= "" then
+			local data = {
+				inv = inv,
+				def = def,
+				stack = stack,
+				meta = stack:get_meta()
+			}
+
+			data.label = data.meta:get_string("description")
+			if not data.label or data.label == "" then
+				data.label = def.description
+			end
+			self.removable_data = data
+			return data
+		end
+	end
+end
+
+-- Store data to inventory slot item (low-level)
+function os_class:set_removable_data()
+	if self.removable_data then
+		local data = self.removable_data
+		if data.label ~= data.def.description then
+			data.meta:set_string("description", data.label)
+		end
+		data.inv:set_stack("main", 1, data.stack)
+	end
+end
+
 -- Get mod storage as (=internet / cloud)
 function os_class:connect_to_cloud(store_name)
 	self.cloud_store = self.cloud_store or {}
@@ -164,18 +173,25 @@ function os_class:connect_to_cloud(store_name)
 	return self.cloud_store[store_name]
 end
 
--- Get item storage as (=floppy/usb)
-function os_class:connect_to_removable(store_name)
-	local stack = self:get_node_inventory():get_stack("main", 1)
-	if not stack then
-		self.removable_store = nil
-		return nil
+-- Save the data
+function os_class:save()
+	self.meta:set_string('laptop_appdata', minetest.serialize(self.appdata))
+	if self.cloud_store then
+		for store, value in pairs(self.cloud_store) do
+			mod_storage:set_string(store, minetest.serialize(value))
+		end
+		self.cloud_store = nil
 	end
 
-	self.removable_store = self.removable_store or {}
-	self.removable_store[store_name] = self.removable_store[store_name] or
-			minetest.deserialize(stack:get_meta():get_string(store_name))
-	return self.removable_store[store_name]
+	if self.removable_store then
+		local data = self:get_removable_data()
+		if data then
+			for store, value in pairs(self.removable_store) do
+				data.meta:set_string(store, minetest.serialize(value))
+			end
+		end
+		self.removable_store = nil
+	end
 end
 
 -----------------------------------------------------
