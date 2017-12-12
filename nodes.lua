@@ -16,7 +16,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -27,6 +27,7 @@ laptop.register_hardware("laptop:core", {
 		},
 		["open_on"] = {
 			hw_state = "resume",
+			light_source = 4,
 			tiles = {
 				"laptop_lap_car_open_on_top.png",
 				"laptop_lap_car_sc_open_bottom.png^laptop_lap_car_bottom.png",
@@ -37,7 +38,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -58,7 +59,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -88,7 +89,7 @@ laptop.register_hardware("laptop:cube", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = "colorfacedir",
 			node_box = {
 					type = "fixed",
 					fixed = {
@@ -111,7 +112,7 @@ laptop.register_hardware("laptop:cube", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = "colorfacedir",
 			node_box = {
 					type = "fixed",
 					fixed = {
@@ -142,7 +143,7 @@ laptop.register_hardware("laptop:monitor2", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -166,7 +167,7 @@ laptop.register_hardware("laptop:monitor2", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -199,7 +200,7 @@ laptop.register_hardware("laptop:monitor4", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -224,7 +225,7 @@ laptop.register_hardware("laptop:monitor4", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "facedir",
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -269,7 +270,7 @@ laptop.register_hardware("laptop:monitor3", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -292,7 +293,7 @@ laptop.register_hardware("laptop:monitor3", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -333,7 +334,7 @@ laptop.register_hardware("laptop:laptop", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -353,7 +354,7 @@ laptop.register_hardware("laptop:laptop", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -374,7 +375,7 @@ laptop.register_hardware("laptop:laptop", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "colorfacedir",
 			node_box = {
 				type = "fixed",
 				fixed = {

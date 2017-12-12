@@ -10,31 +10,30 @@ local mod_storage = minetest.get_mod_storage()
 -- Swap the node
 function os_class:swap_node(new_node_name)
 	local node = minetest.get_node(self.pos)
-	node.name = new_node_name
+	if new_node_name then
+		node.name = new_node_name
+	end
+	local fdir = math.floor(node.param2 % 32)
+	node.param2 = fdir + self.theme.node_color * 32
+	print("swap to", dump(node)) --TODO:remove
 	minetest.swap_node(self.pos, node)
 end
 
 -- Power on the system and start the launcher
 function os_class:power_on(new_node_name)
-	if new_node_name then
-		self:swap_node(new_node_name)
-	end
+	self:swap_node(new_node_name)
 	self:set_app() --launcher
 end
 
 -- Power on the system / and resume last running app
 function os_class:resume(new_node_name)
-	if new_node_name then
-		self:swap_node(new_node_name)
-	end
+	self:swap_node(new_node_name)
 	self:set_app(self.appdata.os.current_app)
 end
 
 -- Power off the system
 function os_class:power_off(new_node_name)
-	if new_node_name then
-		self:swap_node(new_node_name)
-	end
+	self:swap_node(new_node_name)
 	self.meta:set_string('formspec', "")
 	self:save()
 end
@@ -56,6 +55,7 @@ function os_class:set_theme(theme)
 		self.appdata.os.theme = theme
 		self.theme = self:get_theme()
 		self:save()
+		self:swap_node()
 	end
 end
 
