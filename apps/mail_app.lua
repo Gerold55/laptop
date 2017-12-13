@@ -79,9 +79,9 @@ laptop.register_app("mail", {
 
 		-- toggle inbox/sentbox
 		if account.selected_box == "inbox" then
-			formspec = formspec .. mtos.theme:get_button('0,9;1.5,1', 'minor', 'switch_sentbox', 'Sentbox', 'Show sent messages')
+			formspec = formspec .. "image_button[0,8.8;1.5,1.5;"..mtos.theme.minor_button.."^laptop_mail_sentbox.png;switch_sentbox;]tooltip[switch_sentbox;Show sent messages]"
 		else
-			formspec = formspec .. mtos.theme:get_button('0,9;1.5,1', 'minor', 'switch_inbox', 'Inbox', 'Show received messages')
+			formspec = formspec .. "image_button[0,8.8;1.5,1.5;"..mtos.theme.minor_button.."^laptop_mail_received.png;switch_inbox;]tooltip[switch_inbox;Show received messages]"
 		end
 
 		formspec = formspec .. "image_button[1.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_new.png;new;]tooltip[new;New message]"
