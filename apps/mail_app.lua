@@ -96,9 +96,9 @@ laptop.register_app("mail", {
 					"image_button[5.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_trash.png;delete;]tooltip[delete;Delete]"
 			if account.selected_box == "inbox" then
 				if not account.selectedmessage.is_read then
-					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
+					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_read_button.png;markread;]tooltip[markread;Mark message as read]"
 				else
-					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
+					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_button.png;markunread;]tooltip[markunread;Mark message as unread]"
 				end
 			end
 			if account.selected_box == "inbox" then
@@ -113,7 +113,7 @@ laptop.register_app("mail", {
 		end
 		return formspec
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
@@ -185,7 +185,7 @@ laptop.register_view("mail:newplayer", {
 		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.appdata.os.last_player.. " found. Do you like to create a new account?")..
 				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create account')
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
@@ -222,7 +222,7 @@ laptop.register_view("mail:compose", {
 		end
 		return formspec
 	end,
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.appdata.os.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
