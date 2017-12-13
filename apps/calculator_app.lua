@@ -50,7 +50,7 @@ laptop.register_app("calculator", {
 		return formspec
 	end,
 
-	receive_fields_func = function(app, mtos, fields, sender)
+	receive_fields_func = function(app, mtos, sender, fields)
 		local data = app:get_storage_ref()
 		local entry = data.tab[#data.tab]
 

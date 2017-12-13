@@ -45,7 +45,7 @@ laptop.register_app("launcher", {
 		formspec = formspec..'image_button[14.2,-0.31;1.09,0.61;'..mtos.theme.exit_button..';os_exit;X]'
 		return formspec
 	end,
-	receive_fields_func = function(launcher_app, mtos, fields, sender)
+	receive_fields_func = function(launcher_app, mtos, sender, fields)
 		for name, descr in pairs(fields) do
 			if laptop.apps[name] then
 				mtos:set_app(name)
