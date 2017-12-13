@@ -79,6 +79,7 @@ laptop.register_hardware("laptop:cube", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			light_source = 4,
 			tiles = {
 				"laptop_cube_monitor_top.png^laptop_cube_tower_top.png",
 				"laptop_cube_monitor_bottom.png^laptop_cube_tower_bottom.png",
@@ -133,6 +134,7 @@ laptop.register_hardware("laptop:monitor2", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			light_source = 4,
 			tiles = {
 				"laptop_fruit_stand_top.png",
 				"laptop_fruit_base.png",
@@ -190,6 +192,7 @@ laptop.register_hardware("laptop:monitor4", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			light_source = 4,
 			tiles = {
 				"laptop_opti_pc_top.png^laptop_opti_kb_top.png^laptop_opti_ms_top.png^laptop_opti_lcb_top.png^laptop_opti_lcp_top.png^laptop_opti_lcd_top.png",
 				"laptop_opti_pc_bottom.png^laptop_opti_kb_bottom.png^laptop_opti_ms_bottom.png^laptop_opti_lcd_bottom.png",
@@ -260,6 +263,7 @@ laptop.register_hardware("laptop:monitor3", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			light_source = 3,
 			tiles = {
 				"laptop_k_top.png^laptop_t_top.png^laptop_p_top.png^laptop_m_top.png",
 				"laptop_k_bottom.png^laptop_t_bottom.png^laptop_p_bottom.png^laptop_m_bottom.png",
@@ -365,6 +369,7 @@ laptop.register_hardware("laptop:laptop", {
 		},
 		["open_on"] = {
 			hw_state = "resume",
+			light_source = 4,
 			tiles = {
 				"laptop_lap_base_open_on_top.png",
 				"laptop_lap_base_open_bottom.png^laptop_lap_sc_open_bottom.png",

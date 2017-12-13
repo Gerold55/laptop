@@ -96,9 +96,9 @@ laptop.register_app("mail", {
 					"image_button[5.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_trash.png;delete;]tooltip[delete;Delete]"
 			if account.selected_box == "inbox" then
 				if not account.selectedmessage.is_read then
-					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_read.png;markread;]tooltip[markread;Mark message as read]"
+					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_read_button.png;markread;]tooltip[markread;Mark message as read]"
 				else
-					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail.png;markunread;]tooltip[markunread;Mark message as unread]"
+					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_button.png;markunread;]tooltip[markunread;Mark message as unread]"
 				end
 			end
 			if account.selected_box == "inbox" then
