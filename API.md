@@ -8,6 +8,7 @@
 - `hwdef.sequence = { "variant_1_name", "variant_2_name", "variant_3_name" }` On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.custom_theme` -  optional - custom initial theme name
+- `hwdef.removable_capability` - optional. Table with compatible removable groups. Supported "floppy" or "usb". Default { "floppy", "usb" }
 - `hwdef.node_defs = {
 		variant_1_name = {
 			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
@@ -38,10 +39,10 @@ Usable from node functions, from apps or outsite
 - `mtos:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `mtos:get_app(appname)`- Get the app instance
 - `mtos:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
-- `mtos:receive_fields(fields, sender)` - Should be called from node.on_receive_fields to get the apps interactive
 - `mtos:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
 - `mtos:set_theme(theme)`- Activate theme
-
+- `mtos:get_removable_data(media_type)` - Access to the item in node inventory (low-level). if media_type is given (item type "usb" or "floppy", or os_format) the method returns only if the type matches
+- `mtos:set_removable_data()` - Store changes on low-level removable data
 
 ## App Definition
 `laptop.register_app(internal_shortname, { definitiontable })` - add a new app or view
@@ -52,7 +53,7 @@ Usable from node functions, from apps or outsite
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
 - `formspec_func(app, mtos)` - Function, should return the app formspec (mandatory) During definition the "app" and the "mtos" are available
 - `appwindow_formspec_func(launcher_app, app, mtos)`- Only custom launcher app: App background / Window decorations and buttons
-- `receive_fields_func(app, mtos, fields, sender)` Function for input processing. The "app" and the "mtos" are available inside the call
+- `receive_fields_func(app, mtos, sender, fields)` Function for input processing. The "app" and the "mtos" are available inside the call
 `laptop.register_view(internal_shortname, { definitiontable })` - add a new app or view
 same as register_app, but the view flag is set. app_name and app_icon not necessary
 
@@ -78,3 +79,12 @@ Definitiontable:
 `function laptop.get_theme(theme_name)`
 - `theme:get_button(area, prefix, code, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an text
 - `theme:get_label(pos, text)` get a themed label text starting at pos 'x,y'
+
+## Low-level Removable data
+`data = mtos:get_removable_data()`
+- `label` - Meda label. Item name by default
+- `def` - Registered item definition (read-only)
+- `inv` - node inventory
+- `stack` - The item stack
+- `meta` - Stack metadata
+- `os_format`- The format type: "none", "OldOS", "backup", "filesystem" (read-only)
