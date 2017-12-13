@@ -20,7 +20,7 @@ laptop.register_app("stickynote", {
 			table.sort(data.fileslist_sorted)
 		end
 
-		local formspec = "background[0,0.35;15.2,8.2;gui_formbg.png]"..
+		local formspec = "background[0,0.35;15.2,8.2;"..mtos.theme.contrast_bg.."]"..
 				"textarea[0.35,0.35;15.08,9.5;text;;"..minetest.formspec_escape(data.text).."]"..
 				"dropdown[0,9;4,1;file_sel;"
 

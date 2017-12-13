@@ -9,6 +9,7 @@ laptop.themes = {
 		app_button = "laptop_theme_freedom_app_button.png",
 		textcolor = "#000000",
 		node_color = 0,
+		contrast_bg = "gui_formbg.png",
 	},
 }
 
