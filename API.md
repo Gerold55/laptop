@@ -68,11 +68,12 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 Definitiontable:
 - `launcher_bg` Launcher background image
 - `app_bg` Apps background image
+- `contrast_bg` dark background to place under white text elements that does not support textcolor
+- `textcolor` Default text color for buttons and labels. For buttons the major_textcolor and minor_textcolor supported
 - `back_button` Back Button image
 - `exit_button` Exit button image
 - `major_button` Major (highlighted) button image
 - `minor_button` Minor button image
-- `textcolor` Default text color for buttons and labels. For buttons the major_textcolor and minor_textcolor supported
 
 ## Theme methods
 `function laptop.get_theme(theme_name)`
