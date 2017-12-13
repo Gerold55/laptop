@@ -27,6 +27,7 @@ laptop.register_hardware("laptop:core", {
 		},
 		["open_on"] = {
 			hw_state = "resume",
+			light_source = 4,
 			tiles = {
 				"laptop_lap_car_open_on_top.png",
 				"laptop_lap_car_sc_open_bottom.png^laptop_lap_car_bottom.png",
