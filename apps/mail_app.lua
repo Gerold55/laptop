@@ -108,7 +108,7 @@ laptop.register_app("mail", {
 			end
 
 			formspec = formspec .. mtos.theme:get_label('8,1', "Subject: "..(account.selectedmessage.subject or ""))..
-					"background[8,1.55;6.92,7.3;gui_formbg.png]"..
+					"background[8,1.55;6.92,7.3;"..mtos.theme.contrast_bg.."]"..
 					"textarea[8.25,1.5;7,8.35;body;;"..(minetest.formspec_escape(account.selectedmessage.body) or "").."]"
 		end
 		return formspec
@@ -211,9 +211,9 @@ laptop.register_view("mail:compose", {
 		account.newmessage = account.newmessage or {}
 		local message = account.newmessage
 
-		local formspec = "background[-0.1,0.4;4.2,2.4;gui_formbg.png]"..
+		local formspec = "background[-0.1,0.4;4.2,2.4;"..mtos.theme.contrast_bg.."]"..
 				"field[0.25,1;4,1;receiver;To:;%s]field[0.25,2;4,1;subject;Subject:;%s]"..
-				"background[0,3.05;7.95,3.44;gui_formbg.png]"..
+				"background[0,3.05;7.95,3.44;"..mtos.theme.contrast_bg.."]"..
 				"textarea[0.25,3;8,4;body;;%s]"..
 				mtos.theme:get_button("0,8;2,1", "major", "send", "Send message")
 		formspec = string.format(formspec,minetest.formspec_escape(message.receiver or ""),minetest.formspec_escape(message.subject or ""),minetest.formspec_escape(message.body or ""))

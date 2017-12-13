@@ -8,6 +8,7 @@ laptop.themes = {
 		exit_button = "laptop_theme_freedom_exit_button.png",
 		app_button = "laptop_theme_freedom_app_button.png",
 		textcolor = "#000000",
+		contrast_bg = "gui_formbg.png",
 	},
 }
 
