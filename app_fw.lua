@@ -61,6 +61,11 @@ function app_class:get_cloud_storage_ref(app_name)
 	return self.os:connect_to_cloud(app_name)
 end
 
+-- Get persitant storage table
+function app_class:get_removable_storage_ref(app_name)
+	return self.os:connect_to_removable(app_name)
+end
+
 -- Back to previous app in stack
 function app_class:back_app()
 	self.os.appdata.os.current_app = self.os:appstack_pop()
