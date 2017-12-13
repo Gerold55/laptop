@@ -122,6 +122,9 @@ function laptop.register_hardware(name, hwdef)
 			def.drop = default_nodename
 			def.groups.not_in_creative_inventory = 1
 		end
+		if def.paramtype2 == "colorfacedir" and not def.palette then
+			def.palette = "unifieddyes_palette_redviolets.png" --TODO: Replace by own laptop specific PNG file
+		end
 
 		-- needed to transfer content to item if place or dig laptop
 		def.stack_max = 1

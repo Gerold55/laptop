@@ -12,10 +12,12 @@ function os_class:swap_node(new_node_name)
 	local node = minetest.get_node(self.pos)
 	if new_node_name then
 		node.name = new_node_name
+		self.hwdef = laptop.node_config[self.node.name]
 	end
-	local fdir = math.floor(node.param2 % 32)
-	node.param2 = fdir + self.theme.node_color * 32
-	print("swap to", dump(node)) --TODO:remove
+	if self.hwdef.paramtype2 == "colorfacedir" then
+		local fdir = math.floor(node.param2 % 32)
+		node.param2 = fdir + self.theme.node_color * 32
+	end
 	minetest.swap_node(self.pos, node)
 end
 
