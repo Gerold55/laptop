@@ -212,11 +212,27 @@ laptop.register_view("mail:compose", {
 		local message = account.newmessage
 
 		local formspec = "background[-0.1,0.4;4.2,2.4;"..mtos.theme.contrast_bg.."]"..
-				"field[0.25,1;4,1;receiver;To:;%s]field[0.25,2;4,1;subject;Subject:;%s]"..
+				"field[0.25,2;4,1;subject;Subject:;"..minetest.formspec_escape(message.subject or "").."]"..
 				"background[0,3.05;7.95,3.44;"..mtos.theme.contrast_bg.."]"..
-				"textarea[0.25,3;8,4;body;;%s]"..
-				mtos.theme:get_button("0,8;2,1", "major", "send", "Send message")
-		formspec = string.format(formspec,minetest.formspec_escape(message.receiver or ""),minetest.formspec_escape(message.subject or ""),minetest.formspec_escape(message.body or ""))
+				"textarea[0.25,3;8,4;body;;"..minetest.formspec_escape(message.body or "").."]"..
+				mtos.theme:get_button("0,8;2,1", "major", "send", "Send message")..
+				"dropdown[0,0.75;4,1;receiver;"
+
+		local sortedtab = {}
+		for playername,_ in pairs(cloud) do
+			table.insert(sortedtab, playername)
+		end
+		table.sort(sortedtab)
+
+		local selected_idx
+		for idx, playername in ipairs(sortedtab) do
+			formspec = formspec..',' .. minetest.formspec_escape(playername)
+			if playername == message.receiver then
+				selected_idx = idx+1 -- +1 because of empty entry
+			end
+		end
+		formspec = formspec .. ";"..(selected_idx or "").."]"
+
 		if message.receiver and not cloud[message.receiver] then
 			formspec = formspec..mtos.theme:get_label('2.3,8', "invalid receiver player")
 		end
