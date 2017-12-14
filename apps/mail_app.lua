@@ -5,23 +5,28 @@ laptop.register_app("mail", {
 	app_icon = "laptop_email_letter.png",
 	app_info = "Write mails to other players",
 	formspec_func = function(app, mtos)
-		local cloud = app:get_cloud_storage_ref("mail")
-		if not mtos.appdata.os.last_player then
+		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
+		if not cloud then
+			mtos:set_app("mail:nonet")
+			return false
+		end
+
+		if not mtos.sysram.last_player then
 			mtos:set_app() -- no player. Back to launcher
 			return false
 		end
 
-		if not cloud[mtos.appdata.os.last_player] then
+		if not cloud[mtos.sysram.last_player] then
 			mtos:set_app("mail:newplayer")
 			return false
 		end
-		local account = cloud[mtos.appdata.os.last_player]
+		local account = cloud[mtos.sysram.last_player]
 		account.selected_box = account.selected_box or "inbox"
 		account.selected_index = nil -- will be new determinated by selectedmessage
 		local box = account[account.selected_box] -- inbox or outbox
 
 		local formspec =
-				"label[4,-0.31;Welcome "..mtos.appdata.os.last_player.."]"..
+				"label[4,-0.31;Welcome "..mtos.sysram.last_player.."]"..
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
 						"color;"..	-- subject and date color
@@ -114,13 +119,13 @@ laptop.register_app("mail", {
 		return formspec
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
-		if sender:get_player_name() ~= mtos.appdata.os.last_player then
+		if sender:get_player_name() ~= mtos.sysram.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
 		end
 
-		local cloud = app:get_cloud_storage_ref("mail")
-		local account = cloud[mtos.appdata.os.last_player]
+		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
+		local account = cloud[mtos.sysram.last_player]
 		if not account then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
@@ -182,17 +187,17 @@ laptop.register_app("mail", {
 
 laptop.register_view("mail:newplayer", {
 	formspec_func = function(app, mtos)
-		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.appdata.os.last_player.. " found. Do you like to create a new account?")..
+		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.sysram.last_player.. " found. Do you like to create a new account?")..
 				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create account')
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
-		if sender:get_player_name() ~= mtos.appdata.os.last_player then
+		if sender:get_player_name() ~= mtos.sysram.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
 		end
 		if fields.create then
 			local cloud = app:get_cloud_storage_ref("mail")
-			cloud[mtos.appdata.os.last_player] = {
+			cloud[mtos.sysram.last_player] = {
 				inbox = {},
 				sentbox = {}
 			}
@@ -203,11 +208,20 @@ laptop.register_view("mail:newplayer", {
 	end
 })
 
+laptop.register_view("mail:nonet", {
+	formspec_func = function(app, mtos)
+		return mtos.theme:get_label('1,3', "No internet available on this computer")
+	end,
+	receive_fields_func = function(app, mtos, sender, fields)
+		app:exit_app()
+	end
+})
+
 -- Write new mail
 laptop.register_view("mail:compose", {
 	formspec_func = function(app, mtos)
-		local cloud = app:get_cloud_storage_ref("mail")
-		local account = cloud[mtos.appdata.os.last_player]
+		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
+		local account = cloud[mtos.sysram.last_player]
 		account.newmessage = account.newmessage or {}
 		local message = account.newmessage
 
@@ -239,18 +253,18 @@ laptop.register_view("mail:compose", {
 		return formspec
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
-		if sender:get_player_name() ~= mtos.appdata.os.last_player then
+		if sender:get_player_name() ~= mtos.sysram.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
 		end
 
-		local cloud = app:get_cloud_storage_ref("mail")
-		local account = cloud[mtos.appdata.os.last_player]
+		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
+		local account = cloud[mtos.sysram.last_player]
 		account.newmessage = account.newmessage or {}
 		local message = account.newmessage
 
 		message.receiver = fields.receiver or message.receiver
-		message.sender = mtos.appdata.os.last_player
+		message.sender = mtos.sysram.last_player
 		message.time = os.time()
 		message.subject = fields.subject or message.subject
 		message.body = fields.body or message.body

@@ -8,7 +8,7 @@
 - `hwdef.sequence = { "variant_1_name", "variant_2_name", "variant_3_name" }` On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.custom_theme` -  optional - custom initial theme name
-- `hwdef.removable_capability` - optional. Table with compatible removable groups. Supported "floppy" or "usb". Default { "floppy", "usb" }
+- `hwdef.hw_capabilities` - optional. Table with hardware capabilities. Default is all: { "hdd", "floppy", "usb", "net", "liveboot" }
 - `hwdef.node_defs = {
 		variant_1_name = {
 			hw_state =  "resume", "power_on" or "power_off", -- Hardware state

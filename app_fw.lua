@@ -47,29 +47,10 @@ function app_class:receive_data(method, reshow, sender, ...)
 	return ret
 end
 
--- Get persitant storage table
-function app_class:get_storage_ref(app_name)
-	local store_name = app_name or self.name
-	if not self.os.appdata[store_name] then
-		self.os.appdata[store_name] = {}
-	end
-	return self.os.appdata[store_name]
-end
-
--- Get persitant storage table
-function app_class:get_cloud_storage_ref(app_name)
-	return self.os:connect_to_cloud(app_name)
-end
-
--- Get persitant storage table
-function app_class:get_removable_storage_ref(app_name)
-	return self.os:connect_to_removable(app_name)
-end
-
 -- Back to previous app in stack
 function app_class:back_app()
-	self.os.appdata.os.current_app = self.os:appstack_pop()
-	self.os:set_app(self.os.appdata.os.current_app)
+	self.os.sysram.current_app = self.os:appstack_pop()
+	self.os:set_app(self.os.sysram.current_app)
 end
 
 -- Exit current app and back to launcher

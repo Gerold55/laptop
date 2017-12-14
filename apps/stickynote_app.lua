@@ -3,7 +3,7 @@ laptop.register_app("stickynote", {
 	app_icon = "laptop_notes_pad.png",
 	app_info = "Write notes in a text document.",
 	formspec_func = function(app, mtos)
-		local data = app:get_storage_ref()
+		local data = mtos.bdev:get_app_storage('system', 'stickynote')
 		data.files = data.files or {}
 
 		if data.selected_file then
@@ -43,7 +43,7 @@ laptop.register_app("stickynote", {
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
 		if fields.text then
-			local data = app:get_storage_ref()
+			local data = mtos.bdev:get_app_storage('system', 'stickynote')
 			data.text = fields.text
 		end
 	end

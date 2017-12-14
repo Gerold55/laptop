@@ -75,9 +75,8 @@ local function allow_metadata_inventory_put(pos, listname, index, stack, player)
 	local def = stack:get_definition()
 	local allowed_stacksize = 0
 	if def then
-		local supported = mtos.hwdef.removable_capability or {"usb", "floppy"}
-		for _, cap in ipairs(supported) do
-			if def.groups["laptop_removable_"..cap] then
+		for group, _ in pairs(def.groups) do
+			if mtos.bdev:is_hw_capability(group) then
 				allowed_stacksize = 1
 			end
 		end
@@ -142,15 +141,19 @@ function laptop.register_hardware(name, hwdef)
 		minetest.register_node(nodename, def)
 
 		-- set node configuration for hooks
-		laptop.node_config[nodename] = table.copy(hwdef)
+		local merged_hwdef = table.copy(hwdef)
 		for k,v in pairs(hwdef.node_defs[variant]) do
-			laptop.node_config[nodename][k] = v
+			merged_hwdef[k] = v
 		end
 		local next_seq = hwdef.sequence[idx+1] or hwdef.sequence[1]
 		local next_node = name.."_"..next_seq
 		if next_node ~= nodename then
-			laptop.node_config[nodename].next_node = next_node
+			merged_hwdef.next_node = next_node
 		end
+
+		-- Defaults
+		merged_hwdef.hw_capabilities =  merged_hwdef.hw_capabilities or {"hdd", "floppy", "usb", "net", "liveboot"}
+		laptop.node_config[nodename] = merged_hwdef
 	end
 end
 

@@ -3,7 +3,7 @@ laptop.register_app("calculator", {
 	app_icon = "laptop_calculator.png",
 	app_info = "Calculate things",
 	formspec_func = function(app, mtos)
-		local data = app:get_storage_ref()
+		local data = mtos.bdev:get_app_storage('ram', 'calculator')
 
 		if not data.tab then
 			data.tab = {}
@@ -51,7 +51,7 @@ laptop.register_app("calculator", {
 	end,
 
 	receive_fields_func = function(app, mtos, sender, fields)
-		local data = app:get_storage_ref()
+		local data = mtos.bdev:get_app_storage('ram', 'calculator')
 		local entry = data.tab[#data.tab]
 
 		if fields.number then

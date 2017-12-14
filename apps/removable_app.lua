@@ -11,7 +11,8 @@ laptop.register_app("removable", {
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
 				"listring[current_player;main]"
 
-		local idata = mtos:get_removable_data()
+		mtos.bdev.removable_disk = nil -- force reading
+		local idata = mtos.bdev:get_removable_disk()
 		if idata then
 			-- change label
 			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description).."field[2,0.7;4,1;label;Label:;"..idata.label.."]"..
@@ -37,7 +38,7 @@ laptop.register_app("removable", {
 
 
 	receive_fields_func = function(app, mtos, sender, fields)
-		local idata = mtos:get_removable_data()
+		local idata = mtos.bdev:get_removable_disk()
 		if idata then
 			if fields.set_label then
 				idata.label = fields.label
@@ -53,15 +54,15 @@ laptop.register_app("removable", {
 					idata.meta:set_string("os_format", "backup")
 					idata.meta:set_string("backup_data", mtos.meta:get_string('laptop_appdata'))
 				elseif fields.format == "OldOS" then
-					idata.meta:set_string("os_format", "OldOS")
+					idata.meta:set_string("os_format", "boot")
 				end
 			elseif fields.restore then
-				mtos.appdata = minetest.deserialize(idata.meta:get_string("backup_data")) or {}
-				mtos.appdata.os.current_app = nil
-				mtos:save()
+-- TODO was soll wiederhergestellt werden?
+				mtos.meta:set_string('laptop_appdata', idata.meta:get_string("backup_data"))
+				mtos.bdev = laptop.get_bdev_handler(mtos)
 				laptop.os_get(mtos.pos):power_on() --reboot
 			end
-			mtos:set_removable_data()
 		end
+		mtos.bdev:sync()
 	end,
 })
