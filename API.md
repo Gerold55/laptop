@@ -5,11 +5,13 @@
 - `name` - Item name (prefix) The created node names are name_variant
 - `hwdef.description`  -  Computer item name
 - `hwdef.hw_infotext` - Text shown if node is pointed
-- `hwdef.sequence = { "variant_1_name", "variant_2_name", "variant_3_name" }` On punch swaps sequence. the first variant is in creative inventory
+- `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
-- `hwdef.node_defs = {
+- `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
+```
+  hwdef.node_defs = {
 		variant_1_name = {
 			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
 			--node 1 definiton
@@ -18,8 +20,8 @@
 			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
 			--node 2 definiton
 		},
-	}` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
-
+	}
+```
 
 - `laptop.os_get(pos)` - Get an OS object. Usefull in on_construct or on_punch to initialize or do anything with OS
   Needed in on_receive_fields to be able to call mtos:receive_fields(fields, sender) for interactive apps
@@ -100,7 +102,7 @@ Definitiontable:
 - `theme:get_label(pos, text)` get a themed label text starting at pos 'x,y'
 
 
-## Block devices Methods
+## Block devices / Data objects
 `mtos.bdev = laptop.get_bdev_handler(mtos)`
 
 ### Low-Level methods
@@ -128,3 +130,8 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 - `bdev.rtype` - Removable type. "usb" or "floppy"
 - `bdev.storage` - Data table used for app storage, if format is data compatible
 - `bdev:reload()` - Reload all data from node inventory
+
+## Compatible Items
+There is no own compatible items registrator. The item needs to match the item group to be usable with the laptops
+- `laptop_removable_floppy = 1` - The item is a floppy
+- `laptop_removable_usb = 1` - The item is usb storage disk
