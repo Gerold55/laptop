@@ -41,43 +41,40 @@ end
 -- Get Removable disk if exists
 function bdev:get_removable_disk(removable_type)
 	if self.removable_disk == nil then
-		local inv = self.os.meta:get_inventory()
-		inv:set_size("main", 1) -- 1 disk supported
-		local stack = inv:get_stack("main", 1)
-		local is_compatible = false
-		if stack then
-			local def = stack:get_definition()
-			local rtype
-			if def and def.name ~= "" then
-				for group, _ in pairs(def.groups) do
-					if not removable_type or removable_type == self:is_hw_capability(group) then
-						is_compatible = true
+		local data = { bdev = self }
+		data.inv = self.os.meta:get_inventory()
+		data.inv:set_size("main", 1) -- 1 disk supported
+		function data:reload()
+			-- self.inv unchanged
+			-- self.rtype unchanged (assumption
+			local stack = data.inv:get_stack("main", 1)
+			if stack then
+				local def = stack:get_definition()
+				if def and def.name ~= "" then
+					self.stack = stack
+					self.def = def
+					self.meta = stack:get_meta()
+					self.os_format = self.meta:get_string("os_format")
+					if self.os_format == "" then
+						self.os_format = "none"
 					end
+					self.label = self.meta:get_string("description")
+					if self.label == "" then
+						self.label = self.def.description
+					end
+					for group, _ in pairs(self.def.groups) do
+						local rtype_chk = self.bdev:is_hw_capability(group)
+						if not removable_type or removable_type == rtype_chk then
+							self.rtype = rtype_chk
+							break
+						end
+					end
+					self.storage = minetest.deserialize(self.meta:get_string("os_storage")) or {}
 				end
-			end
-
-			if is_compatible then
-				local stackmeta = stack:get_meta()
-				local os_format = stackmeta:get_string("os_format")
-				if os_format == "" then
-					os_format = "none"
-				end
-				local data = {
-					inv = inv,
-					def = def,
-					stack = stack,
-					meta = stackmeta,
-					os_format = os_format,
-					rtype = rtype,
-					storage = minetest.deserialize(stackmeta:get_string("os_storage")) or {},
-				}
-				data.label = data.meta:get_string("description")
-				if not data.label or data.label == "" then
-					data.label = def.description
-				end
-				self.removable_disk = data
 			end
 		end
+		data:reload()
+		self.removable_disk = data
 	end
 	return self.removable_disk
 end
@@ -99,8 +96,8 @@ end
 -- Get device to boot
 function bdev:get_boot_disk()
 	if self:is_hw_capability('liveboot') then
-		local removable = self:get_removable_disk()
-		if removable and removable.os_format == 'boot' then
+		local drive = self:get_removable_disk()
+		if drive.stack and drive.os_format == 'boot' then
 			return 'removable'
 		end
 	end
@@ -123,7 +120,7 @@ function bdev:get_app_storage(disk_type, store_name)
 		end
 	elseif disk_type == 'removable' then
 		local store = self:get_removable_disk()
-		if store and (store.os_format == 'data' or store.os_format == 'boot') then
+		if store.stack and (store.os_format == 'data' or store.os_format == 'boot') then
 			store.storage[store_name] = store.storage[store_name] or {}
 			return store.storage[store_name]
 		else
@@ -154,12 +151,13 @@ function bdev:sync()
 
 	-- save removable
 	if self.removable_disk then
-		local data = self.removable_disk
-		if data.label ~= data.def.description then
-			data.meta:set_string("description", data.label)
+		if self.removable_disk.stack then
+			if self.removable_disk.label ~= self.removable_disk.def.description then
+				self.removable_disk.meta:set_string("description", self.removable_disk.label)
+			end
+			self.removable_disk.meta:set_string("os_storage", minetest.serialize(self.removable_disk.storage))
 		end
-		data.meta:set_string("os_storage", minetest.serialize(data.storage))
-		data.inv:set_stack("main", 1, data.stack)
+		self.removable_disk.inv:set_stack("main", 1, self.removable_disk.stack)
 	end
 
 	-- Modmeta (Cloud)

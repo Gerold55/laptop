@@ -26,6 +26,7 @@ function os_class:power_on(new_node_name)
 	for k,v in pairs(laptop.os_get(self.pos)) do
 		self[k] = v
 	end
+	self.sysram.state = 'on'
 	self:swap_node(new_node_name)
 	self:set_app() --launcher
 end
@@ -33,6 +34,7 @@ end
 -- Power on the system / and resume last running app
 function os_class:resume(new_node_name)
 	self:swap_node(new_node_name)
+	self.sysram.state = 'on'
 	self:set_app(self.sysram.current_app)
 end
 
@@ -40,6 +42,7 @@ end
 function os_class:power_off(new_node_name)
 	self:swap_node(new_node_name)
 	self.meta:set_string('formspec', "")
+	self.sysram.state = 'off'
 	self:save()
 end
 
@@ -124,7 +127,7 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 	local app = self:get_app(appname)
 	local ret = app:receive_data(method, reshow, sender, ...)
 	self.sysram.last_player = sender:get_player_name()
-	if self.sysram.current_app == appname and reshow then
+	if self.sysram.current_app == appname and reshow and self.sysram.state == 'on' then
 		local formspec = app:get_formspec()
 		if formspec ~= false then
 			self.meta:set_string('formspec', formspec)

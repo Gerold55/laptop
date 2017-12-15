@@ -14,11 +14,8 @@ laptop.register_app("launcher", {
 					"listring[current_player;main]"
 
 			local idata = mtos.bdev:get_removable_disk()
-			if idata then
-				if idata.os_format == "boot" then
-					-- boot "default" launcher
-					return laptop.apps.launcher.formspec_func(launcher_app, mtos)
-				else
+			if idata.stack then
+				if idata.os_format ~= "boot" then
 					formspec = formspec .. "label[0,1.7;Disk found but not formatted to boot]"
 				end
 			end

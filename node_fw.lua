@@ -45,8 +45,33 @@ local function on_construct(pos)
 end
 
 local function on_punch(pos, node, puncher)
-	-- TODO: Check if wielded item is an removable. Replace stack in this case
 	local mtos = laptop.os_get(pos)
+
+	local punch_item = puncher:get_wielded_item()
+	local is_compatible = false
+	if punch_item then
+		local def = punch_item:get_definition()
+		for group, _ in pairs(def.groups) do
+			if mtos.bdev:is_hw_capability(group) then
+				is_compatible = true
+			end
+		end
+	end
+
+	if is_compatible then
+		local slot = mtos.bdev:get_removable_disk()
+		-- swap
+		puncher:set_wielded_item(slot.stack)
+		slot.inv:set_stack("main", 1, punch_item)
+		-- reload OS
+		slot:reload()
+		for k,v in pairs(laptop.os_get(mtos.pos)) do
+			mtos[k] = v
+		end
+		mtos:pass_to_app("punched_by_removable", true, puncher, punch_item)
+		return
+	end
+
 	local hwdef = laptop.node_config[node.name]
 	if hwdef.next_node then
 		local hwdef_next = laptop.node_config[hwdef.next_node]

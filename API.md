@@ -75,8 +75,8 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 
 ### App Object
 `local app = mtos:get_app(appname)` - Give the app object internal_shortname, connected to given mtos. Not necessary in formspec_func or receive_fields_func because given trough interface
-- `app:back_app() - Go back to previous app/view
-- `app:exit_app() - Delete call stack and return to launcher
+- `app:back_app()` - Go back to previous app/view
+- `app:exit_app()` - Delete call stack and return to launcher
 
 
 ## Themes
@@ -107,7 +107,7 @@ Definitiontable:
 Can be used for non-data and/or system tasks. For usual data store please use the storage methods
 - `bdev:get_ram_disk()` ram store - a table with all app-related storage partitions
 - `bdev:get_hard_disk()` hdd store - a table with all app-related storage partitions, if hard disk capatibility exists
-- `bdev:get_removable_disk()` removable data object - if removable is inserted
+- `bdev:get_removable_disk()` removable data object (drive)
 - `bdev:get_cloud_disk(store_name)` - Get named cloud storage
 - `bdev:sync()` - Write/store all opened and maybe changed data
 
@@ -119,11 +119,12 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 
 ### Low-level Removable data
 `data = bdev:get_removable_disk()`
-- `label` - Meda label. Item name by default
-- `def` - Registered item definition (read-only)
-- `inv` - node inventory
-- `stack` - The item stack
-- `meta` - Stack metadata
-- `os_format`- The format type: "none", "boot", "backup", "filesystem" (read-only)
-- `rtype` - Removable type. "usb" or "floppy"
-- `storage` - Data table used for app storage, if format is data compatible
+- `bdev.inv` - node inventory (the slot)
+- `bdev.label` - Meda label. Item name by default
+- `bdev.def` - Registered item definition (read-only)
+- `bdev.stack` - The item stack
+- `bdev.meta` - Stack metadata
+- `bdev.os_format`- The format type: "none", "boot", "backup", "filesystem" (read-only)
+- `bdev.rtype` - Removable type. "usb" or "floppy"
+- `bdev.storage` - Data table used for app storage, if format is data compatible
+- `bdev:reload()` - Reload all data from node inventory

@@ -13,7 +13,7 @@ laptop.register_app("removable", {
 
 		mtos.bdev.removable_disk = nil -- force reading
 		local idata = mtos.bdev:get_removable_disk()
-		if idata then
+		if idata.stack then
 			-- change label
 			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description).."field[2,0.7;4,1;label;Label:;"..idata.label.."]"..
 					mtos.theme:get_button('5.7,0.55;1.5,0.7', 'minor', 'set_label', 'Rename', 'Rename the '..idata.def.description)..
@@ -39,7 +39,7 @@ laptop.register_app("removable", {
 
 	receive_fields_func = function(app, mtos, sender, fields)
 		local idata = mtos.bdev:get_removable_disk()
-		if idata then
+		if idata.stack then
 			if fields.set_label then
 				idata.label = fields.label
 			elseif fields.format then
