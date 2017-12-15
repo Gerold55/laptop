@@ -131,13 +131,9 @@ function bdev:get_app_storage(disk_type, store_name)
 		end
 	elseif disk_type == 'system' then
 		if self.system_disk == nil then
-			local ram = self:get_ram_disk()
-			local boot
-			if ram.os then
-				boot = ram.os.booted_from
-			end
-			boot = boot or self:get_boot_disk()
-			self.system_disk = self:get_app_storage(boot, store_name)
+			local runtime = self:get_app_storage("ram", "os")
+			runtime.booted_from = runtime.booted_from or self:get_boot_disk()
+			self.system_disk = self:get_app_storage(runtime.booted_from, store_name)
 		end
 		return self.system_disk
 	elseif disk_type == 'cloud' then

@@ -22,7 +22,10 @@ end
 -- Power on the system and start the launcher
 function os_class:power_on(new_node_name)
 	self.bdev:free_ram_disk()
-	self.sysram = self.bdev:get_app_storage('ram', 'os')
+	-- update current instance with reinitialized data
+	for k,v in pairs(laptop.os_get(self.pos)) do
+		self[k] = v
+	end
 	self:swap_node(new_node_name)
 	self:set_app() --launcher
 end
@@ -144,6 +147,9 @@ function laptop.os_get(pos)
 	self.pos = pos
 	self.node = minetest.get_node(pos)
 	self.hwdef = laptop.node_config[self.node.name]
+	if not self.hwdef then
+		return nil -- not compatible node
+	end
 	self.meta = minetest.get_meta(pos)
 	self.bdev = laptop.get_bdev_handler(self)
 	self.sysram = self.bdev:get_app_storage('ram', 'os')

@@ -60,7 +60,7 @@ laptop.register_app("removable", {
 -- TODO was soll wiederhergestellt werden?
 				mtos.meta:set_string('laptop_appdata', idata.meta:get_string("backup_data"))
 				mtos.bdev = laptop.get_bdev_handler(mtos)
-				laptop.os_get(mtos.pos):power_on() --reboot
+				mtos:power_on() --reboot
 			end
 		end
 		mtos.bdev:sync()
