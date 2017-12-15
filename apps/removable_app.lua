@@ -57,7 +57,6 @@ laptop.register_app("removable", {
 					idata.meta:set_string("os_format", "boot")
 				end
 			elseif fields.restore then
--- TODO was soll wiederhergestellt werden?
 				mtos.meta:set_string('laptop_appdata', idata.meta:get_string("backup_data"))
 				mtos.bdev = laptop.get_bdev_handler(mtos)
 				mtos:power_on() --reboot
