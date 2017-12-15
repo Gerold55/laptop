@@ -153,6 +153,7 @@ function laptop.os_get(pos)
 	self.meta = minetest.get_meta(pos)
 	self.bdev = laptop.get_bdev_handler(self)
 	self.sysram = self.bdev:get_app_storage('ram', 'os')
+	self.sysram.stack = self.sysram.stack or {}
 	self.sysdata = self.bdev:get_app_storage('system', 'os')
 	self.theme = self:get_theme()
 	return self
