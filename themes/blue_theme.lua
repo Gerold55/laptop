@@ -6,5 +6,4 @@ laptop.register_theme("Blue", {
 	back_button = "laptop_theme_blue_back_button.png",
 	exit_button = "laptop_theme_blue_exit_button.png",
 	app_button = "laptop_theme_blue_app_button.png",
-	node_color = 4,
 })

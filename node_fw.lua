@@ -41,7 +41,6 @@ local function on_construct(pos)
 	else
 		mtos:power_off()
 	end
-	mtos:set_infotext(hwdef.hw_infotext)
 end
 
 local function on_punch(pos, node, puncher)
@@ -81,7 +80,6 @@ local function on_punch(pos, node, puncher)
 			mtos:swap_node(hwdef.next_node)
 			mtos:save()
 		end
-		mtos:set_infotext(hwdef_next.hw_infotext)
 	end
 end
 

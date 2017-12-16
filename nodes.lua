@@ -59,7 +59,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "colorfacedir",
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -370,17 +370,16 @@ laptop.register_hardware("laptop:laptop", {
 			hw_state = "resume",
 			light_source = 4,
 			tiles = {
-				{ name = "laptop_lap_base_open_on_top.png", color = 0xffffffff },
-				{ name = "laptop_lap_base_open_bottom.png^laptop_lap_sc_open_bottom.png", color = 0xffffffff },
-				{ name = "laptop_lap_base_open_right.png", color = 0xffffffff },
-				{ name = "laptop_lap_base_open_left.png", color = 0xffffffff },
-				{ name = "laptop_lap_base_open_back.png^laptop_lap_sc_open_back.png", color = 0xffffffff },
-				{ name = "laptop_lap_base_open_front.png", color = 0xffffffff },
+				"laptop_lap_base_open_on_top.png",
+				"laptop_lap_base_open_bottom.png^laptop_lap_sc_open_bottom.png",
+				"laptop_lap_base_open_right.png",
+				"laptop_lap_base_open_left.png",
+				"laptop_lap_base_open_back.png^laptop_lap_sc_open_back.png",
+				"laptop_lap_base_open_front.png^laptop_lap_sc_open_on_front.png",
 			},
-			overlay_tiles = {"", "", "", "", "", "laptop_lap_sc_open_on_front.png"},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = "colorfacedir",
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {

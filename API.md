@@ -4,7 +4,7 @@
 `laptop.register_hardware(name, hwdef)`
 - `name` - Item name (prefix) The created node names are name_variant
 - `hwdef.description`  -  Computer item name
-- `hwdef.hw_infotext` - Text shown if node is pointed
+- `hwdef.infotext` - Text shown if node is pointed
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.custom_theme` -  optional - custom initial theme name

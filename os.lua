@@ -16,6 +16,7 @@ function os_class:swap_node(new_node_name)
 		local fdir = math.floor(node.param2 % 32)
 		node.param2 = fdir + self.theme.node_color * 32
 	end
+	self:set_infotext(self.hwdef.infotext)
 	minetest.swap_node(self.pos, node)
 end
 
