@@ -109,9 +109,8 @@ laptop.register_view('os:select_file', {
 			formspec = formspec .. mtos.theme:get_button('10.2,8.9;1.5,1', 'minor', 'delete', 'Delete')
 			formspec = formspec .. mtos.theme:get_button('8.5,8.9;1.5,1', 'major', 'select', param.button_txt)
 		elseif param.mode == 'save' then
-		
 			formspec = formspec .. mtos.theme:get_button('8.5,8.9;1.5,1', 'major', 'select', param.button_txt)
-	:select_file_dialog(param)	end
+		end
 
 		return formspec
 	end,
