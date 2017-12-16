@@ -2,7 +2,7 @@ laptop.register_hardware("laptop:core", {
 	description = "CP Core",
 	infotext = 'CP Core',
 	sequence = { "closed", "open", "open_on" },
-
+	hw_capabilities = { 'hdd', 'usb', 'net' },
 	node_defs = {
 		["open"] = {
 			hw_state = "power_off",
@@ -16,7 +16,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -38,7 +38,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -59,7 +59,7 @@ laptop.register_hardware("laptop:core", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -75,6 +75,7 @@ laptop.register_hardware("laptop:cube", {
 	infotext = "CUBE PC",
 	sequence = { "off", "on"},
 	custom_theme = "Red",
+	hw_capabilities = { "hdd", "floppy", "net", "liveboot" },
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
@@ -257,7 +258,7 @@ laptop.register_hardware("laptop:monitor3", {
 	description = "Pentium 3",
 	infotext = "Pentium 3",
 	sequence = { "off", "on"},
-	custom_launcher = "launcher_insert_floppy",
+	hw_capabilities = { "floppy", "liveboot" },
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
@@ -272,7 +273,7 @@ laptop.register_hardware("laptop:monitor3", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -295,7 +296,7 @@ laptop.register_hardware("laptop:monitor3", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -336,7 +337,7 @@ laptop.register_hardware("laptop:laptop", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -356,7 +357,7 @@ laptop.register_hardware("laptop:laptop", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -378,7 +379,7 @@ laptop.register_hardware("laptop:laptop", {
 			},
 			drawtype = "nodebox",
 			paramtype = "light",
-			paramtype2 = 'facedir',
+			paramtype2 = "facedir",
 			node_box = {
 				type = "fixed",
 				fixed = {

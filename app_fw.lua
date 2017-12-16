@@ -29,38 +29,31 @@ function app_class:get_formspec()
 end
 
 -- internally used: process input
-function app_class:receive_fields(fields, sender)
+function app_class:receive_data(method, reshow, sender, ...)
 	local ret
-	if self.receive_fields_func then
-		ret = self.receive_fields_func(self, self.os, fields, sender)
+
+	if self[method] then
+		ret = self[method](self, self.os, sender, ...)
 	end
 
-	if fields.os_back then
-		self:back_app()
-	elseif fields.os_exit then
-		self:exit_app()
+	if method == "receive_fields_func" then
+		local fields = ...
+		if fields.os_back then
+			self:back_app()
+		elseif fields.os_exit then
+			self:exit_app()
+		end
 	end
 	return ret
 end
 
--- Get persitant storage table
-function app_class:get_storage_ref(app_name)
-	local store_name = app_name or self.name
-	if not self.os.appdata[store_name] then
-		self.os.appdata[store_name] = {}
-	end
-	return self.os.appdata[store_name]
-end
-
--- Get persitant storage table
-function app_class:get_cloud_storage_ref(app_name)
-	return self.os:connect_to_cloud(app_name)
-end
-
 -- Back to previous app in stack
-function app_class:back_app()
-	self.os.appdata.os.current_app = self.os:appstack_pop()
-	self.os:set_app(self.os.appdata.os.current_app)
+function app_class:back_app(fields, sender)
+	self.os.sysram.current_app = self.os:appstack_pop()
+	if fields then
+		self.os:pass_to_app('receive_fields_func', true, sender, fields)
+	end
+	self.os:set_app(self.os.sysram.current_app)
 end
 
 -- Exit current app and back to launcher

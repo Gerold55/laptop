@@ -3,6 +3,25 @@ laptop.register_app("launcher", {
 --	app_name = "Main launcher", -- not in launcher list
 	fullscreen = true,
 	formspec_func = function(launcher_app, mtos)
+
+		-- no system found. Error
+		if not mtos.sysdata then
+			local formspec = "size[10,7]background[10,7;0,0;laptop_launcher_insert_floppy.png;true]"..
+					"listcolors[#00000069;#5A5A5A;#141318;#30434C;#FFF]"..
+					"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;2.5,3;1,1;]" ..
+					"list[current_player;main;0,6.5;8,1;]" ..
+					"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
+					"listring[current_player;main]"
+
+			local idata = mtos.bdev:get_removable_disk()
+			if idata.stack then
+				if idata.os_format ~= "boot" then
+					formspec = formspec .. "label[0,1.7;Disk found but not formatted to boot]"
+				end
+			end
+			return formspec
+		end
+
 		local c_row_count = 4
 
 		local i = 0
@@ -32,11 +51,11 @@ laptop.register_app("launcher", {
 		if mtos.theme.app_bg then
 			formspec = formspec..'background[0,0;15,10;'..mtos.theme.app_bg..';true]'
 		end
-		if #mtos.appdata.os.stack > 0 then
+		if #mtos.sysram.stack > 0 then
 			formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..mtos.theme.back_button..';os_back;<]'
 		end
 		if app.app_info then
-			if #mtos.appdata.os.stack > 0 then
+			if #mtos.sysram.stack > 0 then
 				formspec = formspec.."label[0.8,-0.29;"..app.app_info.."]"
 			else
 				formspec = formspec.."label[-0.1,-0.29;"..app.app_info.."]"
@@ -45,12 +64,12 @@ laptop.register_app("launcher", {
 		formspec = formspec..'image_button[14.2,-0.31;1.09,0.61;'..mtos.theme.exit_button..';os_exit;X]'
 		return formspec
 	end,
-	receive_fields_func = function(launcher_app, mtos, fields, sender)
+	receive_fields_func = function(launcher_app, mtos, sender, fields)
 		for name, descr in pairs(fields) do
 			if laptop.apps[name] then
 				mtos:set_app(name)
 				break
 			end
 		end
-	end
+	end,
 })

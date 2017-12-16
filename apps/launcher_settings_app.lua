@@ -13,7 +13,7 @@ laptop.register_app("launcher_settings", {
 	app_info = "Change the computer's settings.",
 
 	formspec_func = function(app, mtos)
-		local settings_data = app:get_storage_ref()
+		local settings_data = mtos.bdev:get_app_storage('ram', 'launcher_settings')
 
 		-- Change background setting
 		local current_theme_name = settings_data.selected_theme or mtos:get_theme().name or "default"
@@ -46,8 +46,8 @@ laptop.register_app("launcher_settings", {
 		return formspec
 	end,
 
-	receive_fields_func = function(app, mtos, fields, sender)
-		local settings_data = app:get_storage_ref()
+	receive_fields_func = function(app, mtos, sender, fields)
+		local settings_data = mtos.bdev:get_app_storage('ram', 'launcher_settings')
 
 		if fields.sel_theme then
 			-- CHG:<idx> for selected or DCL:<idx> for double-clicked
