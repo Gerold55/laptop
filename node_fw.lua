@@ -167,6 +167,8 @@ function laptop.register_hardware(name, hwdef)
 
 		-- set node configuration for hooks
 		local merged_hwdef = table.copy(hwdef)
+		merged_hwdef.name = name
+		merged_hwdef.nodename = nodename
 		for k,v in pairs(hwdef.node_defs[variant]) do
 			merged_hwdef[k] = v
 		end

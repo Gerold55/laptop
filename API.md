@@ -43,6 +43,21 @@
 - `mtos:set_theme(theme)`- Activate theme
 - `mtos:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `mtos:pass_to_app(method, reshow, sender, ...)` - call custom "method" on app object. Used internally. Reshow means update formspec after update
+- `mtos:select_file_dialog(param)` - call the select file dialog ('os:select_file')
+```
+		if fields.load then
+			mtos:select_file_dialog({
+					mode = 'open',  -- open/select or save mode
+					allowed_disks = {'hdd', 'removable'}, -- disks shown in disk overview ('ram', 'hdd', 'removable', 'cloud' or 'system')
+					selected_disk_name = data.selected_disk_name, -- Start selection on disk
+					selected_file_name = data.selected_file_name, -- Start selection with file
+					store_name = store_area, -- The storage_name used for fliles (Sample 'stickynote:files')
+					prefix = 'open_', -- Prefix for return files
+			})
+		elseif fields.open_selected_disk and fields.open_selected_file then
+			data.selected_disk_name = fields.open_selected_disk  -- Selected disk (prefix 'open_' is used)
+			data.selected_file_name = fields.open_selected_file -- Selected file (prefix 'open_' is used)
+```
 
 ### Operating system attributes
 	`mtos.pos` - Computers position vector
@@ -77,7 +92,7 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 
 ### App Object
 `local app = mtos:get_app(appname)` - Give the app object internal_shortname, connected to given mtos. Not necessary in formspec_func or receive_fields_func because given trough interface
-- `app:back_app()` - Go back to previous app/view
+- `app:back_app(fields, sender)` - Go back to previous app/view. Trough fields/sender additional data can be sent to the previous app trough receive_fields_func
 - `app:exit_app()` - Delete call stack and return to launcher
 
 
@@ -110,12 +125,12 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 - `bdev:get_ram_disk()` ram store - a table with all app-related storage partitions
 - `bdev:get_hard_disk()` hdd store - a table with all app-related storage partitions, if hard disk capatibility exists
 - `bdev:get_removable_disk()` removable data object (drive)
-- `bdev:get_cloud_disk(store_name)` - Get named cloud storage
+- `bdev:get_cloud_disk(storage_name)` - Get named cloud storage
 - `bdev:sync()` - Write/store all opened and maybe changed data
 
 ### Storage methods
 - `get_boot_disk()` - Check which device can be booted. possible return value is "hdd" or "removable"
-- `get_app_storage(disk_type, store_name)` - Get data storage table to be used in apps.
+- `get_app_storage(disk_type, storage_name)` - Get data storage table to be used in apps.
   - disk_type can be 'ram', 'hdd', 'removable', 'cloud' or 'system'. System is eather hdd or removable storage depending on booted device
   - store_name is usually the app name. 'os' is reserved for System related saves
 

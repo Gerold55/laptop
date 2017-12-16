@@ -141,6 +141,13 @@ function os_class:save()
 	self.bdev:sync()
 end
 
+-- Use parameter and launch the select_file dialog
+-- Return values will be send as fields to the called app
+function os_class:select_file_dialog(param)
+	local store = self.bdev:get_app_storage('ram', 'os:select_file')
+	store.param = param
+	self:set_app('os:select_file')
+end
 -----------------------------------------------------
 -- Get Operating system object
 -----------------------------------------------------
