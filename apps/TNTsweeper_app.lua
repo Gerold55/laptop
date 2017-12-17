@@ -1,0 +1,139 @@
+local level_config = {
+	['Small'] = { w = 9, h = 9, bomb = 10, icon_size = 0.9 },
+	['Small hard'] = { w = 9, h = 9, bomb = 35, icon_size = 0.9},
+	['Midsize'] = { w = 16, h = 16, bomb = 40, icon_size = 0.7 },
+	['Midsize hard'] = { w = 16, h = 16, bomb = 99, icon_size = 0.7},
+	['Big'] = { w = 24, h = 20, bomb = 99, icon_size = 0.58 },
+	['Big hard'] = { w = 24, h = 20, bomb = 170, icon_size = 0.58},
+}
+
+
+local sweeper_class = {}
+sweeper_class.__index = sweeper_class
+
+function sweeper_class:init(level)
+	self.data.level = level
+	local config = level_config[level]
+	-- build board
+	self.data.board = {}
+	local board = self.data.board
+	for w = 1, config.w do
+		board[w] = {}
+		for h = 1, config.h do
+			board[w][h] = { count = 0, is_bomb = false, is_revealed = false }
+		end
+	end
+
+	-- fill board with bombs
+	local placed = 0
+	while placed < config.bomb do
+		local rnd_w = math.random(config.w)
+		local rnd_h = math.random(config.h)
+		local rndfield = board[rnd_w][rnd_h]
+		if not rndfield.is_bomb then
+			rndfield.is_bomb = true
+			placed = placed + 1
+			for w = rnd_w - 1, rnd_w + 1 do
+				for h = rnd_h - 1, rnd_h + 1 do
+					if board[w] and board[w][h] then
+						board[w][h].count = board[w][h].count + 1
+					end
+				end
+			end
+		end
+	end
+end
+
+function sweeper_class:reveal(sel_w, sel_h)
+	local board = self.data.board
+	if board[sel_w] and board[sel_w][sel_h] then
+		local sel = board[sel_w][sel_h]
+		sel.is_revealed = true
+		if sel.is_bomb then
+			return true
+		end
+		if sel.count == 0 then
+			for w = sel_w - 1, sel_w + 1 do
+				for h = sel_h - 1, sel_h + 1 do
+					if board[w] and board[w][h] then
+						if not board[w][h].is_revealed then
+							self:reveal(w,h)
+						end
+					end
+				end
+			end
+		end
+	end
+end
+
+function get_sweeper(data)
+	local self = setmetatable({}, sweeper_class)
+	self.data = data
+	return self
+end
+
+
+laptop.register_app("tntsweeper", {
+	app_name = "TNT Sweeper",
+	app_icon = "tnt_side.png",
+	app_info = "Avoit to hint TNT",
+	formspec_func = function(app, mtos)
+		local data = mtos.bdev:get_app_storage('ram', 'tntsweeper')
+		local sweeper = get_sweeper(data)
+
+		if not sweeper.data.level then
+			sweeper:init('Big') -- TODO Additional config
+		end
+		local config = level_config[sweeper.data.level]
+		local formspec = ""
+
+		for w = 1, config.w do
+			for h = 1, config.h do
+				local pos = (w*config.icon_size*0.8)..','..(h*config.icon_size*0.85)
+				local field = sweeper.data.board[w][h]
+				if not field.is_revealed then
+					formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button..";field:"..w..":"..h..";]"
+				elseif field.is_bomb then
+					formspec = formspec .. "image["..pos..";"..config.icon_size..","..config.icon_size..";tnt_boom.png]"
+				elseif field.count > 0 then
+					local lbpos = ((w+0.4)*config.icon_size*0.8)..','..((h+0.1)*config.icon_size*0.85)
+					formspec = formspec .. mtos.theme:get_label(lbpos, field.count)
+				end
+			end
+		end
+
+		formspec = formspec ..
+				mtos.theme:get_button('13,1.5;1.5,0.8', 'major', 'reset', 'Small')..
+				mtos.theme:get_button('13,2.5;1.5,0.8', 'major', 'reset', 'Small hard')..
+				mtos.theme:get_button('13,3.5;1.5,0.8', 'major', 'reset', 'Midsize')..
+				mtos.theme:get_button('13,4.5;1.5,0.8', 'major', 'reset', 'Midsize hard')..
+				mtos.theme:get_button('13,5.5;1.5,0.8', 'major', 'reset', 'Big')..
+				mtos.theme:get_button('13,6.5;1.5,0.8', 'major', 'reset', 'Big hard')
+		return formspec
+	end,
+
+	receive_fields_func = function(app, mtos, sender, fields)
+		local data = mtos.bdev:get_app_storage('ram', 'tntsweeper')
+		local sweeper = get_sweeper(data)
+		local config = level_config[sweeper.data.level]
+		for field, _ in pairs(fields) do
+			if field:sub(1,6) ==  'field:' then
+				local sel_w, sel_h
+				for str in field:gmatch("([^:]+)") do
+					if str ~= 'field' then
+						if not sel_w then
+							sel_w = tonumber(str)
+						else
+							sel_h = tonumber(str)
+						end
+					end
+				end
+				sweeper:reveal(sel_w, sel_h)
+			end
+		end
+
+		if fields.reset then
+			sweeper:init(minetest.strip_colors(fields.reset))
+		end
+	end
+})
