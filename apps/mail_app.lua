@@ -196,7 +196,7 @@ laptop.register_view("mail:newplayer", {
 			return
 		end
 		if fields.create then
-			local cloud = app:get_cloud_storage_ref("mail")
+			local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
 			cloud[mtos.sysram.last_player] = {
 				inbox = {},
 				sentbox = {}
