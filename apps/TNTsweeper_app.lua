@@ -16,6 +16,11 @@ function sweeper_class:init(level)
 	local config = level_config[level]
 	-- build board
 	self.data.board = {}
+	self.data.open_all = config.w * config.h - config.bomb
+	self.data.open_count = 0
+	self.data.bomb_all = config.bomb
+	self.data.bomb_count = 0
+
 	local board = self.data.board
 	for w = 1, config.w do
 		board[w] = {}
@@ -50,8 +55,12 @@ function sweeper_class:reveal(sel_w, sel_h)
 		local sel = board[sel_w][sel_h]
 		sel.is_revealed = true
 		if sel.is_bomb then
+			if not sel.bomb_marked then -- marked already counted
+				self.data.bomb_count = self.data.bomb_count + 1
+			end
 			return true
 		end
+		self.data.open_count = self.data.open_count + 1
 		if sel.count == 0 then
 			for w = sel_w - 1, sel_w + 1 do
 				for h = sel_h - 1, sel_h + 1 do
@@ -69,8 +78,10 @@ end
 function sweeper_class:toggle_bomb_mark(sel_w, sel_h)
 	local field = self.data.board[sel_w][sel_h]
 	if field.bomb_marked then
+		self.data.bomb_count = self.data.bomb_count - 1
 		field.bomb_marked = nil
 	else
+		self.data.bomb_count = self.data.bomb_count + 1
 		field.bomb_marked = true
 	end
 end
@@ -91,7 +102,7 @@ laptop.register_app("tntsweeper", {
 		local sweeper = get_sweeper(data)
 
 		if not sweeper.data.level then
-			sweeper:init('Big') -- TODO Additional config
+			sweeper:init('Midsize')
 		end
 		local config = level_config[sweeper.data.level]
 		local formspec = ""
@@ -115,17 +126,19 @@ laptop.register_app("tntsweeper", {
 			end
 		end
 
-		formspec = formspec ..
-				mtos.theme:get_button('13,1.5;1.5,0.8', 'major', 'reset', 'Small')..
-				mtos.theme:get_button('13,2.5;1.5,0.8', 'major', 'reset', 'Small hard')..
-				mtos.theme:get_button('13,3.5;1.5,0.8', 'major', 'reset', 'Midsize')..
-				mtos.theme:get_button('13,4.5;1.5,0.8', 'major', 'reset', 'Midsize hard')..
-				mtos.theme:get_button('13,5.5;1.5,0.8', 'major', 'reset', 'Big')..
-				mtos.theme:get_button('13,6.5;1.5,0.8', 'major', 'reset', 'Big hard')
+		formspec = formspec .. "background[12,0.5;3,1;"..mtos.theme.contrast_bg..
+				"]label[12,0.5;Open fields: "..sweeper.data.open_count.."/"..sweeper.data.open_all..
+				"]label[12,1;Bomb: "..sweeper.data.bomb_count.."/"..sweeper.data.bomb_all.."]"..
+				mtos.theme:get_button('12.5,2;1.5,0.8', 'major', 'reset', 'Small')..
+				mtos.theme:get_button('12.5,3;1.5,0.8', 'major', 'reset', 'Small hard')..
+				mtos.theme:get_button('12.5,4;1.5,0.8', 'major', 'reset', 'Midsize')..
+				mtos.theme:get_button('12.5,5;1.5,0.8', 'major', 'reset', 'Midsize hard')..
+				mtos.theme:get_button('12.5,6;1.5,0.8', 'major', 'reset', 'Big')..
+				mtos.theme:get_button('12.5,7;1.5,0.8', 'major', 'reset', 'Big hard')
 		if data.mark_mode then
-			formspec = formspec .. mtos.theme:get_button('13,8;1.5,0.8', 'minor', 'mark_mode', 'mark', 'change to reveal mode')
+			formspec = formspec .. mtos.theme:get_button('12.5,9;1.5,0.8', 'minor', 'mark_mode', 'mark', 'change to reveal mode')
 		else
-			formspec = formspec .. mtos.theme:get_button('13,8;1.5,0.8', 'minor', 'mark_mode', 'reveal', 'change to mark mode')
+			formspec = formspec .. mtos.theme:get_button('12.5,9;1.5,0.8', 'minor', 'mark_mode', 'reveal', 'change to mark mode')
 		end
 		return formspec
 	end,
