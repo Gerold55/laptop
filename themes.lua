@@ -35,9 +35,13 @@ theme_class.__index = theme_class
 
 -- get prepared button textures
 function theme_class:get_button(area, prefix, code, text, tooltip)
-	return'image_button['..area..';'..self[prefix.."_button"]..';'..code..';'.. minetest.colorize(self[prefix.."_textcolor"] or self.textcolor,minetest.formspec_escape(text))..']'..
-			"tooltip["..code..";"..minetest.formspec_escape(tooltip or text).."]"
+	local formspec = 'image_button['..area..';'..self[prefix.."_button"]..';'..code..';'.. minetest.colorize(self[prefix.."_textcolor"] or self.textcolor,minetest.formspec_escape(text))..']'
+	if tooltip then
+		formspec = formspec.."tooltip["..code..";"..minetest.formspec_escape(tooltip).."]"
+	end
+	return formspec
 end
+
 -- Get themed label
 function theme_class:get_label(area, label)
 	return'label['..area..';'..minetest.colorize(self.textcolor, minetest.formspec_escape(label))..']'
