@@ -7,4 +7,4 @@ Notepad
 Settings
 Email (Coming Soon) (Still In Beta)
 
-V.0.26
+V.0.27
