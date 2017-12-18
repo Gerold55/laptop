@@ -39,9 +39,8 @@ laptop.register_app("launcher", {
 		for i, e in ipairs(appslist_sorted) do
 			local x = math.floor((i-1) / c_row_count)*2 + 1
 			local y = ((i-1) % c_row_count)*2 + 1
-			out = out .. 'image_button['..x..','..y..';1,1;'..mtos.theme.app_button..'^'..(e.def.app_icon or 'logo.png')..';'..e.name..';]'..
-						'label['..(x-0.3)..','..(y+1)..';'..e.def.app_name..']'..
-						'tooltip['..e.name..';'..(e.def.app_info or e.name)..']'    --;<bgcolor>;<fontcolor>]'
+			out = out .. mtos.theme:get_image_button(x..','..y..';1,1', 'app', e.name, (e.def.app_icon or 'logo.png'), "", (e.def.app_info or e.name))..
+						mtos.theme:get_label((x-0.3)..','..(y+1), e.def.app_name, "app")
 		end
 		out = out..mtos.theme:get_button("11,9.8;4,0.7", "major", "os_clock", os.date("%c"))
 		return out
@@ -52,7 +51,7 @@ laptop.register_app("launcher", {
 			formspec = formspec..'background[0,0;15,10;'..mtos.theme.app_bg..';true]'
 		end
 		if #mtos.sysram.stack > 0 then
-			formspec = formspec..'image_button[-0.29,-0.31;1.09,0.61;'..mtos.theme.back_button..';os_back;<]'
+			formspec = formspec..mtos.theme:get_button('-0.29,-0.31;1.09,0.61', 'back', 'os_back', '<', 'Return to previous screen')
 		end
 		if app.app_info then
 			if #mtos.sysram.stack > 0 then
@@ -61,7 +60,7 @@ laptop.register_app("launcher", {
 				formspec = formspec.."label[-0.1,-0.29;"..app.app_info.."]"
 			end
 		end
-		formspec = formspec..'image_button[14.2,-0.31;1.09,0.61;'..mtos.theme.exit_button..';os_exit;X]'
+		formspec = formspec..mtos.theme:get_button('14.2,-0.31;1.09,0.61', 'exit', 'os_exit', 'X', 'Exit app')
 		return formspec
 	end,
 	receive_fields_func = function(launcher_app, mtos, sender, fields)

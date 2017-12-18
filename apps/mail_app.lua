@@ -25,8 +25,8 @@ laptop.register_app("mail", {
 		account.selected_index = nil -- will be new determinated by selectedmessage
 		local box = account[account.selected_box] -- inbox or outbox
 
+		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player.."]"
 		local formspec =
-				"label[4,-0.31;Welcome "..mtos.sysram.last_player.."]"..
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
 						"color;"..	-- subject and date color
@@ -84,26 +84,26 @@ laptop.register_app("mail", {
 
 		-- toggle inbox/sentbox
 		if account.selected_box == "inbox" then
-			formspec = formspec .. "image_button[0,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_sentbox.png;switch_sentbox;]tooltip[switch_sentbox;Show sent messages]"
+			formspec = formspec .. mtos.theme:get_image_button('0,9;1,1', 'minor', 'switch_sentbox', 'laptop_mail_sentbox.png', '', 'Show sent messages')
 		else
-			formspec = formspec .. "image_button[0,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_received.png;switch_inbox;]tooltip[switch_inbox;Show received messages]"
+			formspec = formspec .. mtos.theme:get_image_button('0,9;1,1', 'minor', 'switch_inbox', 'laptop_mail_received.png', '', 'Show received messages')
 		end
 
-		formspec = formspec .. "image_button[1.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_new.png;new;]tooltip[new;New message]"
+		formspec = formspec .. mtos.theme:get_image_button('1.7,9;1,1', 'minor', 'new', 'laptop_email_new.png', '', 'New message')
 		if account.newmessage then
-			formspec = formspec .. "image_button[2.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_edit.png;continue;]tooltip[continue;Continue last message]"
+			formspec = formspec .. mtos.theme:get_image_button('2.7,9;1,1', 'minor', 'continue', 'laptop_email_edit.png', '', 'Continue last message')
 		end
 
 		if account.selectedmessage then
 			formspec = formspec ..
-					"image_button[3.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_reply.png;reply;]tooltip[reply;Reply]"..
-					"image_button[4.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_forward.png;forward;]tooltip[forward;Forward]"..
-					"image_button[5.7,9;1,1;"..mtos.theme.minor_button.."^laptop_email_trash.png;delete;]tooltip[delete;Delete]"
+					mtos.theme:get_image_button('3.7,9;1,1', 'minor', 'reply', 'laptop_email_reply.png', '', 'Reply')..
+					mtos.theme:get_image_button('4.7,9;1,1', 'minor', 'forward', 'laptop_email_forward.png', '', 'Forward')..
+					mtos.theme:get_image_button('5.7,9;1,1', 'minor', 'delete', 'laptop_email_trash.png', '', 'Delete')
 			if account.selected_box == "inbox" then
 				if not account.selectedmessage.is_read then
-					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_read_button.png;markread;]tooltip[markread;Mark message as read]"
+					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markread', 'laptop_mail_read_button.png', '', 'Mark message as read')
 				else
-					formspec = formspec .. "image_button[6.7,9;1,1;"..mtos.theme.minor_button.."^laptop_mail_button.png;markunread;]tooltip[markunread;Mark message as unread]"
+					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markunread', 'laptop_mail_button.png', '', 'Mark message as unread')
 				end
 			end
 			if account.selected_box == "inbox" then
