@@ -113,8 +113,9 @@ Definitiontable:
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`
-- `theme:get_button(area, prefix, code, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an text
-- `theme:get_label(pos, text)` get a themed label text starting at pos 'x,y'
+- `theme:get_button(area, prefix, code, text)` get a themed [prefix]_button in area 'x,y;w,h' with code and text
+- `theme:get_image_button(area, prefix, code, image, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an image and text. Text is colorized by [prefix]_textcolor or textcolor
+- `theme:get_label(pos, text, color_prefix)` get a themed label text starting at pos 'x,y', colorize theme by color prefix (usually the button text colors)
 
 
 ## Block devices / Data objects

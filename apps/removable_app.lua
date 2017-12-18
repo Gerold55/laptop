@@ -15,7 +15,7 @@ laptop.register_app("removable", {
 		local idata = mtos.bdev:get_removable_disk()
 		if idata.stack then
 			-- change label
-			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description).."field[2,0.7;4,1;label;Label:;"..idata.label.."]"..
+			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description).."field[2,0.7;4,1;label;;"..idata.label.."]"..
 					mtos.theme:get_button('5.7,0.55;1.5,0.7', 'minor', 'set_label', 'Rename', 'Rename the '..idata.def.description)..
 					mtos.theme:get_label('0,1.7', "Format: "..idata.os_format).. -- format state
 			-- buttons
