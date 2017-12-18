@@ -66,6 +66,15 @@ function sweeper_class:reveal(sel_w, sel_h)
 	end
 end
 
+function sweeper_class:toggle_bomb_mark(sel_w, sel_h)
+	local field = self.data.board[sel_w][sel_h]
+	if field.bomb_marked then
+		field.bomb_marked = nil
+	else
+		field.bomb_marked = true
+	end
+end
+
 function get_sweeper(data)
 	local self = setmetatable({}, sweeper_class)
 	self.data = data
@@ -76,7 +85,7 @@ end
 laptop.register_app("tntsweeper", {
 	app_name = "TNT Sweeper",
 	app_icon = "tnt_side.png",
-	app_info = "Avoit to hint TNT",
+	app_info = "Avoid to hint TNT",
 	formspec_func = function(app, mtos)
 		local data = mtos.bdev:get_app_storage('ram', 'tntsweeper')
 		local sweeper = get_sweeper(data)
@@ -92,7 +101,11 @@ laptop.register_app("tntsweeper", {
 				local pos = (w*config.icon_size*0.8)..','..(h*config.icon_size*0.85)
 				local field = sweeper.data.board[w][h]
 				if not field.is_revealed then
-					formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button..";field:"..w..":"..h..";]"
+					if field.bomb_marked then
+						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button.."^tnt_side.png;field:"..w..":"..h..";]"
+					else
+						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button..";field:"..w..":"..h..";]"
+					end
 				elseif field.is_bomb then
 					formspec = formspec .. "image["..pos..";"..config.icon_size..","..config.icon_size..";tnt_boom.png]"
 				elseif field.count > 0 then
@@ -109,6 +122,11 @@ laptop.register_app("tntsweeper", {
 				mtos.theme:get_button('13,4.5;1.5,0.8', 'major', 'reset', 'Midsize hard')..
 				mtos.theme:get_button('13,5.5;1.5,0.8', 'major', 'reset', 'Big')..
 				mtos.theme:get_button('13,6.5;1.5,0.8', 'major', 'reset', 'Big hard')
+		if data.mark_mode then
+			formspec = formspec .. mtos.theme:get_button('13,8;1.5,0.8', 'minor', 'mark_mode', 'mark', 'change to reveal mode')
+		else
+			formspec = formspec .. mtos.theme:get_button('13,8;1.5,0.8', 'minor', 'mark_mode', 'reveal', 'change to mark mode')
+		end
 		return formspec
 	end,
 
@@ -128,12 +146,24 @@ laptop.register_app("tntsweeper", {
 						end
 					end
 				end
-				sweeper:reveal(sel_w, sel_h)
+
+				--if sender:get_player_control().sneak then -- TODO: test if https://github.com/minetest/minetest/issues/6353
+				if data.mark_mode then
+					sweeper:toggle_bomb_mark(sel_w, sel_h)
+				else
+					sweeper:reveal(sel_w, sel_h)
+				end
 			end
 		end
 
 		if fields.reset then
 			sweeper:init(minetest.strip_colors(fields.reset))
+		elseif fields.mark_mode then
+			if data.mark_mode then
+				data.mark_mode = nil
+			else
+				data.mark_mode = true
+			end
 		end
 	end
 })
