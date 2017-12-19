@@ -86,6 +86,7 @@
 - `on_metadata_inventory_put(app, mtos, player, listname, index, stack)` - Optional: custom check on items put
 - `on_metadata_inventory_take(app, mtos, player, listname, index, stack)` - Optional: custom check on items put
 - `on_metadata_inventory_move(app, mtos, player, from_list, from_index, to_list, to_index, count)` - Optional: custom check on items put
+- `on_timer(app, mtos, nil, elapsed) - Optional. The on-timer callback (no sender)
 
 `laptop.register_view(internal_shortname, { definitiontable })` - add a new app or view
 same as register_app, but the view flag is set. app_name and app_icon not necessary
@@ -94,6 +95,7 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 `local app = mtos:get_app(appname)` - Give the app object internal_shortname, connected to given mtos. Not necessary in formspec_func or receive_fields_func because given trough interface
 - `app:back_app(fields, sender)` - Go back to previous app/view. Trough fields/sender additional data can be sent to the previous app trough receive_fields_func
 - `app:exit_app()` - Delete call stack and return to launcher
+- `app:get_timer()` - Get timer for this app (based on nodetimer)
 
 
 ## Themes
