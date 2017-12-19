@@ -96,7 +96,7 @@ end
 laptop.register_app("tntsweeper", {
 	app_name = "TNT Sweeper",
 	app_icon = "tnt_side.png",
-	app_info = "Avoid to hint TNT",
+	app_info = "Avoid to hit TNT",
 	formspec_func = function(app, mtos)
 		local data = mtos.bdev:get_app_storage('ram', 'tntsweeper')
 		local sweeper = get_sweeper(data)
