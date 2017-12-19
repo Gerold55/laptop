@@ -110,6 +110,29 @@ function os_class:set_app(appname)
 			self.sysram.current_app ~= newapp then
 		self:appstack_add(self.sysram.current_app)
 	end
+
+	-- suspend timer from previous app and resume the new one
+	if self.sysram.current_app ~= newapp then
+		self.timer = minetest.get_node_timer(self.pos)
+		if self.sysram.current_app then
+			if self.timer:is_started() then
+				self.sysram.app_timer[self.sysram.current_app] = {
+						timeout = self.timer:get_timeout(),
+						elapsed = self.timer:get_elapsed(),
+					}
+			else
+				self.sysram.app_timer[self.sysram.current_app] = nil
+			end
+		end
+		-- restore the timer of current app
+		if self.sysram.app_timer[newapp] then
+			local data = self.sysram.app_timer[newapp]
+			self.timer:set(data.timeout, data.elapsed)
+		else
+			self.timer:stop()
+		end
+	end
+
 	self.sysram.current_app = newapp
 	local app = self:get_app(newapp)
 	local formspec = app:get_formspec()
@@ -124,7 +147,9 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 	local appname = self.sysram.current_app or self.hwdef.custom_launcher or "launcher"
 	local app = self:get_app(appname)
 	local ret = app:receive_data(method, reshow, sender, ...)
-	self.sysram.last_player = sender:get_player_name()
+	if sender then
+		self.sysram.last_player = sender:get_player_name()
+	end
 	if self.sysram.current_app == appname and reshow then
 		local formspec = app:get_formspec()
 		if formspec ~= false then
@@ -162,6 +187,7 @@ function laptop.os_get(pos)
 	self.bdev = laptop.get_bdev_handler(self)
 	self.sysram = self.bdev:get_app_storage('ram', 'os')
 	self.sysram.stack = self.sysram.stack or {}
+	self.sysram.app_timer = self.sysram.app_timer or {}
 	self.sysdata = self.bdev:get_app_storage('system', 'os')
 	self.theme = self:get_theme()
 	return self

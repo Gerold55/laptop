@@ -126,6 +126,10 @@ local function on_metadata_inventory_take(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
 	mtos:pass_to_app("on_metadata_inventory_take", true, player, listname, index, stack)
 end
+local function on_timer(pos, elapsed)
+	local mtos = laptop.os_get(pos)
+	mtos:pass_to_app("on_timer", true, nil, elapsed)
+end
 
 function laptop.register_hardware(name, hwdef)
 	local default_nodename = name.."_"..hwdef.sequence[1]
@@ -161,6 +165,7 @@ function laptop.register_hardware(name, hwdef)
 		def.on_metadata_inventory_move = on_metadata_inventory_move
 		def.on_metadata_inventory_put = on_metadata_inventory_put
 		def.on_metadata_inventory_take = on_metadata_inventory_take
+		def.on_timer = on_timer
 		minetest.register_node(nodename, def)
 
 		-- set node configuration for hooks

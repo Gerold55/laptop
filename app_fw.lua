@@ -61,6 +61,11 @@ function app_class:exit_app()
 	self.os:set_app() -- launcher
 end
 
+function app_class:get_timer()
+	self.os.timer = self.os.timer or minetest.get_node_timer(self.os.pos)
+	return self.os.timer
+end
+
 -- Register new app
 function laptop.register_app(name, def)
 	laptop.apps[name] = def
