@@ -14,6 +14,9 @@ local function get_file(key, value)
 	end
 end
 
+laptop.register_view('os:power_off', {
+	fullscreen = true,
+})
 
 
 laptop.register_view('os:select_file', {
