@@ -128,7 +128,7 @@ local function on_metadata_inventory_take(pos, listname, index, stack, player)
 end
 local function on_timer(pos, elapsed)
 	local mtos = laptop.os_get(pos)
-	mtos:pass_to_app("on_timer", true, nil, elapsed)
+	return mtos:pass_to_app("on_timer", true, nil, elapsed)
 end
 
 function laptop.register_hardware(name, hwdef)
