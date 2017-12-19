@@ -95,8 +95,8 @@ end
 
 laptop.register_app("tntsweeper", {
 	app_name = "TNT Sweeper",
-	app_icon = "tnt_side.png",
-	app_info = "Avoid to hit TNT",
+	app_icon = "laptop_tnt.png",
+	app_info = "Avoid hitting TNT",
 	formspec_func = function(app, mtos)
 		local data = mtos.bdev:get_app_storage('ram', 'tntsweeper')
 		local sweeper = get_sweeper(data)
@@ -113,7 +113,7 @@ laptop.register_app("tntsweeper", {
 				local field = sweeper.data.board[w][h]
 				if not field.is_revealed then
 					if field.bomb_marked then
-						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button.."^tnt_side.png;field:"..w..":"..h..";]"
+						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button.."^laptop_tnt.png;field:"..w..":"..h..";]"
 					else
 						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button..";field:"..w..":"..h..";]"
 					end
