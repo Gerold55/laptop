@@ -50,11 +50,14 @@ laptop.register_app("removable", {
 					idata.label = "" -- reset label on wipe
 				elseif fields.format == "data" then
 					idata.meta:set_string("os_format", "data")
+					idata.label = "Data "..idata.def.description
 				elseif fields.format == "backup" then
 					idata.meta:set_string("os_format", "backup")
 					idata.meta:set_string("backup_data", mtos.meta:get_string('laptop_appdata'))
+					idata.label = "Backup of "..mtos.hwdef.description.." from "..os.date('%x')
 				elseif fields.format == "OldOS" then
 					idata.meta:set_string("os_format", "boot")
+					idata.label = "OldOS Boot Disk"
 				end
 			elseif fields.restore then
 				mtos.meta:set_string('laptop_appdata', idata.meta:get_string("backup_data"))
