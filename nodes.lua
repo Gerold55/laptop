@@ -152,6 +152,8 @@ laptop.register_hardware("laptop:printer", {
 	description = "Flash Printex",
 	infotext = 'Flash Printex',
 	sequence = { "closed", "open", "open_on" },
+	custom_launcher = "printer_launcher",
+	hw_capabilities = { "hdd"},
 	node_defs = {
 		["open"] = {
 			hw_state = "power_off",
@@ -176,7 +178,7 @@ laptop.register_hardware("laptop:printer", {
 			}
 		},
 		["open_on"] = {
-			hw_state = "resume",
+			hw_state = "power_on",
 			tiles = {
 				"laptop_printer_top.png",
 				"laptop_printer_bottom.png",
