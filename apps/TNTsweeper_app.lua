@@ -118,7 +118,7 @@ laptop.register_app("tntsweeper", {
 						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button..";field:"..w..":"..h..";]"
 					end
 				elseif field.is_bomb then
-					formspec = formspec .. "image["..pos..";"..config.icon_size..","..config.icon_size..";boom.png]"
+					formspec = formspec .. "image["..pos..";"..config.icon_size..","..config.icon_size..";laptop_boom.png]"
 				elseif field.count > 0 then
 					local lbpos = ((w+0.4)*config.icon_size*0.8)..','..((h+0.1)*config.icon_size*0.85)
 					formspec = formspec .. mtos.theme:get_label(lbpos, field.count)
