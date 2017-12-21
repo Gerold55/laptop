@@ -244,8 +244,8 @@ laptop.register_app("tetris", {
 		return 'container[3,1]background[0,0;4.4,8.7;'.. mtos.theme.contrast_bg .. ']' ..
 			t.boardstring .. t.previewstring ..
 			draw_shape(t.cur, t.x, t.y, t.rot, boardx, boardy) ..
-			mtos.theme:get_label('7,0.1', 'Next...') ..
-			mtos.theme:get_label('7,2.7', 'Score:...'..t.score) ..
+			mtos.theme:get_label('6.5,0.1', 'Next...') ..
+			mtos.theme:get_label('6.5,2.7', 'Score:...'..t.score) ..
 			buttons .. 'container_end[]'
 	end,
 
