@@ -27,11 +27,14 @@ local shapes = {
       { x = {0, 1, 2, 1}, y = {1, 1, 1, 2} },
       { x = {0, 1, 1, 1}, y = {1, 0, 1, 2} } } }
 
-local colors = { "wool_cyan.png", "wool_magenta.png", "wool_red.png",
-		"wool_blue.png", "wool_green.png", "wool_orange.png", "wool_yellow.png" }
+local base_color_texture = "default_diamond_block.png"
+local base_color_alpha = '128'
+colors = { base_color_texture.."^[colorize:#00FFFF:"..base_color_alpha, base_color_texture.."^[colorize:#FF00FF:"..base_color_alpha, base_color_texture.."^[colorize:#FF0000:"..base_color_alpha,
+		base_color_texture.."^[colorize:#0000FF:"..base_color_alpha, base_color_texture.."^[colorize:#00FF00:"..base_color_alpha, base_color_texture.."^[colorize:#FF4500:"..base_color_alpha,
+		base_color_texture.."^[colorize:#FFFF00:"..base_color_alpha }
 
 local boardx, boardy = 0, 0
-local sizex, sizey, size = 0.43, 0.43, 0.45
+local sizex, sizey, size = 0.42, 0.44, 0.47
 
 local comma = ","
 local semi = ";"
@@ -241,7 +244,7 @@ laptop.register_app("tetris", {
 						mtos.theme:get_button('6,3.5;3,1', 'major', 'new', 'New Game', 'Start a new game')
 
 		local t = tetris.data.t
-		return 'container[3,1]background[0,0;4.4,8.7;'.. mtos.theme.contrast_bg .. ']' ..
+		return 'container[3,1]background[0,-0.05;4.35,9;'.. mtos.theme.contrast_bg .. ']' ..
 			t.boardstring .. t.previewstring ..
 			draw_shape(t.cur, t.x, t.y, t.rot, boardx, boardy) ..
 			mtos.theme:get_label('6.5,0.1', 'Next...') ..
