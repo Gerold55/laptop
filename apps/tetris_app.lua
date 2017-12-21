@@ -224,8 +224,8 @@ end
 
 laptop.register_app("tetris", {
 	app_name = "Tetris",
---	app_icon = "",
-	app_info = "Arcade tetris emulator",
+	app_icon = "laptop_tetris_icon.png",
+	app_info = "Tetris",
 
 	formspec_func = function(app, mtos)
 		local data = mtos.bdev:get_app_storage('ram', 'tetris')
