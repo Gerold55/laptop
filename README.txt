@@ -17,6 +17,6 @@ Text editor
 Email
 
 -- Games --
-TNTsweeper (comming soon)
+TNTSweeper
 
 V.0.29
