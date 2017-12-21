@@ -31,7 +31,7 @@ local colors = { "wool_cyan.png", "wool_magenta.png", "wool_red.png",
 		"wool_blue.png", "wool_green.png", "wool_orange.png", "wool_yellow.png" }
 
 local boardx, boardy = 0, 0
-local sizex, sizey, size = 0.29, 0.29, 0.31
+local sizex, sizey, size = 0.43, 0.43, 0.45
 
 local comma = ","
 local semi = ";"
@@ -76,7 +76,7 @@ function tetris_class:new_game()
 	self.data.t = {
 			board = {},
 			boardstring = "",
-			previewstring = draw_shape(nex, 0, 0, 1, 4, 1),
+			previewstring = draw_shape(nex, 0, 0, 1, 6.5, 0.8),
 			score = 0,
 			cur = math.random(7),
 			nex = nex,
@@ -164,7 +164,7 @@ function tetris_class:tick()
 		self:update_boardstring()
 		t.cur, t.nex = t.nex, math.random(7)
 		t.x, t.y, t.rot = 4, 0, 1
-		t.previewstring = draw_shape(t.nex, 0, 0, 1, 4.1, 0.6)
+		t.previewstring = draw_shape(t.nex, 0, 0, 1, 6.5, 0.8)
 	else
 		t.y = t.y + 1
 	end
@@ -232,20 +232,20 @@ laptop.register_app("tetris", {
 			return mtos.theme:get_button('2,4;2,2', 'major', 'new', 'New Game', 'Start a new game')
 		end
 
-		local buttons = mtos.theme:get_button('3,4.5;0.6,0.6', 'minor', 'left', '<')..
-						mtos.theme:get_button('3.6,4.5;0.6,0.6', 'minor', 'rotateleft', 'L')..
-						mtos.theme:get_button('4.2,4.5;0.6,0.6', 'minor', 'down', 'v')..
-						mtos.theme:get_button('4.2,5.3;0.6,0.6', 'minor', 'drop', 'V')..
-						mtos.theme:get_button('4.8,4.5;0.6,0.6', 'minor', 'rotateright', 'R')..
-						mtos.theme:get_button('5.4,4.5;0.6,0.6', 'minor', 'right', '>')..
-						mtos.theme:get_button('3.6,3.5;2,0.6', 'major', 'new', 'New Game', 'Start a new game')
+		local buttons = mtos.theme:get_button('6,6;1,1', 'minor', 'left', '<')..
+						mtos.theme:get_button('6,5;1,1', 'minor', 'rotateleft', 'L')..
+						mtos.theme:get_button('7,5;1,1', 'minor', 'down', 'v')..
+						mtos.theme:get_button('7,6;1,1', 'minor', 'drop', 'V')..
+						mtos.theme:get_button('8,5;1,1', 'minor', 'rotateright', 'R')..
+						mtos.theme:get_button('8,6;1,1', 'minor', 'right', '>')..
+						mtos.theme:get_button('6,3.5;3,1', 'major', 'new', 'New Game', 'Start a new game')
 
 		local t = tetris.data.t
-		return 'container[3,2]background[0,0;3,6;'.. mtos.theme.contrast_bg .. ']' ..
+		return 'container[3,1]background[0,0;4.4,8.7;'.. mtos.theme.contrast_bg .. ']' ..
 			t.boardstring .. t.previewstring ..
 			draw_shape(t.cur, t.x, t.y, t.rot, boardx, boardy) ..
-			mtos.theme:get_label('3.8,0.1', 'Next...') ..
-			mtos.theme:get_label('3.8,2.7', 'Score:...'..t.score) ..
+			mtos.theme:get_label('7,0.1', 'Next...') ..
+			mtos.theme:get_label('7,2.7', 'Score:...'..t.score) ..
 			buttons .. 'container_end[]'
 	end,
 
