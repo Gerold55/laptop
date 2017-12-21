@@ -90,6 +90,7 @@ laptop.register_hardware("laptop:printer", {
 			drawtype = "nodebox",
 			paramtype = "light",
 			paramtype2 = "facedir",
+			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1},
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -112,6 +113,7 @@ laptop.register_hardware("laptop:printer", {
 			drawtype = "nodebox",
 			paramtype = "light",
 			paramtype2 = "facedir",
+			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1},
 			node_box = {
 				type = "fixed",
 				fixed = {

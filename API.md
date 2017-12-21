@@ -58,6 +58,7 @@
 			data.selected_disk_name = fields.open_selected_disk  -- Selected disk (prefix 'open_' is used)
 			data.selected_file_name = fields.open_selected_file -- Selected file (prefix 'open_' is used)
 ```
+- `mtos:print_file_dialog({ label= , text= })` - call the print file dialog ('printer:app')
 
 ### Operating system attributes
 	`mtos.pos` - Computers position vector

@@ -171,6 +171,15 @@ function os_class:select_file_dialog(param)
 	store.param = param
 	self:set_app('os:select_file')
 end
+
+-- Use parameter and launch the select_file dialog
+-- Return values will be send as fields to the called app
+function os_class:print_file_dialog(param)
+	local store = self.bdev:get_app_storage('ram', 'printer:app')
+	store.param = param
+	self:set_app('printer:app')
+end
+
 -----------------------------------------------------
 -- Get Operating system object
 -----------------------------------------------------

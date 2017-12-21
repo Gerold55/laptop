@@ -26,7 +26,8 @@ laptop.register_app("stickynote", {
 				"textarea[0.35,1.35;15.08,9.5;text;;"..minetest.formspec_escape(data.text).."]"..
 				mtos.theme:get_button('0,0.5;1.5,0.8', 'minor', 'clear', 'New', 'New file')..
 				mtos.theme:get_button('2,0.5;1.5,0.8', 'minor', 'load', 'Load', 'Load file')..
-				mtos.theme:get_button('4,0.5;1.5,0.8', 'minor', 'save', 'Save', 'Save file')
+				mtos.theme:get_button('4,0.5;1.5,0.8', 'minor', 'save', 'Save', 'Save file')..
+				mtos.theme:get_button('8,0.5;1.5,0.8', 'minor', 'print', 'Print', 'Print file')
 		return formspec
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
@@ -71,6 +72,11 @@ laptop.register_app("stickynote", {
 			data.selected_disk_name = nil
 			data.selected_file_name = nil
 			data.text = ""
+		elseif fields.print then
+			mtos:print_file_dialog({
+				label = data.selected_file_name,
+				text = data.text,
+			})
 		end
 	end
 })
