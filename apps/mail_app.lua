@@ -114,7 +114,7 @@ laptop.register_app("mail", {
 
 			formspec = formspec .. mtos.theme:get_label('8,1', "Subject: "..(account.selectedmessage.subject or ""))..
 					"background[8,1.55;6.92,7.3;"..mtos.theme.contrast_bg.."]"..
-					"textarea[8.25,1.5;7,8.35;body;;"..(minetest.formspec_escape(account.selectedmessage.body) or "").."]"
+					"textarea[8.35,1.6;6.8,8.25;;"..(minetest.formspec_escape(account.selectedmessage.body) or "")..";]"
 		end
 		return formspec
 	end,
