@@ -1,34 +1,6 @@
 
 laptop.node_config = {}
 
-local function after_place_node(pos, placer, itemstack, pointed_thing)
-	local save = minetest.deserialize(itemstack:get_meta():get_string("laptop_metadata"))
-	if save then
-		local meta = minetest.get_meta(pos)
-		meta:from_table(save.fields)
-		meta:get_inventory():set_list("main", save.invlist)
-	end
-end
-
-local function after_dig_node(pos, oldnode, oldmetadata, digger)
-	local save = { fields = oldmetadata.fields, invlist = {} }
-	if oldmetadata.inventory and oldmetadata.inventory.main then
-		for _, stack in ipairs(oldmetadata.inventory.main) do
-			table.insert(save.invlist, stack:to_string())
-		end
-	end
-
-	local item_name = minetest.registered_items[oldnode.name].drop or oldnode.name
-	local inventory = digger:get_inventory()
-	for idx, stack in ipairs(inventory:get_list("main")) do
-		if stack:get_name() == item_name and stack:get_meta():get_string("laptop_metadata") == "" then
-			stack:get_meta():set_string("laptop_metadata", minetest.serialize(save))
-			digger:get_inventory():set_stack("main", idx, stack)
-			break
-		end
-	end
-end
-
 local function on_construct(pos)
 	local mtos = laptop.os_get(pos)
 	local node = minetest.get_node(pos)
@@ -131,6 +103,51 @@ local function on_timer(pos, elapsed)
 	return mtos:pass_to_app("on_timer", true, nil, elapsed)
 end
 
+local function after_place_node(pos, placer, itemstack, pointed_thing)
+	local save = minetest.deserialize(itemstack:get_meta():get_string("laptop_metadata"))
+	if save then
+		local meta = minetest.get_meta(pos)
+		meta:from_table({fields = save.fields})
+		meta:get_inventory():set_list("main", save.invlist)
+	end
+	itemstack:clear()
+end
+
+local function after_dig_node(pos, oldnode, oldmetadata, digger)
+--local function preserve_metadata(pos, oldnode, oldmetadata, drops) --TODO: if MT-0.5 stable
+	local save = { fields = oldmetadata.fields, invlist = {} }
+	if oldmetadata.inventory and oldmetadata.inventory.main then
+		for _, stack in ipairs(oldmetadata.inventory.main) do
+			table.insert(save.invlist, stack:to_string())
+		end
+	end
+
+	local item_name = minetest.registered_items[oldnode.name].drop or oldnode.name
+	local inventory = digger:get_inventory()
+	local in_inv
+	for idx, stack in ipairs(inventory:get_list("main")) do
+		if stack:get_name() == item_name and stack:get_meta():get_string("laptop_metadata") == "" then
+			stack:get_meta():set_string("laptop_metadata", minetest.serialize(save))
+			digger:get_inventory():set_stack("main", idx, stack)
+			in_inv = true
+			break
+		end
+	end
+
+	-- creative? no item found without metadata. Create new one
+	if not in_inv then
+		local new_stack = ItemStack(item_name)
+		new_stack:get_meta():set_string("laptop_metadata", minetest.serialize(save))
+		local keeped = inventory:add_item("main", new_stack)
+		if not keeped:is_empty() then
+			-- No place in inventory, revert the node
+			minetest.set_node(pos, oldnode)
+			after_place_node(pos, digger, keeped, nil)
+			on_punch(pos, oldnode, digger)
+		end
+	end
+end
+
 function laptop.register_hardware(name, hwdef)
 	local default_nodename = name.."_"..hwdef.sequence[1]
 	for idx, variant in ipairs(hwdef.sequence) do
@@ -156,6 +173,7 @@ function laptop.register_hardware(name, hwdef)
 		def.stack_max = 1
 		def.after_place_node = after_place_node
 		def.after_dig_node = after_dig_node
+--		def.preserve_metadata = preserve_metadata TODO: if MT-0.5 stable
 		def.on_punch = on_punch
 		def.on_construct = on_construct
 		def.on_receive_fields = on_receive_fields
