@@ -20,4 +20,4 @@ Email
 TNTSweeper
 Tetris
 
-V.0.30
+V.0.32
