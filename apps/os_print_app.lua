@@ -4,17 +4,52 @@ laptop.register_app("printer_launcher", {
 --	app_name = "Printer firmware",
 	fullscreen = true,
 	formspec_func = function(launcher_app, mtos)
-		local queue = mtos.bdev:get_app_storage('system', 'printer:queue')
-
-		local formspec = "size[10,7]"..
-				"label[8,0.5;print output]" ..
-				"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;8,1.3;1,1;]" ..
+		mtos.sysdata.print_queue = mtos.sysdata.print_queue or {}
+		mtos.sysdata.selected_view = mtos.sysdata.selected_view or 'output'
+		mtos.sysdata.paper_count = mtos.sysdata.paper_count or 0
+		mtos.sysdata.dye_count = mtos.sysdata.dye_count or 0
+		-- inventory fields
+		local formspec = "size[10.5,7]"..
 				"list[current_player;main;1,2.85;8,1;]" ..
 				"list[current_player;main;1,4.08;8,3;8]" ..
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
 				"listring[current_player;main]"
 		local idata = mtos.bdev:get_removable_disk()
 
+		-- queue
+		formspec = formspec ..
+				"tablecolumns[" ..
+						"text;".. -- label
+						"text;".. -- author
+						"text]".. -- timestamp
+				"table[0,0;6,2.42;printers;"
+		for idx, file in ipairs(mtos.sysdata.print_queue) do
+			if idx > 1 then
+				formspec = formspec..','
+			end
+			formspec = formspec .. minetest.formspec_escape(file.title or "")..','..
+					(file.author or "")..','..os.date("%c", file.timestamp)
+		end
+		formspec = formspec .. ";]"
+
+		local out_button = 'minor'
+		local paper_button = 'minor'
+		local dye_button = 'minor'
+		if mtos.sysdata.selected_view == 'output' then
+			out_button = 'major'
+		elseif mtos.sysdata.selected_view == 'paper' then
+			paper_button = 'major'
+		elseif mtos.sysdata.selected_view == 'dye' then
+			dye_button = 'major'
+		end
+
+		formspec = formspec .."background[6.2,0;4,2.5;"..mtos.theme.contrast_bg..
+				']label[8.3,0.3;Paper: '..mtos.sysdata.paper_count..
+				']label[8.3,0.8;Dye: '..mtos.sysdata.dye_count..']'..
+				mtos.theme:get_button('6.3,0.3;1.7,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
+				mtos.theme:get_button('6.3,1.0;1.7,0.7', dye_button, 'view_dye', 'Dye tray', 'Insert black dye')..
+				mtos.theme:get_button('6.3,1.7;1.7,0.7', out_button, 'view_out', 'Output tray', 'Get printed paper')..
+				"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;8.4,1.3;1,1;]"
 		return formspec
 	end,
 
@@ -24,8 +59,13 @@ laptop.register_app("printer_launcher", {
 	end,
 
 	receive_fields_func = function(launcher_app, mtos, sender, fields)
-		local queue = mtos.bdev:get_app_storage('system', 'printer:queue')
-
+		if fields.view_out then
+			mtos.sysdata.selected_view = 'output'
+		elseif fields.view_paper then
+			mtos.sysdata.selected_view = 'paper'
+		elseif fields.view_dye then
+			mtos.sysdata.selected_view = 'dye'
+		end
 	end,
 })
 
@@ -56,7 +96,7 @@ end
 --------------------------------------------------------
 laptop.register_view("printer:app", {
 	app_info = "Print file",
-	formspec_func = function(launcher_app, mtos)
+	formspec_func = function(app, mtos)
 		local store = mtos.bdev:get_app_storage('ram', 'printer:app')
 		local param = store.param
 		local sysstore = mtos.bdev:get_app_storage('system', 'printer:app')
@@ -108,13 +148,17 @@ laptop.register_view("printer:app", {
 			formspec = formspec .. mtos.theme:get_button('10,9;2,0.7', 'major', 'print', 'Print', 'Print file')
 		end
 
-		formspec = formspec .. mtos.theme:get_label('7.5,1', "Document preview: "..(param.label or "<unnamed>"))..
-					"background[7.5,1.55;6.92,7.3;"..mtos.theme.contrast_bg.."]"..
-					"textarea[7.75,1.5;7,8.35;body;;"..(minetest.formspec_escape(param.text) or "").."]"
+		param.label = param.label or "<unnamed>"
+
+		formspec = formspec .. "background[7.15,0.4;7.6,1;"..mtos.theme.contrast_bg.."]"..
+				"label[7.3,0.6;Heading:]".."field[9.7,0.7;5,1;label;;"..minetest.formspec_escape(param.label or "").."]"..
+				mtos.theme:get_label('9.7,1.7'," by "..(mtos.sysram.last_player or ""))..
+				"background[7.15,2.55;7.6,6.0;"..mtos.theme.contrast_bg.."]"..
+				"textarea[7.5,2.5;7.5,7;;"..(minetest.formspec_escape(param.text) or "")..";]"
 
 		return formspec
 	end,
-	receive_fields_func = function(launcher_app, mtos, sender, fields)
+	receive_fields_func = function(app, mtos, sender, fields)
 		local store = mtos.bdev:get_app_storage('ram', 'printer:app')
 		local param = store.param
 		local sysstore = mtos.bdev:get_app_storage('system', 'printer:app')
@@ -137,6 +181,20 @@ laptop.register_view("printer:app", {
 		if fields.printers then
 			local event = minetest.explode_table_event(fields.printers)
 			sysstore.selected_printer = sysstore.printers[event.row] or sysstore.selected_printer
+		end
+
+		if fields.label then
+			param.label = fields.label
+		end
+
+		if fields.print then
+			local hw_os = laptop.os_get(sysstore.selected_printer.pos)
+			if hw_os and minetest.registered_items[hw_os.node.name].groups.laptop_printer then
+				hw_os.sysdata.print_queue = hw_os.sysdata.print_queue or {}
+				table.insert(hw_os.sysdata.print_queue, { title = param.label, text = param.text, author = sender:get_player_name(), timestamp = os.time() })
+				hw_os:save()
+				app:back_app()
+			end
 		end
 	end,
 })

@@ -73,11 +73,12 @@ laptop.register_hardware("laptop:core", {
 laptop.register_hardware("laptop:printer", {
 	description = "Flash Printex",
 	infotext = 'Flash Printex',
-	sequence = { "closed", "open", "open_on" },
+	sequence = { "off", "powersave", "on" },
 	custom_launcher = "printer_launcher",
-	hw_capabilities = { "hdd"},
+	hw_capabilities = {"hdd"},
 	node_defs = {
-		["open"] = {
+
+		["powersave"] = {
 			hw_state = "power_off",
 			tiles = {
 				"laptop_printer_top.png",
@@ -100,7 +101,7 @@ laptop.register_hardware("laptop:printer", {
 				}
 			}
 		},
-		["open_on"] = {
+		["on"] = {
 			hw_state = "power_on",
 			tiles = {
 				"laptop_printer_top.png",
@@ -123,7 +124,7 @@ laptop.register_hardware("laptop:printer", {
 				  }
 			       }
 			    },
-		["closed"] = {
+		["off"] = {
 			hw_state = "power_off",
 			tiles = {
 				"laptop_printer_top.png",
