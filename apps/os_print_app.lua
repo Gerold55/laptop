@@ -1,13 +1,38 @@
 local printer_range = 10
 
+local function sync_stack_values(mtos)
+	mtos.sysdata.paper_count = mtos.sysdata.paper_count or 0
+	mtos.sysdata.dye_count = mtos.sysdata.dye_count or 0
+	local idata = mtos.bdev:get_removable_disk()
+	-- store old stack values
+	if mtos.sysdata.selected_view == 'paper' then
+		if idata.stack then
+			mtos.sysdata.paper_count = idata.stack:get_count()
+		else
+			mtos.sysdata.paper_count = 0
+		end
+	elseif mtos.sysdata.selected_view == 'dye' then
+		if idata.stack then
+			mtos.sysdata.dye_count = mtos.sysdata.dye_count - math.floor(mtos.sysdata.dye_count) + idata.stack:get_count()
+		else
+			mtos.sysdata.dye_count = mtos.sysdata.dye_count - math.floor(mtos.sysdata.dye_count)
+		end
+	elseif mtos.sysdata.selected_view == 'output' then
+		if idata.stack then
+			mtos.sysdata.out_stack_save = idata.stack:to_string()
+		else
+			mtos.sysdata.out_stack_save  = nil
+		end
+	end
+end
+
 laptop.register_app("printer_launcher", {
 --	app_name = "Printer firmware",
 	fullscreen = true,
 	formspec_func = function(launcher_app, mtos)
 		mtos.sysdata.print_queue = mtos.sysdata.print_queue or {}
 		mtos.sysdata.selected_view = mtos.sysdata.selected_view or 'output'
-		mtos.sysdata.paper_count = mtos.sysdata.paper_count or 0
-		mtos.sysdata.dye_count = mtos.sysdata.dye_count or 0
+		sync_stack_values(mtos)
 		-- inventory fields
 		local formspec = "size[10.5,7]"..
 				"list[current_player;main;1,2.85;8,1;]" ..
@@ -35,15 +60,18 @@ laptop.register_app("printer_launcher", {
 		local out_button = 'minor'
 		local paper_button = 'minor'
 		local dye_button = 'minor'
-		if mtos.sysdata.selected_view == 'output' then
-			out_button = 'major'
-		elseif mtos.sysdata.selected_view == 'paper' then
+		if mtos.sysdata.selected_view == 'paper' then
 			paper_button = 'major'
+			formspec = formspec .."background[6.2,0.3;4,0.7;"..mtos.theme.contrast_bg..']'
 		elseif mtos.sysdata.selected_view == 'dye' then
 			dye_button = 'major'
+			formspec = formspec .."background[6.2,1;4,0.7;"..mtos.theme.contrast_bg..']'
+		elseif mtos.sysdata.selected_view == 'output' then
+			out_button = 'major'
+			formspec = formspec .."background[6.2,1.7;4,0.7;"..mtos.theme.contrast_bg..']'
 		end
 
-		formspec = formspec .."background[6.2,0;4,2.5;"..mtos.theme.contrast_bg..
+		formspec = formspec .."background[8.2,0;2,2.5;"..mtos.theme.contrast_bg..
 				']label[8.3,0.3;Paper: '..mtos.sysdata.paper_count..
 				']label[8.3,0.8;Dye: '..mtos.sysdata.dye_count..']'..
 				mtos.theme:get_button('6.3,0.3;1.7,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
@@ -58,14 +86,38 @@ laptop.register_app("printer_launcher", {
 		return formspec
 	end,
 
-	receive_fields_func = function(launcher_app, mtos, sender, fields)
+	allow_metadata_inventory_put = function(app, mtos, player, listname, index, stack)
+		if mtos.sysdata.selected_view == 'output' then
+			-- nothing
+		elseif  mtos.sysdata.selected_view == 'paper' and stack:get_name() == 'default:paper' then
+			return stack:get_stack_max()
+		elseif mtos.sysdata.selected_view == 'dye' and stack:get_name() == 'dye:black' then
+			return stack:get_stack_max()
+		end
+		return 0
+	end,
+
+	allow_metadata_inventory_take = function(app, mtos, player, listname, index, stack)
+		-- removal allways possible
+		return stack:get_count()
+	end,
+
+	receive_fields_func = function(app, mtos, sender, fields)
+		sync_stack_values(mtos)
+		local idata = mtos.bdev:get_removable_disk()
 		if fields.view_out then
 			mtos.sysdata.selected_view = 'output'
+			idata.stack = ItemStack(mtos.sysdata.out_stack_save or "")
 		elseif fields.view_paper then
 			mtos.sysdata.selected_view = 'paper'
+			idata.stack = ItemStack('default:paper')
+			idata.stack:set_count(mtos.sysdata.paper_count)
 		elseif fields.view_dye then
 			mtos.sysdata.selected_view = 'dye'
+			idata.stack = ItemStack('dye:black')
+			idata.stack:set_count(math.floor(mtos.sysdata.dye_count))
 		end
+		idata:reload(idata.stack)
 	end,
 })
 
@@ -93,7 +145,6 @@ local function get_printer_info(pos)
 	return printer
 end
 
---------------------------------------------------------
 laptop.register_view("printer:app", {
 	app_info = "Print file",
 	formspec_func = function(app, mtos)
