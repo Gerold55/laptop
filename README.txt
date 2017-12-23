@@ -18,5 +18,6 @@ Email
 
 -- Games --
 TNTSweeper
+Tetris
 
 V.0.29
