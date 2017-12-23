@@ -148,7 +148,7 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 - `bdev.os_format`- The format type: "none", "boot", "backup", "filesystem" (read-only)
 - `bdev.rtype` - Removable type. "usb" or "floppy"
 - `bdev.storage` - Data table used for app storage, if format is data compatible
-- `bdev:reload()` - Reload all data from node inventory
+- `bdev:reload(stack)` - Reload all data from node inventory. If stack is given, the stack will be inserted to slot
 
 ## Compatible Items
 There is no own compatible items registrator. The item needs to match the item group to be usable with the laptops
