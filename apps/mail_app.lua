@@ -106,6 +106,7 @@ laptop.register_app("mail", {
 					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markunread', 'laptop_mail_button.png', '', 'Mark message as unread')
 				end
 			end
+			formspec = formspec .. mtos.theme:get_button('8,9;1.5,1', 'minor', 'print', 'Print', 'Print email')
 			if account.selected_box == "inbox" then
 				formspec = formspec .. mtos.theme:get_label('8,0.5', "From: "..(account.selectedmessage.sender or ""))
 			else
@@ -179,7 +180,14 @@ laptop.register_app("mail", {
 				account.selectedmessage.is_read = true
 			elseif fields.markunread then
 				account.selectedmessage.is_read = false
-				account.selected_timestamp = nil -- Stop timer
+				account.selected_timestamp = nil
+			elseif fields.print then
+				mtos:print_file_dialog({
+					label = account.selectedmessage.subject,
+					author = account.selectedmessage.sender,
+					timestamp = account.selectedmessage.time,
+					text = account.selectedmessage.body,
+				})
 			end
 		end
 	end
