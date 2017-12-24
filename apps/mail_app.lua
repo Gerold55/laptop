@@ -3,7 +3,7 @@
 laptop.register_app("mail", {
 	app_name = "Mail",
 	app_icon = "laptop_email_letter.png",
-	app_info = "Write mails to other players",
+	app_info = "Write Mail to Other Players",
 	formspec_func = function(app, mtos)
 		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
 		if not cloud then
@@ -51,7 +51,7 @@ laptop.register_app("mail", {
 
 				-- set subject
 				if not message.subject or message.subject == "" then
-					formspec = formspec .. "(No subject),"
+					formspec = formspec .. "(No Subject),"
 				elseif string.len(message.subject) > 30 then
 					formspec = formspec .. minetest.formspec_escape(string.sub(message.subject,1,27)) .. "...,"
 				else
@@ -79,19 +79,19 @@ laptop.register_app("mail", {
 			end
 			formspec = formspec .. ";"..(account.selected_index or "").."]"
 		else
-			formspec = formspec .. ",,No mail :(]"
+			formspec = formspec .. ",,No Mail :(]"
 		end
 
 		-- toggle inbox/sentbox
 		if account.selected_box == "inbox" then
-			formspec = formspec .. mtos.theme:get_image_button('0,9;1,1', 'minor', 'switch_sentbox', 'laptop_mail_sentbox.png', '', 'Show sent messages')
+			formspec = formspec .. mtos.theme:get_image_button('0,9;1,1', 'minor', 'switch_sentbox', 'laptop_mail_sentbox.png', '', 'Show Sent Messages')
 		else
-			formspec = formspec .. mtos.theme:get_image_button('0,9;1,1', 'minor', 'switch_inbox', 'laptop_mail_received.png', '', 'Show received messages')
+			formspec = formspec .. mtos.theme:get_image_button('0,9;1,1', 'minor', 'switch_inbox', 'laptop_mail_received.png', '', 'Show Received Messages')
 		end
 
-		formspec = formspec .. mtos.theme:get_image_button('1.7,9;1,1', 'minor', 'new', 'laptop_email_new.png', '', 'New message')
+		formspec = formspec .. mtos.theme:get_image_button('1.7,9;1,1', 'minor', 'new', 'laptop_email_new.png', '', 'New Message')
 		if account.newmessage then
-			formspec = formspec .. mtos.theme:get_image_button('2.7,9;1,1', 'minor', 'continue', 'laptop_email_edit.png', '', 'Continue last message')
+			formspec = formspec .. mtos.theme:get_image_button('2.7,9;1,1', 'minor', 'continue', 'laptop_email_edit.png', '', 'Continue Last Message')
 		end
 
 		if account.selectedmessage then
@@ -101,12 +101,12 @@ laptop.register_app("mail", {
 					mtos.theme:get_image_button('5.7,9;1,1', 'minor', 'delete', 'laptop_email_trash.png', '', 'Delete')
 			if account.selected_box == "inbox" then
 				if not account.selectedmessage.is_read then
-					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markread', 'laptop_mail_read_button.png', '', 'Mark message as read')
+					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markread', 'laptop_mail_read_button.png', '', 'Mark Message as Read')
 				else
-					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markunread', 'laptop_mail_button.png', '', 'Mark message as unread')
+					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markunread', 'laptop_mail_button.png', '', 'Mark Message as Unread')
 				end
 			end
-			formspec = formspec .. mtos.theme:get_button('8,9;1.5,1', 'minor', 'print', 'Print', 'Print email')
+			formspec = formspec .. mtos.theme:get_image_button('8,9;1,1', 'minor', 'print', 'printer_button.png', '', 'Print Email')
 			if account.selected_box == "inbox" then
 				formspec = formspec .. mtos.theme:get_label('8,0.5', "From: "..(account.selectedmessage.sender or ""))
 			else
@@ -196,7 +196,7 @@ laptop.register_app("mail", {
 laptop.register_view("mail:newplayer", {
 	formspec_func = function(app, mtos)
 		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.sysram.last_player.. " found. Do you like to create a new account?")..
-				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create account')
+				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create Account')
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
 		if sender:get_player_name() ~= mtos.sysram.last_player then
