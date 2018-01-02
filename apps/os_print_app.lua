@@ -69,11 +69,12 @@ laptop.register_app("printer_launcher", {
 		sync_stack_values(mtos)
 		trigger_queue(mtos)
 		-- inventory fields
-		local formspec = "size[10.5,7]"..
-				"list[current_player;main;1,2.85;8,1;]" ..
-				"list[current_player;main;1,4.08;8,3;8]" ..
+		local formspec = "size[9,8]"..
+				"list[current_player;main;0.3,3.85;8,1;]" ..
+				"list[current_player;main;0.3,5.08;8,3;8]" ..
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
-				"listring[current_player;main]"
+				"listring[current_player;main]"..
+				"label[0,0;"..mtos.hwdef.description.."]"
 		local idata = mtos.bdev:get_removable_disk()
 
 		-- queue
@@ -82,7 +83,7 @@ laptop.register_app("printer_launcher", {
 						"text;".. -- label
 						"text;".. -- author
 						"text]".. -- timestamp
-				"table[0,0;6,2.42;printers;"
+				"table[0,0.5;5,2.42;printers;"
 		for idx, file in ipairs(mtos.sysdata.print_queue) do
 			if idx > 1 then
 				formspec = formspec..','
@@ -97,22 +98,26 @@ laptop.register_app("printer_launcher", {
 		local dye_button = 'minor'
 		if mtos.sysdata.selected_view == 'paper' then
 			paper_button = 'major'
-			formspec = formspec .."background[6.2,0.3;4,0.7;"..mtos.theme.contrast_bg..']'
+			formspec = formspec .."background[6.2,0.8;2.5,0.7;"..mtos.theme.contrast_bg..']'
 		elseif mtos.sysdata.selected_view == 'dye' then
 			dye_button = 'major'
-			formspec = formspec .."background[6.2,1;4,0.7;"..mtos.theme.contrast_bg..']'
+			formspec = formspec .."background[6.2,1.5;2.5,0.7;"..mtos.theme.contrast_bg..']'
 		elseif mtos.sysdata.selected_view == 'output' then
 			out_button = 'major'
-			formspec = formspec .."background[6.2,1.7;4,0.7;"..mtos.theme.contrast_bg..']'
+			formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_bg..']'
 		end
 
-		formspec = formspec .."background[8.2,"..(mtos.sysdata.print_progress/2)..";2,"..((5-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_bg..
-				']label[8.3,0.3;Paper: '..mtos.sysdata.paper_count..
-				']label[8.3,0.8;Dye: '..mtos.sysdata.dye_count..']'..
-				mtos.theme:get_button('6.3,0.3;1.7,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
-				mtos.theme:get_button('6.3,1.0;1.7,0.7', dye_button, 'view_dye', 'Dye tray', 'Insert black dye')..
-				mtos.theme:get_button('6.3,1.7;1.7,0.7', out_button, 'view_out', 'Output tray', 'Get printed paper')..
-				"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;8.4,1.3;1,1;]"
+--		formspec = formspec .."background[5.2,"..(mtos.sysdata.print_progress/2+0.55)..";1.5,"..((4.9-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_bg..
+		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_bg..
+				']label[5.3,0.8;Paper: '..mtos.sysdata.paper_count..
+				']label[5.3,1.3;Dye: '..mtos.sysdata.dye_count..']'..
+				mtos.theme:get_button('6.8,0.8;1.5,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
+				mtos.theme:get_button('6.8,1.5;1.5,0.7', dye_button, 'view_dye', 'Dye tray', 'Insert black dye')..
+				mtos.theme:get_button('6.8,2.2;1.5,0.7', out_button, 'view_out', 'Output tray', 'Get printed paper')..
+				"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;5.4,1.8;1,1;]"..
+				mtos.theme:get_button('0.3,3;1.5,0.7', 'minor', 'reset', 'Reset', 'Reset printer queue')..
+				mtos.theme:get_button('2,3;1.5,0.7', 'minor', 'delete', 'Delete', 'Delete job')..
+				"background[3.7,3.1;"..(mtos.sysdata.print_progress)..",0.5;laptop_theme_red_back_button.png]"
 		return formspec
 	end,
 
@@ -151,6 +156,12 @@ laptop.register_app("printer_launcher", {
 			mtos.sysdata.selected_view = 'dye'
 			idata.stack = ItemStack('dye:black')
 			idata.stack:set_count(math.floor(mtos.sysdata.dye_count))
+		elseif fields.reset then
+			mtos.sysdata.print_queue = {}
+			mtos.sysdata.print_progress = 0
+		elseif fields.delete then
+			table.remove(mtos.sysdata.print_queue, 1)
+			mtos.sysdata.print_progress = 0
 		end
 		idata:reload(idata.stack)
 		trigger_queue(mtos)
