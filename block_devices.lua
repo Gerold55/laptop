@@ -44,10 +44,10 @@ function bdev:get_removable_disk(removable_type)
 		local data = { bdev = self }
 		data.inv = self.os.meta:get_inventory()
 		data.inv:set_size("main", 1) -- 1 disk supported
-		function data:reload()
+		function data:reload(stack)
 			-- self.inv unchanged
 			-- self.rtype unchanged (assumption
-			local stack = data.inv:get_stack("main", 1)
+			stack = stack or data.inv:get_stack("main", 1)
 			if stack then
 				local def = stack:get_definition()
 				if def and def.name ~= "" then
@@ -152,10 +152,12 @@ function bdev:sync()
 	-- save removable
 	if self.removable_disk then
 		if self.removable_disk.stack then
-			if self.removable_disk.label ~= self.removable_disk.def.description then
+			if self.removable_disk.def and self.removable_disk.label ~= self.removable_disk.def.description then
 				self.removable_disk.meta:set_string("description", self.removable_disk.label)
 			end
-			self.removable_disk.meta:set_string("os_storage", minetest.serialize(self.removable_disk.storage))
+			if self.removable_disk.storage then
+				self.removable_disk.meta:set_string("os_storage", minetest.serialize(self.removable_disk.storage))
+			end
 		end
 		self.removable_disk.inv:set_stack("main", 1, self.removable_disk.stack)
 	end

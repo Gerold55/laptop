@@ -70,6 +70,85 @@ laptop.register_hardware("laptop:core", {
 	}
 })
 
+laptop.register_hardware("laptop:printer", {
+	description = "Flash Printex",
+	infotext = 'Flash Printex',
+	sequence = { "off", "powersave", "on" },
+	custom_launcher = "printer_launcher",
+	hw_capabilities = {"hdd"},
+	node_defs = {
+
+		["powersave"] = {
+			hw_state = "power_off",
+			tiles = {
+				"laptop_printer_top.png",
+				"laptop_printer_bottom.png",
+				"laptop_printer_right.png",
+				"laptop_printer_left.png",
+				"laptop_printer_back.png",
+				"laptop_printer_front.png",
+			},
+			drawtype = "nodebox",
+			paramtype = "light",
+			paramtype2 = "facedir",
+			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1},
+			node_box = {
+				type = "fixed",
+				fixed = {
+					{-0.375, -0.5, -0.125, 0.375, -0.125, 0.3125}, -- core
+					{-0.25, -0.5, -0.375, 0.25, -0.4375, -0.125}, -- tray
+					{-0.25, -0.125, 0.25, 0.25, 0.125, 0.3125}, -- charger
+				}
+			}
+		},
+		["on"] = {
+			hw_state = "power_on",
+			tiles = {
+				"laptop_printer_top.png",
+				"laptop_printer_bottom.png",
+				"laptop_printer_right.png",
+				"laptop_printer_left.png",
+				"laptop_printer_back.png",
+				"laptop_printer_front_on.png",
+			},
+			drawtype = "nodebox",
+			paramtype = "light",
+			paramtype2 = "facedir",
+			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1},
+			node_box = {
+				type = "fixed",
+				fixed = {
+					{-0.375, -0.5, -0.125, 0.375, -0.125, 0.3125}, -- core
+					{-0.25, -0.5, -0.375, 0.25, -0.4375, -0.125}, -- tray
+					{-0.25, -0.125, 0.25, 0.25, 0.125, 0.3125}, -- charger
+				  }
+			       }
+			    },
+		["off"] = {
+			hw_state = "power_off",
+			tiles = {
+				"laptop_printer_top.png",
+				"laptop_printer_bottom.png",
+				"laptop_printer_right.png",
+				"laptop_printer_left.png",
+				"laptop_printer_back.png",
+				"laptop_printer_front_off.png",
+			},
+			drawtype = "nodebox",
+			paramtype = "light",
+			paramtype2 = "facedir",
+			node_box = {
+				type = "fixed",
+				fixed = {
+					{-0.375, -0.5, -0.125, 0.375, -0.125, 0.3125}, -- core
+					{-0.25, -0.5, -0.375, 0.25, -0.4375, -0.125}, -- tray
+					{-0.25, -0.125, 0.25, 0.25, 0.125, 0.3125}, -- charger
+				}
+			}
+		}
+	}
+})
+
 laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",

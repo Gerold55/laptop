@@ -33,9 +33,9 @@ local function on_punch(pos, node, puncher)
 		local slot = mtos.bdev:get_removable_disk()
 		-- swap
 		puncher:set_wielded_item(slot.stack)
-		slot.inv:set_stack("main", 1, punch_item)
 		-- reload OS
-		slot:reload()
+		slot:reload(punch_item)
+		mtos.bdev:sync()
 		for k,v in pairs(laptop.os_get(mtos.pos)) do
 			mtos[k] = v
 		end
