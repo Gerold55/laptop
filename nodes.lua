@@ -323,15 +323,6 @@ laptop.register_hardware("laptop:monitor4", {
 	}
 })
 
-minetest.register_craft({
-	output = 'laptop:monitor4_off',
-	recipe = {
-		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
-		{'default:steel_ingot', 'default:glass', 'default:steel_ingot'},
-		{'default:steel_ingot', 'default:gold_ingot', 'default:steel_ingot'},
-	}
-})
-
 --Old PC--
 laptop.register_hardware("laptop:monitor3", {
 	description = "Pentium 3",
@@ -386,15 +377,6 @@ laptop.register_hardware("laptop:monitor3", {
 				}
 			}
 		}
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:monitor3_off',
-	recipe = {
-		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
-		{'default:steel_ingot', 'default:copper_ingot', 'default:steel_ingot'},
-		{'default:steel_ingot', 'default:glass', 'default:steel_ingot'},
 	}
 })
 
@@ -469,13 +451,3 @@ laptop.register_hardware("laptop:laptop", {
 		}
 	}
 })
-
-minetest.register_craft({
-	output = 'laptop:laptop_closed',
-	recipe = {
-		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
-		{'default:copper_ingot', 'default:copper_ingot', 'default:copper_ingot'},
-		{'default:steel_ingot', 'default:glass', 'default:steel_ingot'},
-	}
-})
-
