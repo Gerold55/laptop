@@ -37,6 +37,7 @@ laptop.register_app("calculator", {
 				mtos.theme:get_button('6,5;1,1', "minor", 'number', '9') ..
 				mtos.theme:get_button('4,6;1,1', "minor", 'number', '0') ..
 				mtos.theme:get_button('5,6;1,1', "minor", 'number', '.') ..
+				mtos.theme:get_button('6,6;1,1', "minor", 'minus', '-') ..
 
 				mtos.theme:get_button('4,7;1,1',"minor", 'constant_pi', "PI")..
 				mtos.theme:get_button('5,7;1,1', "minor", 'constant_e', "e")..
@@ -64,6 +65,12 @@ laptop.register_app("calculator", {
 			local new_val = (entry.var2 or "")..minetest.strip_colors(fields.number)
 			if tonumber(new_val) then
 				entry.var2 = new_val
+			end
+		elseif fields.minus then
+			if entry.var2 then
+				entry.var2 = tostring(-tonumber(entry.var2))
+			else
+				entry.var2 = '-0'
 			end
 		elseif fields.constant_pi then
 			entry.var2 = tostring(math.pi)
