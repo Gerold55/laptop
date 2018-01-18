@@ -58,16 +58,6 @@ laptop.register_app("calculator", {
 	receive_fields_func = function(app, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'calculator')
 		local entry = data.tab[#data.tab]
-        
-	if fields.constant_pi then
-		entry.var2 = tostring(math.pi)
-	end
-	if fields.constant_e then
-		entry.var2 = tostring(math.exp(1))
-	end
-	if fields.rnd then
-		entry.var2 = tostring(math.random())
-	end
 
 		if fields.number then
 			-- simple number entry. With check for valid value
@@ -75,6 +65,12 @@ laptop.register_app("calculator", {
 			if tonumber(new_val) then
 				entry.var2 = new_val
 			end
+		elseif fields.constant_pi then
+			entry.var2 = tostring(math.pi)
+		elseif fields.constant_e then
+			entry.var2 = tostring(math.exp(1))
+		elseif fields.rnd then
+			entry.var2 = tostring(math.random())
 		elseif fields.del_char then
 			-- delete char
 			if entry.var2 then
@@ -134,8 +130,8 @@ laptop.register_app("calculator", {
 						result = tonumber(entry.var1) / tonumber(entry.var2)
 					elseif entry.operator == '*' then
 						result = tonumber(entry.var1) * tonumber(entry.var2)
-                elseif entry.operator == '^' then
-                    result = tonumber(entry.var1) ^ tonumber(entry.var2)
+					elseif entry.operator == '^' then
+						result = tonumber(entry.var1) ^ tonumber(entry.var2)
 					elseif entry.operator == '=' then
 						result = tonumber(entry.var2)
 					end
