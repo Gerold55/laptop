@@ -22,7 +22,7 @@ laptop.register_app("calculator", {
 			if idx > 1 then
 				formspec = formspec..','
 			end
-			formspec = formspec..(entry.var1 or "")..","..(entry.operator or "")..","..(entry.var2 or "0")
+			formspec = formspec..(entry.var1 or "")..","..(entry.operator or "")..","..(entry.var2 or "")
 		end
 
 		formspec = formspec .. ";"..#data.tab.."]"..
@@ -55,14 +55,17 @@ laptop.register_app("calculator", {
 		local entry = data.tab[#data.tab]
 
 		if fields.number then
-			-- simple number entry
-			entry.var2 = (entry.var2 or "")..minetest.strip_colors(fields.number)
+			-- simple number entry. With check for valid value
+			local new_val = (entry.var2 or "")..minetest.strip_colors(fields.number)
+			if tonumber(new_val) then
+				entry.var2 = new_val
+			end
 		elseif fields.del_char then
 			-- delete char
-			if entry.var2 and entry.var2 ~= "" then
+			if entry.var2 then
 				-- remove char from current number
 				entry.var2 = entry.var2:sub(1, -2)
-				if entry.var2 == "" then
+				if not tonumber(entry.var2) then
 					entry.var2 = nil
 				end
 			else
@@ -79,7 +82,7 @@ laptop.register_app("calculator", {
 			end
 		elseif fields.del_line then
 			-- just delete full number if exists
-			if entry.var2 and entry.var2 ~= "" then
+			if entry.var2 then
 				entry.var2 = nil
 			else
 				-- go back to previous line and delete the full number if exists
@@ -93,39 +96,43 @@ laptop.register_app("calculator", {
 			data.tab = nil
 		elseif fields.operator then
 			fields.operator = minetest.strip_colors(fields.operator)
-			local entry = data.tab[#data.tab]
 			-- no previous operator
 			if not entry.operator then
-				if fields.operator == '=' then
+				if fields.operator == '=' and (entry.var1 or entry.var2) then
 					table.insert(data.tab, {}) -- add empty line
-				elseif entry.var2 and entry.var2 ~= "" then
+				elseif entry.var2 then
 					-- move to the left
 					entry.var1 = entry.var2
 					entry.operator = fields.operator
 					entry.var2 = nil
 				end
-
 			-- process previous operator
 			else
 				local result
-				if entry.operator == '+' then
-					result = tonumber(entry.var1) + tonumber(entry.var2)
-				elseif entry.operator == '-' then
-					result = tonumber(entry.var1) - tonumber(entry.var2)
-				elseif entry.operator == '/' then
-					result = tonumber(entry.var1) / tonumber(entry.var2)
-				elseif entry.operator == '*' then
-					result = tonumber(entry.var1) * tonumber(entry.var2)
-				elseif entry.operator == '=' then
-					result = tonumber(entry.var2)
-				end
-				if not result then
-					result = 0
-				end
-				if fields.operator == '=' then
-					table.insert(data.tab, {var2 = tostring(result)})
+				if entry.var2 then
+					-- both values available
+					if entry.operator == '+' then
+						result = tonumber(entry.var1) + tonumber(entry.var2)
+					elseif entry.operator == '-' then
+						result = tonumber(entry.var1) - tonumber(entry.var2)
+					elseif entry.operator == '/' then
+						result = tonumber(entry.var1) / tonumber(entry.var2)
+					elseif entry.operator == '*' then
+						result = tonumber(entry.var1) * tonumber(entry.var2)
+					elseif entry.operator == '=' then
+						result = tonumber(entry.var2)
+					end
 				else
-					table.insert(data.tab, {var1 = tostring(result), operator = fields.operator})
+					if entry.operator == '-' then
+						result = - tonumber(entry.var1)
+					end
+				end
+				if result then
+					if fields.operator == '=' then
+						table.insert(data.tab, {var2 = tostring(result)})
+					else
+						table.insert(data.tab, {var1 = tostring(result), operator = fields.operator})
+					end
 				end
 			end
 		end
