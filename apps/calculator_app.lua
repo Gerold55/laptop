@@ -38,10 +38,15 @@ laptop.register_app("calculator", {
 				mtos.theme:get_button('4,6;1,1', "minor", 'number', '0') ..
 				mtos.theme:get_button('5,6;1,1', "minor", 'number', '.') ..
 
+				mtos.theme:get_button('4,7;1,1',"minor", 'constant_pi', "PI")..
+				mtos.theme:get_button('5,7;1,1', "minor", 'constant_e', "e")..
+				mtos.theme:get_button('6,7;1,1', "minor", 'rnd', "RND")..
+
 				mtos.theme:get_button('8,3;1,1', "minor", 'operator', '+') ..
 				mtos.theme:get_button('8,4;1,1', "minor", 'operator', '-') ..
 				mtos.theme:get_button('8,5;1,1', "minor", 'operator', '/') ..
 				mtos.theme:get_button('8,6;1,1', "minor", 'operator', '*') ..
+				mtos.theme:get_button('8,7;1,1', "minor", 'operator', '^') ..
 				mtos.theme:get_button('9,6;2,1', "minor", 'operator', '=') ..
 
 				mtos.theme:get_button('9,3;2,1', "minor", 'del_char', 'DEL-1') ..
@@ -53,6 +58,16 @@ laptop.register_app("calculator", {
 	receive_fields_func = function(app, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'calculator')
 		local entry = data.tab[#data.tab]
+        
+	if fields.constant_pi then
+		entry.var2 = tostring(math.pi)
+	end
+	if fields.constant_e then
+		entry.var2 = tostring(math.exp(1))
+	end
+	if fields.rnd then
+		entry.var2 = tostring(math.random())
+	end
 
 		if fields.number then
 			-- simple number entry. With check for valid value
@@ -119,6 +134,8 @@ laptop.register_app("calculator", {
 						result = tonumber(entry.var1) / tonumber(entry.var2)
 					elseif entry.operator == '*' then
 						result = tonumber(entry.var1) * tonumber(entry.var2)
+                elseif entry.operator == '^' then
+                    result = tonumber(entry.var1) ^ tonumber(entry.var2)
 					elseif entry.operator == '=' then
 						result = tonumber(entry.var2)
 					end
