@@ -1,9 +1,6 @@
 The Laptop mod is a group collaboration between Bell07, Toby109tt, veNext, Cross_over and Yours truly lol.
 We aim to make a working laptop inside of MineTest.
-There is multiple different computers to choose from and to use.
-There is multiple different apps to run on comupters
-There is multiple different media to store data
-There is multiple different themes to personalize computers
+There are different computers, apps which run on computers, media to store data and different themes to personalize the appearance.
 
 Apps Included So Far:
 
