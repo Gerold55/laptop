@@ -143,10 +143,12 @@ end
 function bdev:sync()
 	-- save RAM
 	self.os.meta:set_string('laptop_ram', minetest.serialize(self.ram_disk))
+	self.os.meta:mark_as_private('laptop_ram')
 
 	-- save HDD
 	if self.hard_disk then
 		self.os.meta:set_string('laptop_appdata', minetest.serialize(self.hard_disk))
+		self.os.meta:mark_as_private('laptop_appdata')
 	end
 
 	-- save removable
