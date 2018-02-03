@@ -13,27 +13,27 @@ The mod includes next components:
 
 | Itemname | Name | Author |
 | - | - | - |
-| core | CP Core | by |
-| printer | Flash Printex | by |
-| cube | CUBE PC | by |
-| monitor2 | Fruit Zero | by |
-| monitor4 | Bell CrossOver | by |
-| monitor3 | Pentium 3 | by |
-| laptop | laptop v2.0 | by |
+| core | CP Core | by Cross_over and Gerold55 |
+| printer | Flash Printex | by Cross_over and Gerold55 |
+| cube | CUBE PC | by Cross_over and Gerold55 |
+| monitor2 | Fruit Zero | by Cross_over and Gerold55 |
+| monitor4 | Bell CrossOver | by Cross_over and Gerold55 |
+| monitor3 | Pentium 3 | by Cross_over and Gerold55 |
+| laptop | laptop v2.0 | by Cross_over and Gerold55 |
 
 ## Items
 | Itemname | Description | Author |
 | - | - | - |
-| floppy | Boot old computer or just store data | by |
-| usbstick | Store data or take full computer backup | by |
-| printed_paper | Show printed text on use | by |
+| floppy | Boot old computer or just store data | by Toby109tt and Cross_over |
+| usbstick | Store data or take full computer backup | by Toby109tt and Cross_over |
+| printed_paper | Show printed text on use | by Toby109tt and Cross_over |
 
 ## Software
 ### System
 | Name | Description | Author |
 | - | - | - |
 | mtos/app_fw/bdev | Operating System | by bell07 |
-| launcher | Desktop launcher | by bell07 |
+| launcher | Desktop launcher | by bell07, app icons by Toby109tt and Cross_over |
 | launcher_settings | Theme selector | by bell07 |
 | os_dialogs | Select file dialog | by bell07 |
 | os_print | Printer OS and driver | by bell07 |
