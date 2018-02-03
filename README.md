@@ -55,13 +55,13 @@ The mod includes next components:
 ## Themes
 | Name | Description | Author |
 | - | - | - |
-| basic | | by |
-| blue | | by |
-| bubbles | | by |
-| cubic | | by |
-| fruit | | by |
-| magma | | by |
-| red | | by |
+| basic | | by v-rob |
+| blue | | by v-rob |
+| bubbles | | by veNext |
+| cubic | | by v-rob |
+| fruit | | by veNext |
+| magma | | by v-rob |
+| red | | by v-rob |
 
 
 V.0.33
