@@ -108,7 +108,13 @@ local function after_place_node(pos, placer, itemstack, pointed_thing)
 	if save then
 		local meta = minetest.get_meta(pos)
 		meta:from_table({fields = save.fields})
-		meta:get_inventory():set_list("main", save.invlist)
+		if save.invlist.main then
+			for invname, inv in pairs(save.invlist) do
+				meta:get_inventory():set_list(invname, inv)
+			end
+		else -- compatibility to prev. version
+			meta:get_inventory():set_list("main", save.invlist)
+		end
 	end
 	itemstack:clear()
 end
@@ -116,9 +122,13 @@ end
 local function after_dig_node(pos, oldnode, oldmetadata, digger)
 --local function preserve_metadata(pos, oldnode, oldmetadata, drops) --TODO: if MT-0.5 stable
 	local save = { fields = oldmetadata.fields, invlist = {} }
-	if oldmetadata.inventory and oldmetadata.inventory.main then
-		for _, stack in ipairs(oldmetadata.inventory.main) do
-			table.insert(save.invlist, stack:to_string())
+	if oldmetadata.inventory then
+		for invname, inv in pairs(oldmetadata.inventory) do
+			local invsave = {}
+			save.invlist[invname] = invsave
+			for _, stack in ipairs(inv) do
+				table.insert(invsave, stack:to_string())
+			end
 		end
 	end
 
