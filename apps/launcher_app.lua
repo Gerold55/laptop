@@ -42,7 +42,7 @@ laptop.register_app("launcher", {
 			out = out .. mtos.theme:get_image_button(x..','..y..';1,1', 'app', e.name, (e.def.app_icon or 'logo.png'), "", (e.def.app_info or e.name))..
 						mtos.theme:get_label((x-0.3)..','..(y+1), e.def.app_name, "app")
 		end
-		out = out..mtos.theme:get_button("11,9.8;4,0.7", "major", "os_clock", os.date("%c"))
+		out = out..mtos.theme:get_button(mtos.theme.taskbar_clock_position_and_size, "major", "os_clock", os.date("%c"))
 		return out
 	end,
 	appwindow_formspec_func = function(launcher_app, app, mtos)
@@ -55,12 +55,12 @@ laptop.register_app("launcher", {
 		end
 		if app.app_info then
 			if #mtos.sysram.stack > 0 then
-				formspec = formspec.."label[0.8,-0.29;"..app.app_info.."]"
+				formspec = formspec..mtos.theme:get_label("0.8,-0.29", app.app_info, "titlebar")
 			else
-				formspec = formspec.."label[-0.1,-0.29;"..app.app_info.."]"
+				formspec = formspec..mtos.theme:get_label("0.8,-0.29", app.app_info, "titlebar")
 			end
 		end
-		formspec = formspec..mtos.theme:get_button('14.2,-0.31;1.09,0.61', 'exit', 'os_exit', 'X', 'Exit app')
+		formspec = formspec..mtos.theme:get_button('14.2,-0.31;1.09,0.61', 'exit', 'os_exit', mtos.theme.exit_character, 'Exit app')
 		return formspec
 	end,
 	receive_fields_func = function(launcher_app, mtos, sender, fields)
