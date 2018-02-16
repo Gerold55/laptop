@@ -113,7 +113,7 @@ Definitiontable:
 - `major_button` Major (highlighted) button image
 - `minor_button` Minor button image
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
-- `taskbar_clock_position` Set where the clock and taskbar are positioned on the desktop
+- `taskbar_clock_position_and_size` Set where the clock and taskbar are positioned and its size on the desktop
 - `exit_character` Sets the character that shows up in the close box, X is default
 - `titlebar_textcolor` Sets the color of text on app titlebar
 
