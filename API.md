@@ -113,6 +113,10 @@ Definitiontable:
 - `major_button` Major (highlighted) button image
 - `minor_button` Minor button image
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
+- `minor_button`
+- `exit_character`
+- `titlebar_textcolor`
+
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`
