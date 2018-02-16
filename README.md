@@ -68,4 +68,4 @@ The mod includes next components:
 | snow pines | | by Grizzly Adam |
 
 
-V.0.33
+V.0.34
