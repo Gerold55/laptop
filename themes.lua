@@ -13,6 +13,9 @@ laptop.themes = {
 		textcolor = "#000000",
 		node_color = 0,
 		contrast_bg = "gui_formbg.png",
+		taskbar_clock_position_and_size = "11,9.8;4,0.7",
+		exit_character = "X",
+		titlebar_textcolor = "#FFFFFF",
 	},
 }
 
