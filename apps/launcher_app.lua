@@ -57,7 +57,7 @@ laptop.register_app("launcher", {
 			if #mtos.sysram.stack > 0 then
 				formspec = formspec..mtos.theme:get_label("0.8,-0.29", app.app_info, "titlebar")
 			else
-				formspec = formspec..mtos.theme:get_label("0.8,-0.29", app.app_info, "titlebar")
+				formspec = formspec..mtos.theme:get_label("-0.1,-0.29", app.app_info, "titlebar")
 			end
 		end
 		formspec = formspec..mtos.theme:get_button('14.2,-0.31;1.09,0.61', 'exit', 'os_exit', mtos.theme.exit_character, 'Exit app')
