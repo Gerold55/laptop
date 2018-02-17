@@ -8,4 +8,4 @@ Apps Included So Far:
 
 -- Games -- TNTSweeper Tetris
 
-V.0.33
+V.0.35
