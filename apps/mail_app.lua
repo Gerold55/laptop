@@ -44,9 +44,9 @@ laptop.register_app("mail", {
 				if account.selected_box == "sentbox" then
 					formspec = formspec .. "1,#88FF88," -- unread
 				elseif not message.is_read then
-					formspec = formspec .. "1,#FF8888," -- unread
+					formspec = formspec .. "1,#FFFFFF," -- unread
 				else
-					formspec = formspec .. "2,#FFFFFF," -- read
+					formspec = formspec .. "2,#888888," -- read
 				end
 
 				-- set subject
