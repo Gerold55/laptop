@@ -61,6 +61,9 @@ function sweeper_class:reveal(sel_w, sel_h)
 			return true
 		end
 		self.data.open_count = self.data.open_count + 1
+		if sel.bomb_marked then
+			self.data.bomb_count = self.data.bomb_count - 1
+		end
 		if sel.count == 0 then
 			for w = sel_w - 1, sel_w + 1 do
 				for h = sel_h - 1, sel_h + 1 do
