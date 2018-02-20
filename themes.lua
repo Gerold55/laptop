@@ -7,6 +7,7 @@ laptop.themes = {
 		back_button = "laptop_theme_freedom_back_button.png",
 		exit_button = "laptop_theme_freedom_exit_button.png",
 		app_button = "laptop_theme_freedom_app_button.png",
+		desktop_icon_label_button= "laptop_theme_desktop_icon_label_button_black.png",
 		back_textcolor = "#FFFF00",
 		exit_textcolor = "#FF0000",
 		app_textcolor = '#FFFFFF',
