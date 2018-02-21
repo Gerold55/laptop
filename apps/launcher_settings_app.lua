@@ -38,7 +38,7 @@ laptop.register_app("launcher_settings", {
 		formspec = formspec.."]"
 
 		if current_theme then
-			formspec = formspec.."image[5.5,1;5,3.75;"..current_theme.launcher_bg.."]"
+			formspec = formspec.."image[5.5,1;5,3.75;"..current_theme.desktop_background.."]"
 		end
 
 		formspec = formspec .. mtos.theme:get_button('0,3.2;2.5,0.6', 'major', 'theme_apply', 'Apply', 'Apply theme')

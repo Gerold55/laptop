@@ -98,17 +98,17 @@ laptop.register_app("printer_launcher", {
 		local dye_button = 'minor'
 		if mtos.sysdata.selected_view == 'paper' then
 			paper_button = 'major'
-			formspec = formspec .."background[6.2,0.8;2.5,0.7;"..mtos.theme.contrast_bg..']'
+			formspec = formspec .."background[6.2,0.8;2.5,0.7;"..mtos.theme.contrast_background..']'
 		elseif mtos.sysdata.selected_view == 'dye' then
 			dye_button = 'major'
-			formspec = formspec .."background[6.2,1.5;2.5,0.7;"..mtos.theme.contrast_bg..']'
+			formspec = formspec .."background[6.2,1.5;2.5,0.7;"..mtos.theme.contrast_background..']'
 		elseif mtos.sysdata.selected_view == 'output' then
 			out_button = 'major'
-			formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_bg..']'
+			formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_background..']'
 		end
 
---		formspec = formspec .."background[5.2,"..(mtos.sysdata.print_progress/2+0.55)..";1.5,"..((4.9-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_bg..
-		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_bg..
+--		formspec = formspec .."background[5.2,"..(mtos.sysdata.print_progress/2+0.55)..";1.5,"..((4.9-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_background..
+		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_background..
 				']label[5.3,0.8;Paper: '..mtos.sysdata.paper_count..
 				']label[5.3,1.3;Dye: '..mtos.sysdata.dye_count..']'..
 				mtos.theme:get_button('6.8,0.8;1.5,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
@@ -254,10 +254,10 @@ laptop.register_view("printer:app", {
 
 		param.label = param.label or "<unnamed>"
 
-		formspec = formspec .. "background[7.15,0.4;7.6,1;"..mtos.theme.contrast_bg.."]"..
+		formspec = formspec .. "background[7.15,0.4;7.6,1;"..mtos.theme.contrast_background.."]"..
 				"label[7.3,0.6;Heading:]".."field[9.7,0.7;5,1;label;;"..minetest.formspec_escape(param.label or "").."]"..
 				mtos.theme:get_label('9.7,1.7'," by "..(mtos.sysram.last_player or ""))..
-				"background[7.15,2.55;7.6,6.0;"..mtos.theme.contrast_bg.."]"..
+				"background[7.15,2.55;7.6,6.0;"..mtos.theme.contrast_background.."]"..
 				"textarea[7.5,2.5;7.5,7;;"..(minetest.formspec_escape(param.text) or "")..";]"
 
 		return formspec

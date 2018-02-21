@@ -114,7 +114,7 @@ laptop.register_app("mail", {
 			end
 
 			formspec = formspec .. mtos.theme:get_label('8,1', "Subject: "..(account.selectedmessage.subject or ""))..
-					"background[8,1.55;6.92,7.3;"..mtos.theme.contrast_bg.."]"..
+					"background[8,1.55;6.92,7.3;"..mtos.theme.contrast_background.."]"..
 					"textarea[8.35,1.6;6.8,8.25;;"..(minetest.formspec_escape(account.selectedmessage.body) or "")..";]"
 		end
 		return formspec
@@ -233,9 +233,9 @@ laptop.register_view("mail:compose", {
 		account.newmessage = account.newmessage or {}
 		local message = account.newmessage
 
-		local formspec = "background[0,0.4;8,2.4;"..mtos.theme.contrast_bg.."]"..
+		local formspec = "background[0,0.4;8,2.4;"..mtos.theme.contrast_background.."]"..
 				"label[0.25,2;Subject:]".."field[2.7,2;5,1;subject;;"..minetest.formspec_escape(message.subject or "").."]"..
-				"background[0,3.05;7.95,3.44;"..mtos.theme.contrast_bg.."]"..
+				"background[0,3.05;7.95,3.44;"..mtos.theme.contrast_background.."]"..
 				"textarea[0.25,3;8,4;body;;"..minetest.formspec_escape(message.body or "").."]"..
 				mtos.theme:get_button("0,8;2,1", "major", "send", "Send message")..
 				"label[0.25,0.75;Receiver:]".."dropdown[2.4,0.75;5.2,1;receiver;"

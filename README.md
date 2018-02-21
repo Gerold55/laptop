@@ -1,6 +1,6 @@
 # Laptop | Computers emulation for Minetest
 
-The Laptop mod is a group collaboration between bell07, Cross_over, Gerold55, Toby109tt, v-rob, veNext  Grizzly Adam  and Yours truly lol.
+The Laptop mod is a group collaboration between bell07, Cross_over, Gerold55, Toby109tt, v-rob, veNext, Grizzly Adam  and Yours truly lol.
 We aim to make a working laptop inside of MineTest.
 There are different computers, apps which run on computers, media to store data and different themes to personalize the appearance.
 
@@ -58,6 +58,7 @@ The mod includes next components:
 | argyle | | by Grizzly Adam |
 | basic | | by v-rob |
 | blue | | by v-rob |
+| boing! | | by Grizzly Adam |
 | bubbles | | by veNext |
 | Circuit | | by Grizzly Adam |
 | clouds | | by Grizzly Adam |
