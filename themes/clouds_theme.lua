@@ -1,6 +1,6 @@
 laptop.register_theme("Clouds", {
-	launcher_bg = "laptop_theme_clouds_launcher_bg.png",
-	app_bg = "laptop_theme_clouds_app_bg.png",
+	desktop_background = "laptop_theme_clouds_desktop_background.png",
+	app_background = "laptop_theme_clouds_app_background.png",
 	major_button = "laptop_theme_argyle_major_button.png",
 	minor_button = "laptop_theme_argyle_major_button.png",
 	back_button = "laptop_theme_argyle_exit_button.png",
@@ -8,7 +8,5 @@ laptop.register_theme("Clouds", {
 	exit_button = "laptop_theme_argyle_exit_button.png",
 	exit_textcolor = "#000000",
 	app_button = "blank.png",
-	textcolor = "#000000",
-	app_textcolor = "#ffffff",
 	desktop_icon_label_button = "laptop_theme_clouds_desktop_icon_label_button.png",
 })

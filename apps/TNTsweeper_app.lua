@@ -49,37 +49,25 @@ function sweeper_class:init(level)
 	end
 end
 
-function sweeper_class:get(sel_w, sel_h)
-	local board = self.data.board
-	if board[sel_w] then
-		return board[sel_w][sel_h]
-	end
-end
-
 function sweeper_class:reveal(sel_w, sel_h)
 	local board = self.data.board
-	local sel = self:get(sel_w, sel_h)
-
-	-- unmark bomb
-	if sel.bomb_marked then
-		self:toggle_bomb_mark(sel_w, sel_h)
-	end
-
-	sel.is_revealed = true
-	if sel.is_bomb then
-		-- Bomb found
-		self.data.bomb_count = self.data.bomb_count + 1
-	else
-		-- No bomb, count empty fields
+	if board[sel_w] and board[sel_w][sel_h] then
+		local sel = board[sel_w][sel_h]
+		sel.is_revealed = true
+		if sel.is_bomb then
+			if not sel.bomb_marked then -- marked already counted
+				self.data.bomb_count = self.data.bomb_count + 1
+			end
+			return true
+		end
 		self.data.open_count = self.data.open_count + 1
 		if sel.count == 0 then
 			for w = sel_w - 1, sel_w + 1 do
 				for h = sel_h - 1, sel_h + 1 do
-					local chk_sel = self:get(w,h)
-					if chk_sel and
-							not chk_sel.is_revealed and
-							not chk_sel.bomb_marked then
-						self:reveal(w,h)
+					if board[w] and board[w][h] then
+						if not board[w][h].is_revealed then
+							self:reveal(w,h)
+						end
 					end
 				end
 			end
@@ -88,13 +76,13 @@ function sweeper_class:reveal(sel_w, sel_h)
 end
 
 function sweeper_class:toggle_bomb_mark(sel_w, sel_h)
-	local sel = self:get(sel_w, sel_h)
-	if sel.bomb_marked then
+	local field = self.data.board[sel_w][sel_h]
+	if field.bomb_marked then
 		self.data.bomb_count = self.data.bomb_count - 1
-		sel.bomb_marked = nil
+		field.bomb_marked = nil
 	else
 		self.data.bomb_count = self.data.bomb_count + 1
-		sel.bomb_marked = true
+		field.bomb_marked = true
 	end
 end
 
@@ -138,7 +126,7 @@ laptop.register_app("tntsweeper", {
 			end
 		end
 
-		formspec = formspec .. "background[12,0.5;3,1;"..mtos.theme.contrast_bg..
+		formspec = formspec .. "background[12,0.5;3,1;"..mtos.theme.contrast_background..
 				"]label[12,0.5;Open fields: "..sweeper.data.open_count.."/"..sweeper.data.open_all..
 				"]label[12,1;Bomb: "..sweeper.data.bomb_count.."/"..sweeper.data.bomb_all.."]"..
 				mtos.theme:get_button('12.5,2;1.5,0.8', 'major', 'reset', 'Small')..
