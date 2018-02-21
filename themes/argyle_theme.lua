@@ -6,7 +6,7 @@ laptop.register_theme("Argyle", {
 	back_button = "laptop_theme_argyle_exit_button.png",
 	back_textcolor= "#000000",
 	exit_button = "blank.png",
-	app_button = "blank.png",
+	desktop_icon_button = "blank.png",
 	exit_button = "laptop_theme_argyle_exit_button.png",
 	exit_textcolor = "#000000",
 	desktop_icon_label_textcolor = "#000000",

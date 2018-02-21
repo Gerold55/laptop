@@ -9,7 +9,7 @@ laptop.register_theme("Boing!", {
 	back_textcolor = "#000000",
 	exit_button = "laptop_theme_boing_exit_button.png",
 	exit_character = " ",
-	app_button = "blank.png",
+	desktop_icon_button = "blank.png",
 	taskbar_clock_position_and_size = "11,-.25;4,0.4",
 	desktop_icon_label_button = "laptop_theme_boing_major_button.png",
 	titlebar_textcolor = "#000000",

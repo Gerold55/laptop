@@ -5,5 +5,5 @@ laptop.register_theme("Magma", {
 	minor_button = "laptop_theme_minor_button.png",
 	back_button = "laptop_theme_magma_back_button.png",
 	exit_button = "laptop_theme_magma_exit_button.png",
-	app_button = "laptop_theme_magma_app_button.png",
+	desktop_icon_button = "laptop_theme_magma_desktop_icon_button.png",
 })

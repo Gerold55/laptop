@@ -39,7 +39,7 @@ laptop.register_app("launcher", {
 		for i, e in ipairs(appslist_sorted) do
 			local x = math.floor((i-1) / c_row_count)*2 + 1
 			local y = ((i-1) % c_row_count)*2 + 1
-			out = out .. mtos.theme:get_image_button(x..','..y..';1,1', 'app', e.name, (e.def.app_icon or 'logo.png'), "", (e.def.app_info or e.name))..
+			out = out .. mtos.theme:get_image_button(x..','..y..';1,1', 'desktop_icon', e.name, (e.def.app_icon or 'logo.png'), "", (e.def.app_info or e.name))..
 			mtos.theme:get_button((x-.5)..','..(y+1.08)..';2,.4', 'desktop_icon_label', e.name, e.def.app_name)
 		end
 		out = out..mtos.theme:get_button(mtos.theme.taskbar_clock_position_and_size, "major", "os_clock", os.date("%c"))
