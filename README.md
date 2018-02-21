@@ -58,6 +58,7 @@ The mod includes next components:
 | argyle | | by Grizzly Adam |
 | basic | | by v-rob |
 | blue | | by v-rob |
+| boing! | | by Grizzly Adam |
 | bubbles | | by veNext |
 | Circuit | | by Grizzly Adam |
 | clouds | | by Grizzly Adam |
