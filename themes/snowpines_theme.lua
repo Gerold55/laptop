@@ -9,6 +9,6 @@ laptop.register_theme("Snow Pines", {
 	exit_textcolor = "#000000",
 	app_button = "blank.png",
 	textcolor = "#ffffff",
-	app_textcolor = "#ffffff",
+	desktop_icon_label_textcolor = "#ffffff",
 	taskbar_clock_position_and_size = "5.5,-.31;4,0.7",
 })

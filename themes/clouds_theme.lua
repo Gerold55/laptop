@@ -9,6 +9,6 @@ laptop.register_theme("Clouds", {
 	exit_textcolor = "#000000",
 	app_button = "blank.png",
 	textcolor = "#000000",
-	app_textcolor = "#ffffff",
+	desktop_icon_label_textcolor = "#ffffff",
 	desktop_icon_label_button = "laptop_theme_clouds_desktop_icon_label_button.png",
 })

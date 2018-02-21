@@ -6,6 +6,6 @@ laptop.register_theme("Bubbles", {
 	back_button = "laptop_theme_blue_back_button.png",
 	exit_button = "laptop_theme_blue_exit_button.png",
 	app_button = "laptop_theme_blue_app_button.png",
-	app_textcolor = "#0000FF",
+	desktop_icon_label_textcolor = "#0000FF",
 	desktop_icon_label_button = "laptop_theme_desktop_icon_label_button_grey.png",
 })
