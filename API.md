@@ -103,20 +103,25 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 ### Theme definition
 `laptop.register_theme(name, definitiontable)` - add a new theme. All parameters optional, if missed, the default is used
 Definitiontable:
-- `launcher_bg` Launcher background image
-- `app_bg` Apps background image
-- `contrast_bg` dark background to place under white text elements that does not support textcolor
-- `textcolor` Default text color for buttons and labels. For buttons the major_textcolor and minor_textcolor supported
-- `back_button` Back Button image
-- `exit_button` Exit button image
-- `app_button` App button background in launcher
+- `desktop_background` Desktop background image
+- `app_background` Apps background image, adds titlebar
 - `major_button` Major (highlighted) button image
+- `major_textcolor` Major (highlighted) button text color
 - `minor_button` Minor button image
-- `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
-- `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
+- `minor_textcolor` Minor button text color
+- `back_button` Back Button image
+- `back_textcolor` Back Button textclolor (for '<' character)
+- `exit_button` Exit button image
+- `exit_textcolor` Exit button textcolor (for 'X' character)
 - `exit_character` Sets the character that shows up in the close box, X is default
+- `desktop_icon_button` App button background in launcher
+- `desktop_icon_label_button` Background texture for icon label text. Black, grey and white are supplied
+- `desktop_icon_label_textcolor` Icon label text color
 - `titlebar_textcolor` Sets the color of text on app titlebar
-
+- `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
+- `contrast_background` dark background to place under white text elements that does not support textcolor
+- `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
+- `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`

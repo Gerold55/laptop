@@ -22,7 +22,7 @@ laptop.register_app("stickynote", {
 			table.sort(data.fileslist_sorted)
 		end
 
-		local formspec = "background[0,1.35;15.2,8.35;"..mtos.theme.contrast_bg.."]"..
+		local formspec = "background[0,1.35;15.2,8.35;"..mtos.theme.contrast_background.."]"..
 				"textarea[0.35,1.35;15.08,9.5;text;;"..minetest.formspec_escape(data.text).."]"..
 				mtos.theme:get_button('0,0.5;1.5,0.8', 'minor', 'clear', 'New', 'New file')..
 				mtos.theme:get_button('2,0.5;1.5,0.8', 'minor', 'load', 'Load', 'Load file')..
