@@ -1,18 +1,21 @@
 laptop.themes = {
 	Freedom = {
-		launcher_bg = "laptop_theme_freedom_launcher_bg.png",
-		app_bg = "laptop_theme_freedom_app_bg.png",
+		desktop_background = "laptop_theme_freedom_desktop_background.png",
+		app_background = "laptop_theme_freedom_app_background.png",
 		major_button = "laptop_theme_freedom_major_button.png",
+		major_textcolor = "#000000",
 		minor_button = "laptop_theme_minor_button.png",
+		minor_textcolor = "#000000",
 		back_button = "laptop_theme_freedom_back_button.png",
 		exit_button = "laptop_theme_freedom_exit_button.png",
 		app_button = "laptop_theme_freedom_app_button.png",
 		back_textcolor = "#FFFF00",
 		exit_textcolor = "#FF0000",
-		app_textcolor = '#FFFFFF',
+		desktop_icon_label_textcolor = '#FFFFFF',
+		desktop_icon_label_button= "laptop_theme_desktop_icon_label_button_black.png",
 		textcolor = "#000000",
 		node_color = 0,
-		contrast_bg = "gui_formbg.png",
+		contrast_background = "gui_formbg.png",
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		exit_character = "X",
 		titlebar_textcolor = "#FFFFFF",
@@ -65,6 +68,11 @@ function theme_class:get_label(area, label, color_prefix)
 	else
 		return 'label['..area..';'..minetest.colorize(self.textcolor, minetest.formspec_escape(label))..']'
 	end
+end
+
+-- Get black text
+function theme_class:get_blacktext(area, label, color_prefix)
+		return 'label['..area..';'..minetest.colorize("#000000", minetest.formspec_escape(label))..']'
 end
 
 function laptop.get_theme(theme_name)
