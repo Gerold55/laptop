@@ -244,7 +244,7 @@ laptop.register_app("tetris", {
 						mtos.theme:get_button('6,3.5;3,1', 'major', 'new', 'New Game', 'Start a new game')
 
 		local t = tetris.data.t
-		return 'container[3,1]background[0,-0.05;4.35,9;'.. mtos.theme.contrast_bg .. ']' ..
+		return 'container[3,1]background[0,-0.05;4.35,9;'.. mtos.theme.contrast_background .. ']' ..
 			t.boardstring .. t.previewstring ..
 			draw_shape(t.cur, t.x, t.y, t.rot, boardx, boardy) ..
 			mtos.theme:get_label('6.5,0.1', 'Next...') ..
