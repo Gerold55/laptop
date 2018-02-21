@@ -7,7 +7,7 @@ laptop.register_theme("Circuit", {
 	exit_button = "laptop_theme_circuit_exit_button.png",
 	app_button = "blank.png",
 	textcolor = "#000000",
-	app_textcolor = "#ffffff",
+	desktop_icon_label_textcolor = "#ffffff",
 	taskbar_clock_position_and_size = "11,-.38;4,0.7",
 	exit_character = " ",
 	titlebar_textcolor = "#000000",

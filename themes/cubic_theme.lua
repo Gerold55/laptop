@@ -5,5 +5,5 @@ laptop.register_theme("Cubic", {
 	minor_button = "laptop_theme_minor_button.png",
 	back_button = "laptop_theme_cubic_back_button.png",
 	exit_button = "laptop_theme_cubic_exit_button.png",
-		app_button = "laptop_theme_cubic_app_button.png",
+	app_button = "laptop_theme_cubic_app_button.png",
 })
