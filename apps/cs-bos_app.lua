@@ -111,13 +111,13 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					add_outline(data, 'NO DISK FOUND')
 				end
-			elseif is_executable_app(laptop.apps[exec_command]) then
+			elseif is_executable_app(laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCH '..exec_command)
-				mtos:set_app(exec_command)
+				mtos:set_app(exec_command:lower())
 			elseif exec_command == "LIST" then
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(v) then
-						add_outline(data, k.." "..(v.name or "") .. " " .. (v.app_info or ""))
+						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 					end
 				end
 			elseif exec_command == "CLS" then
