@@ -83,9 +83,9 @@ laptop.register_app("cs-bos_launcher", {
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- exit app (if in app mode)
 			elseif exec_command == "date" then
-				add_outline(data.outlines, (os.date("%I:%M:%S %p")))
+				add_outline(data.outlines, os.date("%I:%M:%S %p"))
 			elseif exec_command == "ver" then
-				add_outline(data.outlines, ('CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
+				add_outline(data.outlines, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
 			else
 				add_outline(data.outlines, exec_command.."?SYNTAX ERROR")
 			end

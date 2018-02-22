@@ -328,7 +328,7 @@ laptop.register_hardware("laptop:monitor3", {
 	description = "Pentium 3",
 	infotext = "Pentium 3",
 	sequence = { "off", "on"},
-	custom_launcher = "cs-bos",
+	custom_launcher = "cs-bos_launcher",
 	hw_capabilities = { "floppy", "liveboot" },
 	node_defs = {
 		["on"] = {
