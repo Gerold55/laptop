@@ -28,9 +28,9 @@ laptop.register_app("removable", {
 				formspec = formspec .. mtos.theme:get_button('2,4;1.5,0.7', 'minor', 'restore', 'restore', 'Restore from backup disk')
 			end
 
-			-- format oldos
+			-- format CS-BOS
 			if idata.def.groups.laptop_removable_floppy then
-				formspec = formspec .. mtos.theme:get_button('4,3;1.5,0.7', 'minor', 'format', 'OldOS', 'Format disk to boot OldOS ')
+				formspec = formspec .. mtos.theme:get_button('4,3;1.5,0.7', 'minor', 'format', 'CS-BOS', 'Format disk to boot CS-BOS ')
 			end
 		end
 		return formspec
@@ -55,9 +55,9 @@ laptop.register_app("removable", {
 					idata.meta:set_string("os_format", "backup")
 					idata.meta:set_string("backup_data", mtos.meta:get_string('laptop_appdata'))
 					idata.label = "Backup of "..mtos.hwdef.description.." from "..os.date('%x')
-				elseif fields.format == "OldOS" then
+				elseif fields.format == "CS-BOS" then
 					idata.meta:set_string("os_format", "boot")
-					idata.label = "OldOS Boot Disk"
+					idata.label = "CS-BOS Boot Disk"
 				end
 			elseif fields.restore then
 				mtos.meta:set_string('laptop_appdata', idata.meta:get_string("backup_data"))
