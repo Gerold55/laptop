@@ -12,6 +12,12 @@ local function add_outline(outlines, line)
 	end
 end
 
+local function is_executable_app(app)
+	if app and not app.view and -- app given
+			not app.appwindow_formspec_func then--not a launcher
+		return true
+	end
+end
 
 laptop.register_app("cs-bos_launcher", {
 	app_name = "CS-BOS v3.31",
@@ -94,9 +100,15 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					add_outline(data.outlines, 'NO DISK FOUND')
 				end
-			elseif laptop.apps[exec_command] and not laptop.apps[exec_command].view then
+			elseif is_executable_app(laptop.apps[exec_command]) then
 				add_outline(data.outlines, 'LAUNCH '..exec_command)
 				mtos:set_app(exec_command)
+			elseif exec_command == "list" then
+				for k, v in pairs(laptop.apps) do
+					if is_executable_app(v) then
+						add_outline(data.outlines, k.." "..(v.name or "") .. " " .. (v.app_info or ""))
+					end
+				end
 			else
 				add_outline(data.outlines, exec_command.."?SYNTAX ERROR")
 			end
