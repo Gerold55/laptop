@@ -21,16 +21,16 @@ local function is_executable_app(app)
 end
 
 local help_texts = {
-	cls = "Clears the screen.",
-	date = "Displays the current system date.",
-	datetime = "Displays the current system date and time.",
-	help = "Displays HELP menu. HELP [command} displays help on that command.",
-	mem = "Displays memory usage table.",
-	time = "Displays the current system time.",
-	timedate = "Displays the current system time and date.",
-	exit = "Exits CS-BOS.",
-	todo = "View TODO list for CS-BOS",
-	ver = "Displays CS-BOS version.",
+	CLS = "Clears the screen.",
+	DATE = "Displays the current system date.",
+	DATETIME = "Displays the current system date and time.",
+	HELP = "Displays HELP menu. HELP [command} displays help on that command.",
+	MEM = "Displays memory usage table.",
+	TIME = "Displays the current system time.",
+	TIMEDATE = "Displays the current system time and date.",
+	EXIT = "Exits CS-BOS.",
+	TODO = "View TODO list for CS-BOS",
+	VER = "Displays CS-BOS version.",
 }
 
 laptop.register_app("cs-bos_launcher", {
@@ -189,11 +189,11 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, 'These shell commands are defined internally.')
 					add_outline(data, '')
 					for k, v in pairs(help_texts) do
-						add_outline(data, k:upper().."    "..v)
+						add_outline(data, k.."    "..v)
 					end
 					add_outline(data, '')
 				else
-					local help_text = help_texts[help_command] or "?SYNTAX ERROR"
+					local help_text = help_texts[help_command:upper()] or "?SYNTAX ERROR"
 					add_outline(data, help_command:upper().. "    "..help_text)
 						add_outline(data, '')
 				end
