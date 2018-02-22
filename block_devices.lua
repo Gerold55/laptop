@@ -73,6 +73,16 @@ function bdev:get_removable_disk(removable_type)
 				end
 			end
 		end
+		function data:eject()
+			if not self.stack then
+				return false
+			end
+			local drop_pos = table.copy(self.bdev.os.pos)
+			drop_pos = { x=drop_pos.x+math.random()*2-1, y=drop_pos.y,z=drop_pos.z+math.random()*2-1 }
+			minetest.item_drop(self.stack, nil, drop_pos)
+			self.stack = nil
+			return true
+		end
 		data:reload()
 		self.removable_disk = data
 	end

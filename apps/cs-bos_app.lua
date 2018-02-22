@@ -86,6 +86,14 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data.outlines, os.date("%I:%M:%S %p"))
 			elseif exec_command == "ver" then
 				add_outline(data.outlines, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
+			elseif exec_command == "eject" then
+				local idata = mtos.bdev:get_removable_disk()
+				local success = idata:eject()
+				if success then
+					add_outline(data.outlines, 'DISK EJECTED')
+				else
+					add_outline(data.outlines, 'NO DISK FOUND')
+				end
 			else
 				add_outline(data.outlines, exec_command.."?SYNTAX ERROR")
 			end
