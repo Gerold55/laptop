@@ -3,6 +3,7 @@ local initial_message = {
 	"(C)COPYRIGHT 1982 CARDIFF-SOFT",
 	"128K RAM SYSTEM  77822 BYTES FREE",
 	"",
+	">",
 }
 
 local function add_outline(data, line)
@@ -58,11 +59,17 @@ laptop.register_app("cs-bos_launcher", {
 
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
 
-		data.outlines = data.outlines or table.copy(initial_message)
 		data.inputfield = data.inputfield or ""
 			-- Apple ][ Green: #00FF33
 			-- PC Amber: #FFB000
 		data.tty = data.tty or "#00FF33"
+
+		if not data.outlines then
+			data.outlines = {}
+			for _, line in ipairs(initial_message) do
+				add_outline(data, line)
+			end
+		end
 
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
@@ -82,7 +89,7 @@ laptop.register_app("cs-bos_launcher", {
 	receive_fields_func = function(cs_bos, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
 
-		data.outlines = data.outlines or table.copy(initial_message)
+		data.outlines = data.outlines or {}
 		data.inputfield = data.inputfield or ""
 
 		if fields.inputfield then -- move received data to the formspec input field
@@ -121,7 +128,7 @@ laptop.register_app("cs-bos_launcher", {
 					end
 				end
 			elseif exec_command == "CLS" then
-				count=1 repeat count=count+1 add_outline(data, '') until count==35
+				for i=1, 35 do add_outline(data, '') end
 			elseif exec_command == "TIME" then
 				add_outline(data, os.date("%I:%M:%S %p"))
 				add_outline(data, '')
