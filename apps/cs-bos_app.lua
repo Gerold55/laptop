@@ -1,6 +1,9 @@
+local version = "3.31"
+local releaseyear = "1982"
+
 local initial_message = {
 	"BASIC OPERATING SYSTEM",
-	"(C)COPYRIGHT 1982 CARDIFF-SOFT",
+	"(C)COPYRIGHT "..releaseyear.." CARDIFF-SOFT",
 	"128K RAM SYSTEM  77822 BYTES FREE",
 	"",
 }
@@ -34,8 +37,10 @@ local help_texts = {
 }
 
 laptop.register_app("cs-bos_launcher", {
-	app_name = "CS-BOS v3.31",
+	app_name = "CS-BOS Prompt",
+	app_info = "Command Line Interface",
 	fullscreen = true,
+	app_icon = "laptop_cs_bos.png",
 
 	formspec_func = function(cs_bos, mtos)
 
@@ -140,7 +145,7 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
 				add_outline(data, '')
 			elseif exec_command == "VER" then
-				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
+				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..version)
 				add_outline(data, '')
 			elseif exec_command == "MEM" then
 				add_outline(data, 'Memory Type                 Total =            Used       +       Free')
