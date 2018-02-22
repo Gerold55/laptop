@@ -1,17 +1,14 @@
-local tty="#00FF33"
--- Apple ][ Green: #00FF33
--- PC Amber: #FFB000
 local initial_message = {
-	tty.."BASIC OPERATING SYSTEM",
-	tty.."(C)COPYRIGHT 1982 CARDIFF-SOFT",
-	tty.."128K RAM SYSTEM  77822 BYTES FREE",
+	"BASIC OPERATING SYSTEM",
+	"(C)COPYRIGHT 1982 CARDIFF-SOFT",
+	"128K RAM SYSTEM  77822 BYTES FREE",
 	"",
 }
 
-local function add_outline(outlines, line)
-	table.insert(outlines, line)
-	if #outlines > 34 then -- maximum lines count
-		table.remove(outlines,1)
+local function add_outline(data, line)
+	table.insert(data.outlines, data.tty..line)
+	if #data.outlines > 34 then -- maximum lines count
+		table.remove(data.outlines,1)
 	end
 end
 
@@ -55,6 +52,9 @@ laptop.register_app("cs-bos_launcher", {
 
 		data.outlines = data.outlines or table.copy(initial_message)
 		data.inputfield = data.inputfield or ""
+			-- Apple ][ Green: #00FF33
+			-- PC Amber: #FFB000
+		data.tty = data.tty or "#00FF33"
 
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
@@ -86,7 +86,7 @@ laptop.register_app("cs-bos_launcher", {
 		-- run the command
 			local exec_all = data.inputfield:split(" ")
 			local exec_command = exec_all[1] --further parameters are 2++
-			add_outline(data.outlines, tty.."> "..data.inputfield)
+			add_outline(data, "> "..data.inputfield)
 			data.inputfield = ""
 			if exec_command == nil then --empty line
 			elseif exec_command == "exit" then
@@ -96,130 +96,130 @@ laptop.register_app("cs-bos_launcher", {
 				local idata = mtos.bdev:get_removable_disk()
 				local success = idata:eject()
 				if success then
-					add_outline(data.outlines, 'DISK EJECTED')
+					add_outline(data, 'DISK EJECTED')
 				else
-					add_outline(data.outlines, 'NO DISK FOUND')
+					add_outline(data, 'NO DISK FOUND')
 				end
 			elseif is_executable_app(laptop.apps[exec_command]) then
-				add_outline(data.outlines, 'LAUNCH '..exec_command)
+				add_outline(data, 'LAUNCH '..exec_command)
 				mtos:set_app(exec_command)
 			elseif exec_command == "list" then
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(v) then
-						add_outline(data.outlines, k.." "..(v.name or "") .. " " .. (v.app_info or ""))
+						add_outline(data, k.." "..(v.name or "") .. " " .. (v.app_info or ""))
 					end
 				end
 			elseif exec_command == "cls" then
-				count=1 repeat count=count+1 add_outline(data.outlines, '') until count==35
+				count=1 repeat count=count+1 add_outline(data, '') until count==35
 			elseif exec_command == "time" then
-				add_outline(data.outlines, tty..os.date("%I:%M:%S %p"))
-				add_outline(data.outlines, '')
+				add_outline(data, os.date("%I:%M:%S %p"))
+				add_outline(data, '')
 			elseif exec_command == "date" then
-				add_outline(data.outlines, tty..os.date("%A %B %d, %Y"))
-				add_outline(data.outlines, '')
+				add_outline(data, os.date("%A %B %d, %Y"))
+				add_outline(data, '')
 			elseif exec_command == "timedate" then
-				add_outline(data.outlines, tty..os.date("%I:%M:%S %p, %A %B %d, %Y"))
-				add_outline(data.outlines, '')
+				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
+				add_outline(data, '')
 			elseif exec_command == "ver" then
-				add_outline(data.outlines, tty..'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
-				add_outline(data.outlines, '')
+				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
+				add_outline(data, '')
 			elseif exec_command == "mem" then
-				add_outline(data.outlines, tty..'Memory Type                 Total =            Used       +       Free')
-				add_outline(data.outlines, tty..'------------------------       -------------        -------------       -------------')
-				add_outline(data.outlines, tty..'Conventional                        640                   16                 624')
-				add_outline(data.outlines, tty..'Upper                                    123                   86                   37')
-				add_outline(data.outlines, tty..'Reserved                                  0                     0                      0')
-				add_outline(data.outlines, tty..'Extended (XMS)*         130,309           53,148            77,198')
-				add_outline(data.outlines, tty..'------------------------       -------------        -------------       -------------')
-				add_outline(data.outlines, tty..'Total Memory                131,072            53,250           77,822')
-				add_outline(data.outlines, '')
+				add_outline(data, 'Memory Type                 Total =            Used       +       Free')
+				add_outline(data, '------------------------       -------------        -------------       -------------')
+				add_outline(data, 'Conventional                        640                   16                 624')
+				add_outline(data, 'Upper                                    123                   86                   37')
+				add_outline(data, 'Reserved                                  0                     0                      0')
+				add_outline(data, 'Extended (XMS)*         130,309           53,148            77,198')
+				add_outline(data, '------------------------       -------------        -------------       -------------')
+				add_outline(data, 'Total Memory                131,072            53,250           77,822')
+				add_outline(data, '')
 			elseif exec_command == "dir" then
-				add_outline(data.outlines, tty..'List Files')
-				add_outline(data.outlines, '')
+				add_outline(data, 'List Files')
+				add_outline(data, '')
 			elseif exec_command == "textcolor" then
 				local textcolor = exec_all[2]
 				if textcolor == "green" then
-							tty="#00FF33"
-							add_outline(data.outlines, '')
+							data.tty="#00FF33"
+							add_outline(data, 'Color changed to '..textcolor)
 				elseif textcolor == "amber" then
-							tty="#FFB000"
-							add_outline(data.outlines, '')
+							data.tty="#FFB000"
+							add_outline(data, 'Color changed to '..textcolor)
 				elseif textcolor == "white" then
-							tty="#FFFFFF"
-							add_outline(data.outlines, '')
-				else add_outline(data.outlines, tty..'?SYNATX ERROR')
-				add_outline(data.outlines, '')
+							data.tty="#FFFFFF"
+							add_outline(data, 'Color changed to '..textcolor)
+				else add_outline(data, '?SYNATX ERROR')
+				add_outline(data, '')
 			end
 
 ----TODO List----
 			elseif exec_command == "todo" then
-				add_outline(data.outlines, tty..'cload: load a specific file from cassette')
-				add_outline(data.outlines, tty..'del: remove file from current disk or cassette')
-				add_outline(data.outlines, tty..'dir: list files or apps on current disk')
-				add_outline(data.outlines, tty..'dir0: list files or apps on disk 0')
-				add_outline(data.outlines, tty..'dir1: list files or apps on disk 1')
-				add_outline(data.outlines, tty..'dir2: list files or apps on disk 1')
-				add_outline(data.outlines, tty..'eject: eject disk')
-				add_outline(data.outlines, tty..'format: format disk')
-				add_outline(data.outlines, tty..'format /s: make boot disk')
-				add_outline(data.outlines, tty..'Use up arrow to load previous command')
-				add_outline(data.outlines, '')
+				add_outline(data, 'cload: load a specific file from cassette')
+				add_outline(data, 'del: remove file from current disk or cassette')
+				add_outline(data, 'dir: list files or apps on current disk')
+				add_outline(data, 'dir0: list files or apps on disk 0')
+				add_outline(data, 'dir1: list files or apps on disk 1')
+				add_outline(data, 'dir2: list files or apps on disk 1')
+				add_outline(data, 'format: format disk')
+				add_outline(data, 'format /s: make boot disk')
+				add_outline(data, 'Use up arrow to load previous command')
+				add_outline(data, '')
 
 ----help commands----
 				elseif exec_command == "help" then
 					local help_command = exec_all[2]
 					if help_command == "cls" then
-						add_outline(data.outlines, tty.." CLS     Clears the screen.")
-						add_outline(data.outlines, '')
+						add_outline(data, " CLS     Clears the screen.")
+						add_outline(data, '')
 					elseif help_command == "date" then
-						add_outline(data.outlines, tty.." DATE    Displays the current system date.")
-						add_outline(data.outlines, '')
+						add_outline(data, " DATE    Displays the current system date.")
+						add_outline(data, '')
 					elseif help_command == "datetime" then
-						add_outline(data.outlines, tty.." DATETIME    Displays the current system date and time.")
-						add_outline(data.outlines, '')
---					elseif help_command == "exit" then
---						add_outline(data.outlines, tty.." EXIT    Exits CS-BOS.")
-						add_outline(data.outlines, '')
+						add_outline(data, " DATETIME    Displays the current system date and time.")
+						add_outline(data, '')
+						add_outline(data, '')
 					elseif help_command == "help" then
-						add_outline(data.outlines, tty.." HELP    Displays HELP menu. HELP [command} displays help on that command.")
-						add_outline(data.outlines, '')
+						add_outline(data, " HELP    Displays HELP menu. HELP [command} displays help on that command.")
+						add_outline(data, '')
 					elseif help_command == "mem" then
-						add_outline(data.outlines, tty.." MEM    Displays memory usage table.")
-						add_outline(data.outlines, '')
+						add_outline(data, " MEM    Displays memory usage table.")
+						add_outline(data, '')
 					elseif help_command == "time" then
-						add_outline(data.outlines, tty.." TIME    Displays the current system time.")
-						add_outline(data.outlines, '')
+						add_outline(data, " TIME    Displays the current system time.")
+						add_outline(data, '')
 					elseif help_command == "timedate" then
-						add_outline(data.outlines, tty.." TIMEDATE    Displays the current system time and date.")
-						add_outline(data.outlines, '')
+						add_outline(data, " TIMEDATE    Displays the current system time and date.")
+						add_outline(data, '')
+					elseif help_command == "exit" then
+						add_outline(data, " EXIT    Exits CS-BOS.")
+
 					elseif help_command == "todo" then
-						add_outline(data.outlines, tty.." TODO      View TODO list for CS-BOS")
-						add_outline(data.outlines, '')
+						add_outline(data, " TODO      View TODO list for CS-BOS")
+						add_outline(data, '')
 					elseif help_command == "ver" then
-						add_outline(data.outlines, tty.." VER    Displays CS-BOS version.")
-						add_outline(data.outlines, '')
+						add_outline(data, " VER    Displays CS-BOS version.")
+						add_outline(data, '')
 ----main help command--
 					elseif help_command == nil then
-						add_outline(data.outlines, tty..'These shell commands are defined internally.')
-						add_outline(data.outlines, '')
-						add_outline(data.outlines, tty..' CLS       Clears the screen.')
-						add_outline(data.outlines, tty..' DATE      Displays the current system date.')
-		--				add_outline(data.outlines, tty..' EXIT      EXITS CS-BOS.')
-						add_outline(data.outlines, tty..' HELP      Displays HELP menu. HELP [command} displays help on that command.')
-						add_outline(data.outlines, tty..' MEM       Displays memory usage table.')
-						add_outline(data.outlines, tty..' TIME      Displays the current system time.')
-						add_outline(data.outlines, tty..' TIMEDATE  Displays the current system time and date.')
-						add_outline(data.outlines, tty..' TODO      View TODO list for CS-BOS')
-						add_outline(data.outlines, tty..' VER     Displays CS-BOS version.')
-						add_outline(data.outlines, '')	
+						add_outline(data, 'These shell commands are defined internally.')
+						add_outline(data, '')
+						add_outline(data, ' CLS       Clears the screen.')
+						add_outline(data, ' DATE      Displays the current system date.')
+						add_outline(data, ' EXIT      EXITS CS-BOS.')
+						add_outline(data, ' HELP      Displays HELP menu. HELP [command} displays help on that command.')
+						add_outline(data, ' MEM       Displays memory usage table.')
+						add_outline(data, ' TIME      Displays the current system time.')
+						add_outline(data, ' TIMEDATE  Displays the current system time and date.')
+						add_outline(data, ' TODO      View TODO list for CS-BOS')
+						add_outline(data, ' VER     Displays CS-BOS version.')
+						add_outline(data, '')
 					else
-						add_outline(data.outlines, tty.."?SYNTAX ERROR")
-						add_outline(data.outlines, '')
+						add_outline(data, "?SYNTAX ERROR")
+						add_outline(data, '')
 					end
 ----end help commands----
 			else
-				add_outline(data.outlines, tty.."?SYNTAX ERROR")
-				add_outline(data.outlines, '')
+				add_outline(data, "?SYNTAX ERROR")
+				add_outline(data, '')
 			end
 		end
 	end,
