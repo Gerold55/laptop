@@ -94,11 +94,14 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					add_outline(data.outlines, 'NO DISK FOUND')
 				end
+			elseif laptop.apps[exec_command] and not laptop.apps[exec_command].view then
+				add_outline(data.outlines, 'LAUNCH '..exec_command)
+				mtos:set_app(exec_command)
 			else
 				add_outline(data.outlines, exec_command.."?SYNTAX ERROR")
 			end
 		end
 	end,
 
-
+	appwindow_formspec_func = laptop.apps["launcher"].appwindow_formspec_func, --re-use the default launcher theming
 })
