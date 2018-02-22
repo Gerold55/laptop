@@ -7,7 +7,7 @@ local initial_message = {
 }
 
 local function add_outline(data, line)
-	table.insert(data.outlines, data.tty..line)
+	table.insert(data.outlines, line)
 	if #data.outlines > 34 then -- maximum lines count
 		table.remove(data.outlines,1)
 	end
@@ -79,7 +79,7 @@ laptop.register_app("cs-bos_launcher", {
 			if idx > 1 then
 				formspec = formspec..','
 			end
-			formspec = formspec..minetest.formspec_escape(line)
+			formspec = formspec..data.tty..minetest.formspec_escape(line)
 		end
 		formspec = formspec..";"..#data.outlines.."]"..
 				"field_close_on_enter[inputfield;false]"
