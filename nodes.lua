@@ -206,7 +206,7 @@ laptop.register_hardware("laptop:cube", {
 	}
 })
 
-laptop.register_hardware("laptop:monitor2", {
+laptop.register_hardware("laptop:fruit_zero", {
 	description = "Fruit Zero",
 	infotext = "Fruit Zero",
 	sequence = { "off", "on"},
@@ -264,7 +264,7 @@ laptop.register_hardware("laptop:monitor2", {
 })
 
 
-laptop.register_hardware("laptop:monitor4", {
+laptop.register_hardware("laptop:bell_crossover", {
 	description = "Bell CrossOver",
 	infotext = "Bell CrossOver",
 	sequence = { "off", "on"},
@@ -324,11 +324,11 @@ laptop.register_hardware("laptop:monitor4", {
 })
 
 --Old PC--
-laptop.register_hardware("laptop:monitor3", {
-	description = "Pentium 3",
-	infotext = "Pentium 3",
+laptop.register_hardware("laptop:kodiak_1000", {
+	description = "Kodiak 1000",
+	infotext = "Kodiak 1000",
 	sequence = { "off", "on"},
-	custom_launcher = "cs-bos",
+	custom_launcher = "cs-bos_launcher",
 	hw_capabilities = { "floppy", "liveboot" },
 	node_defs = {
 		["on"] = {
@@ -382,9 +382,9 @@ laptop.register_hardware("laptop:monitor3", {
 })
 
 -- Laptop v2.0
-laptop.register_hardware("laptop:laptop", {
-	description = "laptop v2.0",
-	infotext = "laptop v2.0",
+laptop.register_hardware("laptop:portable_workstation_2", {
+	description = "Portable Workstation 2",
+	infotext = "Portable Workstation 2",
 	sequence = { "closed", "open", "open_on"},
 	node_defs = {
 		["closed"] = {
