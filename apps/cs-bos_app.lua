@@ -74,6 +74,8 @@ laptop.register_app("cs-bos_launcher", {
 			local exec_command = exec_all[1] --further parameters are 2++
 			add_outline(data.outlines, "> "..data.inputfield)
 			data.inputfield = ""
+
+----Commands Here----
 			if exec_command == nil then --empty line
 			elseif exec_command == "cls" then
 				data.outlines = nil -- reset screen
@@ -81,9 +83,11 @@ laptop.register_app("cs-bos_launcher", {
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- exit app (if in app mode)
 			elseif exec_command == "date" then
-				add_outline(data.outlines, os.date())
+				add_outline(data.outlines, (os.date("%I:%M:%S %p")))
+			elseif exec_command == "ver" then
+				add_outline(data.outlines, ('CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
 			else
-				add_outline(data.outlines, exec_command..": command not found")
+				add_outline(data.outlines, exec_command.."?SYNTAX ERROR")
 			end
 		end
 	end,
