@@ -20,8 +20,16 @@ local function is_executable_app(app)
 end
 
 local help_texts = {
-	cls = "bla bla",
-	time = "bla bla",
+	cls = "Clears the screen.",
+	date = "Displays the current system date.",
+	datetime = "Displays the current system date and time.",
+	help = "Displays HELP menu. HELP [command} displays help on that command.",
+	mem = "Displays memory usage table.",
+	time = "Displays the current system time.",
+	timedate = "Displays the current system time and date.",
+	exit = "Exits CS-BOS.",
+	todo = "View TODO list for CS-BOS",
+	ver = "Displays CS-BOS version.",
 }
 
 laptop.register_app("cs-bos_launcher", {
@@ -165,58 +173,20 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, '')
 
 ----help commands----
-				elseif exec_command == "help" then
-					local help_command = exec_all[2]
-					if help_command == "cls" then
-						add_outline(data, " CLS     Clears the screen.")
-						add_outline(data, '')
-					elseif help_command == "date" then
-						add_outline(data, " DATE    Displays the current system date.")
-						add_outline(data, '')
-					elseif help_command == "datetime" then
-						add_outline(data, " DATETIME    Displays the current system date and time.")
-						add_outline(data, '')
-						add_outline(data, '')
-					elseif help_command == "help" then
-						add_outline(data, " HELP    Displays HELP menu. HELP [command} displays help on that command.")
-						add_outline(data, '')
-					elseif help_command == "mem" then
-						add_outline(data, " MEM    Displays memory usage table.")
-						add_outline(data, '')
-					elseif help_command == "time" then
-						add_outline(data, " TIME    Displays the current system time.")
-						add_outline(data, '')
-					elseif help_command == "timedate" then
-						add_outline(data, " TIMEDATE    Displays the current system time and date.")
-						add_outline(data, '')
-					elseif help_command == "exit" then
-						add_outline(data, " EXIT    Exits CS-BOS.")
-
-					elseif help_command == "todo" then
-						add_outline(data, " TODO      View TODO list for CS-BOS")
-						add_outline(data, '')
-					elseif help_command == "ver" then
-						add_outline(data, " VER    Displays CS-BOS version.")
-						add_outline(data, '')
-----main help command--
-					elseif help_command == nil then
-						add_outline(data, 'These shell commands are defined internally.')
-						add_outline(data, '')
-						add_outline(data, ' CLS       Clears the screen.')
-						add_outline(data, ' DATE      Displays the current system date.')
-						add_outline(data, ' EXIT      EXITS CS-BOS.')
-						add_outline(data, ' HELP      Displays HELP menu. HELP [command} displays help on that command.')
-						add_outline(data, ' MEM       Displays memory usage table.')
-						add_outline(data, ' TIME      Displays the current system time.')
-						add_outline(data, ' TIMEDATE  Displays the current system time and date.')
-						add_outline(data, ' TODO      View TODO list for CS-BOS')
-						add_outline(data, ' VER     Displays CS-BOS version.')
-						add_outline(data, '')
-					else
-						add_outline(data, "?SYNTAX ERROR")
-						add_outline(data, '')
+			elseif exec_command == "help" then
+				local help_command = exec_all[2]
+				if not help_command then -- no argument, print all
+					add_outline(data, 'These shell commands are defined internally.')
+					add_outline(data, '')
+					for k, v in pairs(help_texts) do
+						add_outline(data, k.."    "..v)
 					end
-----end help commands----
+					add_outline(data, '')
+				else
+					local help_text = help_texts[help_command] or "?SYNTAX ERROR"
+					add_outline(data, help_command.. "    "..help_text)
+						add_outline(data, '')
+				end
 			else
 				add_outline(data, "?SYNTAX ERROR")
 				add_outline(data, '')
