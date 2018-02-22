@@ -25,10 +25,12 @@ end
 local help_texts = {
 	CLS = "                  Clears the screen.",
 	DATE = "                Displays the current system date.",
-	DIR = "                    Displays directory of current disk. Use DIR[#] to view directory of other disks.",
+	DIR = "                    Displays directory of current disk.",
 	EXIT = "                  Exits CS-BOS.",
 	HELP = "                Displays HELP menu. HELP [command] displays help on that command.",
 	MEM = "                 Displays memory usage table.",
+	QUIT = "                  Quits an application.",
+	REBOOT = "          Perform a soft reboot.",
 	TEXTCOLOR = "  Change terminal text color. TEXTCOLOR [green, amber, or white]",
 	TIME = "                 Displays the current system time.",
 	TIMEDATE = "       Displays the current system time and date.",
@@ -114,7 +116,13 @@ laptop.register_app("cs-bos_launcher", {
 			if exec_command == nil then --empty line
 			elseif exec_command == "EXIT" then
 				data.outlines = nil  -- reset screen
-				mtos:set_app()  -- exit app (if in app mode)
+				mtos:power_off()  -- exit CS_BOS
+			elseif exec_command == "QUIT" then
+				data.outlines = nil  -- reset screen
+				mtos:set_app()  -- quit app (if in app mode)
+			elseif exec_command == "REBOOT" then
+				data.outlines = nil  -- reset screen
+				mtos:power_on()  -- reboots computer
 			elseif exec_command == "EJECT" then
 				local idata = mtos.bdev:get_removable_disk()
 				local success = idata:eject()
@@ -127,6 +135,8 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'LAUNCH '..exec_command)
 				mtos:set_app(exec_command:lower())
 			elseif exec_command == "DIR" then
+				add_outline(data, 'VIEWING CONTENTS OF DISK 0')
+				add_outline(data, '')
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(v) then
 						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
