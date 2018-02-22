@@ -38,6 +38,7 @@ The mod includes next components:
 | os_dialogs | Select file dialog | by bell07 |
 | os_print | Printer OS and driver | by bell07 |
 | removable | Removable storage manager | by bell07 |
+| CS-BOS | Text based Operating System | by Grizzly Adam and bell07 |
 
 ### Office
 | Name | Description | Author |
