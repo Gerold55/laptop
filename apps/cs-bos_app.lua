@@ -96,11 +96,14 @@ laptop.register_app("cs-bos_launcher", {
 			local exec_command = exec_all[1] --further parameters are 2++
 			add_outline(data, "> "..data.inputfield)
 			data.inputfield = ""
+			if exec_command then
+				exec_command = exec_command:upper()
+			end
 			if exec_command == nil then --empty line
-			elseif exec_command == "exit" then
+			elseif exec_command == "EXIT" then
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- exit app (if in app mode)
-			elseif exec_command == "eject" then
+			elseif exec_command == "EJECT" then
 				local idata = mtos.bdev:get_removable_disk()
 				local success = idata:eject()
 				if success then
@@ -111,27 +114,27 @@ laptop.register_app("cs-bos_launcher", {
 			elseif is_executable_app(laptop.apps[exec_command]) then
 				add_outline(data, 'LAUNCH '..exec_command)
 				mtos:set_app(exec_command)
-			elseif exec_command == "list" then
+			elseif exec_command == "LIST" then
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(v) then
 						add_outline(data, k.." "..(v.name or "") .. " " .. (v.app_info or ""))
 					end
 				end
-			elseif exec_command == "cls" then
+			elseif exec_command == "CLS" then
 				count=1 repeat count=count+1 add_outline(data, '') until count==35
-			elseif exec_command == "time" then
+			elseif exec_command == "TIME" then
 				add_outline(data, os.date("%I:%M:%S %p"))
 				add_outline(data, '')
-			elseif exec_command == "date" then
+			elseif exec_command == "DATE" then
 				add_outline(data, os.date("%A %B %d, %Y"))
 				add_outline(data, '')
-			elseif exec_command == "timedate" then
+			elseif exec_command == "TIMEDATE" then
 				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
 				add_outline(data, '')
-			elseif exec_command == "ver" then
+			elseif exec_command == "VER" then
 				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
 				add_outline(data, '')
-			elseif exec_command == "mem" then
+			elseif exec_command == "MEM" then
 				add_outline(data, 'Memory Type                 Total =            Used       +       Free')
 				add_outline(data, '------------------------       -------------        -------------       -------------')
 				add_outline(data, 'Conventional                        640                   16                 624')
@@ -141,10 +144,10 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, '------------------------       -------------        -------------       -------------')
 				add_outline(data, 'Total Memory                131,072            53,250           77,822')
 				add_outline(data, '')
-			elseif exec_command == "dir" then
+			elseif exec_command == "DIR" then
 				add_outline(data, 'List Files')
 				add_outline(data, '')
-			elseif exec_command == "textcolor" then
+			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
 				if textcolor == "green" then
 							data.tty="#00FF33"
@@ -160,7 +163,7 @@ laptop.register_app("cs-bos_launcher", {
 			end
 
 ----TODO List----
-			elseif exec_command == "todo" then
+			elseif exec_command == "TODO" then
 				add_outline(data, 'cload: load a specific file from cassette')
 				add_outline(data, 'del: remove file from current disk or cassette')
 				add_outline(data, 'dir: list files or apps on current disk')
@@ -173,18 +176,18 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, '')
 
 ----help commands----
-			elseif exec_command == "help" then
+			elseif exec_command == "HELP" then
 				local help_command = exec_all[2]
 				if not help_command then -- no argument, print all
 					add_outline(data, 'These shell commands are defined internally.')
 					add_outline(data, '')
 					for k, v in pairs(help_texts) do
-						add_outline(data, k.."    "..v)
+						add_outline(data, k:upper().."    "..v)
 					end
 					add_outline(data, '')
 				else
 					local help_text = help_texts[help_command] or "?SYNTAX ERROR"
-					add_outline(data, help_command.. "    "..help_text)
+					add_outline(data, help_command:upper().. "    "..help_text)
 						add_outline(data, '')
 				end
 			else
