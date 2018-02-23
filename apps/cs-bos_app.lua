@@ -37,8 +37,8 @@ local help_texts = {
 	TIMEDATE = "       Displays the current system time and date.",
 	TODO = "               View TODO list for CS-BOS",
 	VER = "                  Displays CS-BOS version.",
-	FORMAT = "          [/E][/S][/D]  Show format info or format Disk. /E empty disk, /S creates boot disk, /D creates data disk",
-	LABEL = "              [new_label] Show / Set floppy label",
+	FORMAT = "          View format information or Format Disk. FORMAT [/E] Erase disk, [/S] Create system (boot) disk, [/D] Create data disk",
+	LABEL = "              Show/Set floppy label. LABEL [new_label]",
 }
 
 
@@ -47,8 +47,6 @@ local function get_initial_message(data)
 			"BASIC OPERATING SYSTEM v"..data.os_attr.version_string,
 			"(C)COPYRIGHT "..data.os_attr.releaseyear.." CARDIFF-SOFT",
 			"128K RAM SYSTEM  77822 BYTES FREE",
-			"",
-			">"
 		}
 end
 
@@ -198,6 +196,8 @@ laptop.register_app("cs-bos_launcher", {
 			elseif is_executable_app(mtos, laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCHED '..exec_command)
 				mtos:set_app(exec_command:lower())
+
+
 			elseif exec_command == "DIR" then
 				add_outline(data, 'VIEWING CONTENTS OF DISK 0')
 				add_outline(data, '')
@@ -206,6 +206,8 @@ laptop.register_app("cs-bos_launcher", {
 						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 					end
 				end
+
+
 			elseif exec_command == "INFO" then
 				local info_file = exec_all[2]
 				if is_executable_app(mtos, v) then
@@ -307,8 +309,7 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'del: remove file from current disk or cassette')
 				add_outline(data, 'dir0: list files or apps on disk 0')
 				add_outline(data, 'dir1: list files or apps on disk 1')
-				add_outline(data, 'dir2: list files or apps on disk 1')
-				add_outline(data, 'Use up arrow to load previous command')
+				add_outline(data, 'dir2: list files or apps on disk 2')
 				add_outline(data, '')
 
 ----help commands----
@@ -334,7 +335,7 @@ laptop.register_app("cs-bos_launcher", {
 					if data.os_attr.blacklist_commands[help_command] then
 						help_text = "?NOT IMPLEMENTED ERROR"
 					else
-						help_text = help_texts[help_command] or "?SYNTAX ERROR"
+						help_text = help_texts[help_command] or "?  NO HELP IS AVAILABLE FOR THAT TOPIC"
 					end
 					add_outline(data, help_command:upper().. "    "..help_text)
 						add_outline(data, '')
