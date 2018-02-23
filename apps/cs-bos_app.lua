@@ -93,12 +93,14 @@ laptop.register_app("cs-bos_launcher", {
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
 				"field[0.020,9.93;15.6,1;inputfield;;"..minetest.formspec_escape(data.inputfield).."]"..
-				"textlist[-.35,-.35;15.57, 10.12;outlines;"
+				"tablecolumns[text]tableoptions[background=#000000;border=false;highlight=#000000;"..
+				"color="..sdata.tty..";highlight_text="..sdata.tty.."]"..
+				"table[-0.35,-0.35;15.57, 10.12;outlines;"
 		for idx,line in ipairs(data.outlines) do
 			if idx > 1 then
 				formspec = formspec..','
 			end
-			formspec = formspec..sdata.tty..minetest.formspec_escape(line)
+			formspec = formspec..minetest.formspec_escape(line)
 		end
 		formspec = formspec..";"..#data.outlines.."]"..
 				"field_close_on_enter[inputfield;false]"
