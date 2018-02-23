@@ -116,13 +116,20 @@ laptop.register_app("cs-bos_launcher", {
 			end
 			if exec_command == nil then --empty line
 			elseif exec_command == "EXIT" then
-				data.outlines = nil  -- reset screen
-				mtos:power_off()  -- exit CS_BOS
+				-- same code as in node_fw on punch to disable the OS
+				if mtos.hwdef.next_node then
+					local hwdef_next = laptop.node_config[mtos.hwdef.next_node]
+					if hwdef_next.hw_state then
+						mtos[hwdef_next.hw_state](mtos, mtos.hwdef.next_node)
+					else
+						mtos:swap_node(hwdef.next_node)
+						mtos:save()
+					end
+				end
 			elseif exec_command == "QUIT" then
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- quit app (if in app mode)
 			elseif exec_command == "REBOOT" then
-				data.outlines = nil  -- reset screen
 				mtos:power_on()  -- reboots computer
 			elseif exec_command == "EJECT" then
 				local idata = mtos.bdev:get_removable_disk()
