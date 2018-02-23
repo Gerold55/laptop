@@ -196,7 +196,7 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, 'NO DISK FOUND')
 				end
 			elseif is_executable_app(mtos, laptop.apps[exec_command:lower()]) then
-				add_outline(data, 'LAUNCH '..exec_command)
+				add_outline(data, 'LAUNCHED '..exec_command)
 				mtos:set_app(exec_command:lower())
 			elseif exec_command == "DIR" then
 				add_outline(data, 'VIEWING CONTENTS OF DISK 0')
@@ -205,6 +205,11 @@ laptop.register_app("cs-bos_launcher", {
 					if is_executable_app(mtos, v) then
 						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 					end
+				end
+			elseif exec_command == "INFO" then
+				local info_file = exec_all[2]
+				if is_executable_app(mtos, v) then
+					add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 				end
 			elseif exec_command == "CLS" then
 				for i=1, 35 do add_outline(data, '') end
