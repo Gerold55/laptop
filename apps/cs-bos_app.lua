@@ -16,12 +16,16 @@ local function add_outline(data, line)
 	end
 end
 
-local function is_executable_app(app)
-	if app and not app.view and -- app given
+local function is_executable_app(mtos, app)
+	if not mtos.sysdata then -- cannot executed withoud sysdata
+		return false
+	elseif app and not app.view and -- app given
 			not app.appwindow_formspec_func and --not a launcher
 			app.name ~= 'removable' and -- skip this apps hard-coded
 			app.name ~= 'launcher_settings' then
 		return true
+	else
+		return false
 	end
 end
 
@@ -51,8 +55,12 @@ laptop.register_app("cs-bos_launcher", {
 
 	formspec_func = function(cs_bos, mtos)
 
-		-- no system found. Error
-		if not mtos.sysdata then
+		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
+		local sysos = mtos.bdev:get_app_storage('ram', 'os')
+		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
+
+		-- no system found. In case of booted from removable, continue in live mode
+		if not mtos.sysdata and sysos.booted_from ~= "removable" then
 			local formspec = "size[10,7]background[10,7;0,0;laptop_launcher_insert_floppy.png;true]"..
 					"listcolors[#00000069;#5A5A5A;#141318;#30434C;#FFF]"..
 					"list[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main;2.5,3;1,1;]" ..
@@ -69,13 +77,11 @@ laptop.register_app("cs-bos_launcher", {
 			return formspec
 		end
 
-		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
-		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos')
-
 		data.inputfield = data.inputfield or ""
 			-- Apple ][ Green: #00FF33
 			-- PC Amber: #FFB000
-		sdata.tty = sdata.tty or "#00FF33"
+		sdata.tty = sdata.tty or data.tty or "#00FF33"
+		data.tty = sdata.tty
 
 		if not data.outlines then
 			data.outlines = {}
@@ -101,7 +107,7 @@ laptop.register_app("cs-bos_launcher", {
 
 	receive_fields_func = function(cs_bos, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
-		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos')
+		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
 
 		data.outlines = data.outlines or {}
 		data.inputfield = data.inputfield or ""
@@ -146,14 +152,14 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					add_outline(data, 'NO DISK FOUND')
 				end
-			elseif is_executable_app(laptop.apps[exec_command:lower()]) then
+			elseif is_executable_app(mtos, laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCH '..exec_command)
 				mtos:set_app(exec_command:lower())
 			elseif exec_command == "DIR" then
 				add_outline(data, 'VIEWING CONTENTS OF DISK 0')
 				add_outline(data, '')
 				for k, v in pairs(laptop.apps) do
-					if is_executable_app(v) then
+					if is_executable_app(mtos, v) then
 						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 					end
 				end
@@ -184,16 +190,19 @@ laptop.register_app("cs-bos_launcher", {
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
 				if textcolor == "green" then
-							sdata.tty="#00FF33"
-							add_outline(data, 'Color changed to '..textcolor)
+					sdata.tty="#00FF33"
 				elseif textcolor == "amber" then
-							sdata.tty="#FFB000"
-							add_outline(data, 'Color changed to '..textcolor)
+					sdata.tty="#FFB000"
 				elseif textcolor == "white" then
-							sdata.tty="#FFFFFF"
-							add_outline(data, 'Color changed to '..textcolor)
-				else add_outline(data, '?SYNATX ERROR')
+					sdata.tty="#FFFFFF"
+				else
+					textcolor = 'ERROR'
+					add_outline(data, '?SYNATX ERROR')
 					add_outline(data, '')
+				end
+				if textcolor ~= 'ERROR' then
+					data.tty = sdata.tty
+					add_outline(data, 'Color changed to '..textcolor)
 				end
 			elseif exec_command == "FORMAT" then
 				local idata = mtos.bdev:get_removable_disk()
