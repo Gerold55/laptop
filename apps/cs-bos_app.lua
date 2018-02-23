@@ -203,7 +203,7 @@ laptop.register_app("cs-bos_launcher", {
 					local idata = mtos.bdev:get_removable_disk()
 					if idata and idata.label then
 						add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
-						add_outline(data, "FORMAT: "..idata.os_format:upper)
+						add_outline(data, "FORMAT: "..idata.os_format:upper())
 						add_outline(data, "") 
 					else
 						add_outline(data, "?ERROR ACCESSING DISK 1")
