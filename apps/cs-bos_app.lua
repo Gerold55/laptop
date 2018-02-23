@@ -47,6 +47,10 @@ local help_texts = {
 	LABEL = "              [new_label] Show / Set floppy label",
 }
 
+function numWithCommas(n)
+  return tostring(math.floor(n)):reverse():gsub("(%d%d%d)","%1,"):gsub(",(%-?)$","%1"):reverse()
+end
+
 laptop.register_app("cs-bos_launcher", {
 	app_name = "CS-BOS Prompt",
 	app_info = "Command Line Interface",
@@ -180,14 +184,17 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..version)
 				add_outline(data, '')
 			elseif exec_command == "MEM" then
+				local convent = math.random(30,99)
+				local upper = math.random(10,99)
+				local xms = math.random(20000,99999)
 				add_outline(data, 'Memory Type                 Total =            Used       +       Free')
 				add_outline(data, '------------------------       -------------        -------------       -------------')
-				add_outline(data, 'Conventional                        640                   16                 624')
-				add_outline(data, 'Upper                                    123                   86                   37')
+				add_outline(data, 'Conventional                        640                   '..convent..'                 '..(640-convent))
+				add_outline(data, 'Upper                                    123                   '..upper..'                   '..(123-upper))
 				add_outline(data, 'Reserved                                  0                     0                      0')
-				add_outline(data, 'Extended (XMS)*         130,309           53,148            77,198')
+				add_outline(data, 'Extended (XMS)*         130,309           '..numWithCommas(xms)..'            '..numWithCommas(130309-xms))
 				add_outline(data, '------------------------       -------------        -------------       -------------')
-				add_outline(data, 'Total Memory                131,072            53,250           77,822')
+				add_outline(data, 'Total Memory                131,072            '..numWithCommas(convent+upper+xms)..'           '..numWithCommas(131072-(convent+upper+xms)))
 				add_outline(data, '')
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
