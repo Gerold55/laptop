@@ -199,19 +199,14 @@ laptop.register_app("cs-bos_launcher", {
 
 
 			elseif exec_command == "DIR" then
-				add_outline(data, 'VIEWING CONTENTS OF DISK 0')
+				local idata = mtos.bdev:get_removable_disk()
+				add_outline(data, 'VIEWING CONTENTS OF DISK 0: '..idata.label)
+				add_outline(data, "FORMAT: "..idata.os_format)
 				add_outline(data, '')
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(mtos, v) then
-						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
+						add_outline(data, k:upper().."*    " .. (v.app_info or ""))
 					end
-				end
-
-
-			elseif exec_command == "INFO" then
-				local info_file = exec_all[2]
-				if is_executable_app(mtos, v) then
-					add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 				end
 			elseif exec_command == "CLS" then
 				data.outlines = {}
