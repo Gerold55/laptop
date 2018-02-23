@@ -197,15 +197,25 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'LAUNCHED '..exec_command)
 				mtos:set_app(exec_command:lower())
 
-
 			elseif exec_command == "DIR" then
-				local idata = mtos.bdev:get_removable_disk()
-				add_outline(data, 'VIEWING CONTENTS OF DISK 0: '..idata.label)
-				add_outline(data, "FORMAT: "..idata.os_format)
-				add_outline(data, '')
+			local idata = mtos.bdev:get_removable_disk()
+				if not idata.stack then
+					add_outline(data, "VIEWING CONTENTS OF DISK 0: HDD")
+					add_outline(data, "FORMAT: BOOTABLE")
+					add_outline(data, "")
+				else
+					if idata and idata.label then
+						add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
+						add_outline(data, "FORMAT: "..idata.os_format)
+						add_outline(data, "") 
+					else
+						add_outline(data, "?ERROR ACCESSING DISK 1")
+						add_outline(data, "")
+					end
+				end
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(mtos, v) then
-						add_outline(data, k:upper().."*    " .. (v.app_info or ""))
+						add_outline(data, k:upper().."*    ".. (v.app_info or ""))
 					end
 				end
 			elseif exec_command == "CLS" then
