@@ -59,8 +59,10 @@ end
 
 -- Set current theme
 function os_class:set_theme(theme)
-	if laptop.themes[theme] and self.sysdata then
-		self.sysdata.theme = theme
+	if laptop.themes[theme] then
+		if self.sysdata then
+			self.sysdata.theme = theme
+		end
 		self.theme = self:get_theme()
 		self:swap_node()
 		self:save()

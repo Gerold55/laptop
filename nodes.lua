@@ -75,6 +75,7 @@ laptop.register_hardware("laptop:printer", {
 	infotext = 'Flash Printex',
 	sequence = { "off", "powersave", "on" },
 	custom_launcher = "printer_launcher",
+	custom_theme = "Shell",
 	hw_capabilities = {"hdd"},
 	node_defs = {
 
@@ -153,7 +154,7 @@ laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
 	sequence = { "off", "on"},
-	custom_theme = "Red",
+	custom_theme = "Shell",
 	hw_capabilities = { "hdd", "floppy", "net", "liveboot" },
 	node_defs = {
 		["on"] = {

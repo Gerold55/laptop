@@ -57,6 +57,8 @@ laptop.register_app("removable", {
 					idata.label = "Backup of "..mtos.hwdef.description.." from "..os.date('%x')
 				elseif fields.format == "CS-BOS" then
 					idata.meta:set_string("os_format", "boot")
+					local disksys = mtos.bdev:get_app_storage("removable", 'os')
+					disksys.theme = "Shell"
 					idata.label = "CS-BOS Boot Disk"
 				end
 			elseif fields.restore then
