@@ -212,7 +212,7 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
 				end
 			elseif exec_command == "CLS" then
-				for i=1, 35 do add_outline(data, '') end
+				data.outlines = {}
 			elseif exec_command == "TIME" then
 				add_outline(data, os.date("%I:%M:%S %p"))
 				add_outline(data, '')
@@ -308,8 +308,6 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'dir0: list files or apps on disk 0')
 				add_outline(data, 'dir1: list files or apps on disk 1')
 				add_outline(data, 'dir2: list files or apps on disk 1')
-				add_outline(data, 'format: format disk')
-				add_outline(data, 'format /s: make boot disk')
 				add_outline(data, 'Use up arrow to load previous command')
 				add_outline(data, '')
 
