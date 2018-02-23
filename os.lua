@@ -51,8 +51,13 @@ end
 
 -- Get given or current theme
 function os_class:get_theme(theme)
-	if not theme and self.sysdata then
-		theme = self.sysdata.theme
+	if not theme then
+		if self.sysdata then
+			theme = self.sysdata.theme
+		end
+		if not theme then
+			theme = self.hwdef.custom_theme
+		end
 	end
 	return laptop.get_theme(theme)
 end
