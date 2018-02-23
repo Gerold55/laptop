@@ -1,10 +1,3 @@
-local function format_disk(idata, ftype, label)
-	idata.stack = ItemStack(idata.def.name)
-	idata.meta = idata.stack:get_meta()
-	idata.meta:set_string("os_format", ftype or "")
-	idata.label = label or ""
-end
-
 laptop.register_app("removable", {
 	app_name = "Removable Storage",
 	app_icon = "laptop_hard_drive.png",
@@ -48,14 +41,14 @@ laptop.register_app("removable", {
 			if fields.set_label then
 				idata.label = fields.label
 			elseif fields.format_wipe then
-				format_disk(idata)
+				idata:format_disk()
 			elseif fields.format_data then
-				format_disk(idata, "data", "Data "..idata.def.description)
+				idata:format_disk("data", "Data "..idata.def.description)
 			elseif fields.format_backup then
-				format_disk(idata, "backup", "Backup of "..mtos.hwdef.description.." from "..os.date('%x'))
+				idata:format_disk("backup", "Backup of "..mtos.hwdef.description.." from "..os.date('%x'))
 				idata.meta:set_string("backup_data", mtos.meta:get_string('laptop_appdata'))
 			elseif fields.format_csbos then
-				format_disk(idata, "boot", "CS-BOS Boot Disk")
+				idata:format_disk("boot", "CS-BOS Boot Disk")
 			elseif fields.restore then
 				mtos.meta:set_string('laptop_appdata', idata.meta:get_string("backup_data"))
 				mtos.bdev = laptop.get_bdev_handler(mtos)

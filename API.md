@@ -158,6 +158,8 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 - `bdev.rtype` - Removable type. "usb" or "floppy"
 - `bdev.storage` - Data table used for app storage, if format is data compatible
 - `bdev:reload(stack)` - Reload all data from node inventory. If stack is given, the stack will be inserted to slot
+- `bdev:eject()` - Remove item from slot and drop them to the world nearly computer
+- `bdev:format_disk(ftype, label)` - Format the disk. ftype can be "" or nil, "data" "backup" or "boot"
 
 ## Compatible Items
 There is no own compatible items registrator. The item needs to match the item group to be usable with the laptops
