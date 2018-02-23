@@ -29,10 +29,10 @@ local help_texts = {
 	CLS = "                  Clears the screen.",
 	DATE = "                Displays the current system date.",
 	DIR = "                    Displays directory of current disk.",
-	EXIT = "                  Exits CS-BOS.",
+	HALT = "                 Shut down CS-BOS.",
 	HELP = "                Displays HELP menu. HELP [command] displays help on that command.",
 	MEM = "                 Displays memory usage table.",
-	QUIT = "                  Quits an application.",
+	EXIT = "                  Exit CS-BOS shell",
 	REBOOT = "          Perform a soft reboot.",
 	TEXTCOLOR = "  Change terminal text color. TEXTCOLOR [green, amber, or white]",
 	TIME = "                 Displays the current system time.",
@@ -122,7 +122,7 @@ laptop.register_app("cs-bos_launcher", {
 				exec_command = exec_command:upper()
 			end
 			if exec_command == nil then --empty line
-			elseif exec_command == "EXIT" then
+			elseif exec_command == "HALT" then
 				-- same code as in node_fw on punch to disable the OS
 				if mtos.hwdef.next_node then
 					local hwdef_next = laptop.node_config[mtos.hwdef.next_node]
@@ -133,7 +133,7 @@ laptop.register_app("cs-bos_launcher", {
 						mtos:save()
 					end
 				end
-			elseif exec_command == "QUIT" then
+			elseif exec_command == "EXIT" then
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- quit app (if in app mode)
 			elseif exec_command == "REBOOT" then
