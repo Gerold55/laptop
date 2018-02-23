@@ -66,11 +66,12 @@ laptop.register_app("cs-bos_launcher", {
 		end
 
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
+		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos')
 
 		data.inputfield = data.inputfield or ""
 			-- Apple ][ Green: #00FF33
 			-- PC Amber: #FFB000
-		data.tty = data.tty or "#00FF33"
+		sdata.tty = sdata.tty or "#00FF33"
 
 		if not data.outlines then
 			data.outlines = {}
@@ -87,7 +88,7 @@ laptop.register_app("cs-bos_launcher", {
 			if idx > 1 then
 				formspec = formspec..','
 			end
-			formspec = formspec..data.tty..minetest.formspec_escape(line)
+			formspec = formspec..sdata.tty..minetest.formspec_escape(line)
 		end
 		formspec = formspec..";"..#data.outlines.."]"..
 				"field_close_on_enter[inputfield;false]"
@@ -96,6 +97,7 @@ laptop.register_app("cs-bos_launcher", {
 
 	receive_fields_func = function(cs_bos, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
+		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos')
 
 		data.outlines = data.outlines or {}
 		data.inputfield = data.inputfield or ""
@@ -177,13 +179,13 @@ laptop.register_app("cs-bos_launcher", {
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
 				if textcolor == "green" then
-							data.tty="#00FF33"
+							sdata.tty="#00FF33"
 							add_outline(data, 'Color changed to '..textcolor)
 				elseif textcolor == "amber" then
-							data.tty="#FFB000"
+							sdata.tty="#FFB000"
 							add_outline(data, 'Color changed to '..textcolor)
 				elseif textcolor == "white" then
-							data.tty="#FFFFFF"
+							sdata.tty="#FFFFFF"
 							add_outline(data, 'Color changed to '..textcolor)
 				else add_outline(data, '?SYNATX ERROR')
 				add_outline(data, '')
