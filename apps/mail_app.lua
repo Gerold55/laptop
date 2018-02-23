@@ -25,7 +25,7 @@ laptop.register_app("mail", {
 		account.selected_index = nil -- will be new determinated by selectedmessage
 		local box = account[account.selected_box] -- inbox or outbox
 
-		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player.."]"
+		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player
 		local formspec =
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
@@ -218,7 +218,7 @@ laptop.register_view("mail:newplayer", {
 
 laptop.register_view("mail:nonet", {
 	formspec_func = function(app, mtos)
-		return mtos.theme:get_label('1,3', "No internet available on this computer")
+		return mtos.theme:get_label('1,3', "NO NETWORK CONNECTION")
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
 		app:exit_app()

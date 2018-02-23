@@ -1,6 +1,9 @@
+local version = "3.31"
+local releaseyear = "1982"
+
 local initial_message = {
 	"BASIC OPERATING SYSTEM",
-	"(C)COPYRIGHT 1982 CARDIFF-SOFT",
+	"(C)COPYRIGHT "..releaseyear.." CARDIFF-SOFT",
 	"128K RAM SYSTEM  77822 BYTES FREE",
 	"",
 	">",
@@ -21,21 +24,26 @@ local function is_executable_app(app)
 end
 
 local help_texts = {
-	CLS = "Clears the screen.",
-	DATE = "Displays the current system date.",
-	DATETIME = "Displays the current system date and time.",
-	HELP = "Displays HELP menu. HELP [command} displays help on that command.",
-	MEM = "Displays memory usage table.",
-	TIME = "Displays the current system time.",
-	TIMEDATE = "Displays the current system time and date.",
-	EXIT = "Exits CS-BOS.",
-	TODO = "View TODO list for CS-BOS",
-	VER = "Displays CS-BOS version.",
+	CLS = "                  Clears the screen.",
+	DATE = "                Displays the current system date.",
+	DIR = "                    Displays directory of current disk.",
+	EXIT = "                  Exits CS-BOS.",
+	HELP = "                Displays HELP menu. HELP [command] displays help on that command.",
+	MEM = "                 Displays memory usage table.",
+	QUIT = "                  Quits an application.",
+	REBOOT = "          Perform a soft reboot.",
+	TEXTCOLOR = "  Change terminal text color. TEXTCOLOR [green, amber, or white]",
+	TIME = "                 Displays the current system time.",
+	TIMEDATE = "       Displays the current system time and date.",
+	TODO = "               View TODO list for CS-BOS",
+	VER = "                  Displays CS-BOS version.",
 }
 
 laptop.register_app("cs-bos_launcher", {
-	app_name = "CS-BOS v3.31",
+	app_name = "CS-BOS Prompt",
+	app_info = "Command Line Interface",
 	fullscreen = true,
+	app_icon = "laptop_cs_bos.png",
 
 	formspec_func = function(cs_bos, mtos)
 
@@ -109,7 +117,13 @@ laptop.register_app("cs-bos_launcher", {
 			if exec_command == nil then --empty line
 			elseif exec_command == "EXIT" then
 				data.outlines = nil  -- reset screen
-				mtos:set_app()  -- exit app (if in app mode)
+				mtos:power_off()  -- exit CS_BOS
+			elseif exec_command == "QUIT" then
+				data.outlines = nil  -- reset screen
+				mtos:set_app()  -- quit app (if in app mode)
+			elseif exec_command == "REBOOT" then
+				data.outlines = nil  -- reset screen
+				mtos:power_on()  -- reboots computer
 			elseif exec_command == "EJECT" then
 				local idata = mtos.bdev:get_removable_disk()
 				local success = idata:eject()
@@ -121,7 +135,9 @@ laptop.register_app("cs-bos_launcher", {
 			elseif is_executable_app(laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCH '..exec_command)
 				mtos:set_app(exec_command:lower())
-			elseif exec_command == "LIST" then
+			elseif exec_command == "DIR" then
+				add_outline(data, 'VIEWING CONTENTS OF DISK 0')
+				add_outline(data, '')
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(v) then
 						add_outline(data, k:upper().."    "..(v.name or "") .. " " .. (v.app_info or ""))
@@ -139,7 +155,7 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
 				add_outline(data, '')
 			elseif exec_command == "VER" then
-				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v3.31')
+				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..version)
 				add_outline(data, '')
 			elseif exec_command == "MEM" then
 				add_outline(data, 'Memory Type                 Total =            Used       +       Free')
@@ -150,9 +166,6 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'Extended (XMS)*         130,309           53,148            77,198')
 				add_outline(data, '------------------------       -------------        -------------       -------------')
 				add_outline(data, 'Total Memory                131,072            53,250           77,822')
-				add_outline(data, '')
-			elseif exec_command == "DIR" then
-				add_outline(data, 'List Files')
 				add_outline(data, '')
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
@@ -173,7 +186,6 @@ laptop.register_app("cs-bos_launcher", {
 			elseif exec_command == "TODO" then
 				add_outline(data, 'cload: load a specific file from cassette')
 				add_outline(data, 'del: remove file from current disk or cassette')
-				add_outline(data, 'dir: list files or apps on current disk')
 				add_outline(data, 'dir0: list files or apps on disk 0')
 				add_outline(data, 'dir1: list files or apps on disk 1')
 				add_outline(data, 'dir2: list files or apps on disk 1')
@@ -188,9 +200,14 @@ laptop.register_app("cs-bos_launcher", {
 				if not help_command then -- no argument, print all
 					add_outline(data, 'These shell commands are defined internally.')
 					add_outline(data, '')
-					for k, v in pairs(help_texts) do
-						add_outline(data, k.."    "..v)
-					end
+						local help_sorted = {}
+						for k, v in pairs(help_texts) do
+							table.insert(help_sorted, k.."    "..v)
+						end
+						table.sort(help_sorted)
+						for _, kv in ipairs(help_sorted) do
+							add_outline(data, kv)
+						end
 					add_outline(data, '')
 				else
 					local help_text = help_texts[help_command:upper()] or "?SYNTAX ERROR"
@@ -204,5 +221,8 @@ laptop.register_app("cs-bos_launcher", {
 		end
 	end,
 
-	appwindow_formspec_func = laptop.apps["launcher"].appwindow_formspec_func, --re-use the default launcher theming
+appwindow_formspec_func = function(...)
+	--re-use the default launcher theming
+	return laptop.apps["launcher"].appwindow_formspec_func(...)
+end,
 })
