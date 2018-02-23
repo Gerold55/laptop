@@ -454,3 +454,18 @@ laptop.register_hardware("laptop:portable_workstation_2", {
 		}
 	}
 })
+
+
+-- Conversion from older laptop version, before 2018-03
+minetest.register_alias("laptop:monitor2_off", "laptop:fruit_zero_off")
+minetest.register_alias("laptop:monitor2_on", "laptop:fruit_zero_on")
+
+minetest.register_alias("laptop:monitor4_off", "laptop:bell_crossover_off")
+minetest.register_alias("laptop:monitor4_on", "laptop:bell_crossover_on")
+
+minetest.register_alias("laptop:monitor3_off", "laptop:kodiak_1000_off")
+minetest.register_alias("laptop:monitor3_on", "laptop:kodiak_1000_on")
+
+minetest.register_alias("laptop:laptop_closed", "laptop:portable_workstation_2_closed")
+minetest.register_alias("laptop:laptop_open", "laptop:portable_workstation_2_open")
+minetest.register_alias("laptop:laptop_open_on", "laptop:portable_workstation_2_open_on")
