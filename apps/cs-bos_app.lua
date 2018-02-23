@@ -146,6 +146,7 @@ laptop.register_app("cs-bos_launcher", {
 
 	receive_fields_func = function(cs_bos, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
+		local sysos = mtos.bdev:get_app_storage('ram', 'os')
 		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
 		initialize_data(data, sdata, mtos)
 
@@ -199,10 +200,21 @@ laptop.register_app("cs-bos_launcher", {
 
 
 			elseif exec_command == "DIR" then
-				local idata = mtos.bdev:get_removable_disk()
-				add_outline(data, 'VIEWING CONTENTS OF DISK 0: '..idata.label)
-				add_outline(data, "FORMAT: "..idata.os_format)
-				add_outline(data, '')
+				if sysos.booted_from == "removable" then
+					local idata = mtos.bdev:get_removable_disk()
+					if idata and idata.label then
+						add_outline(data, 'VIEWING CONTENTS OF DISK 0: '..idata.label)
+						add_outline(data, "FORMAT: "..idata.os_format)
+						add_outline(data, '')
+					else
+						add_outline(data, 'ERROR ACCESSING DISK 0: ')
+						add_outline(data, '')
+					end
+				else
+					add_outline(data, 'VIEWING CONTENTS OF HARD DISK 0: ')
+					add_outline(data, "FORMAT: bootable")
+					add_outline(data, '')
+				end
 				for k, v in pairs(laptop.apps) do
 					if is_executable_app(mtos, v) then
 						add_outline(data, k:upper().."*    " .. (v.app_info or ""))
