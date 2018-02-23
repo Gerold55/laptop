@@ -330,6 +330,7 @@ laptop.register_hardware("laptop:kodiak_1000", {
 	infotext = "Kodiak 1000",
 	sequence = { "off", "on"},
 	custom_launcher = "cs-bos_launcher",
+	os_version = "3.31",
 	custom_theme = "Shell",
 	hw_capabilities = { "floppy", "liveboot" },
 	node_defs = {

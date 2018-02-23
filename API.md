@@ -7,6 +7,7 @@
 - `hwdef.infotext` - Text shown if node is pointed
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
+- `hwdef.os_version` - optional - Set OS version, used in CS-BOS launcher only
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization

@@ -1,33 +1,27 @@
-local version = "3.31"
-local releaseyear = "1982"
-
-local initial_message = {
-	"BASIC OPERATING SYSTEM",
-	"(C)COPYRIGHT "..releaseyear.." CARDIFF-SOFT",
-	"128K RAM SYSTEM  77822 BYTES FREE",
-	"",
-	">",
+local os_version_attr = {
+	['3.31'] = {
+		releaseyear = '1982',
+		version_string = '3.31',
+		textcolor = '#00FF33', -- green
+		blacklist_commands = { TEXTCOLOR = true },
+		scrollback_size = 34,
+	},
+	['1.10'] = {
+		releaseyear = '1976',
+		version_string = '1.10',
+		textcolor = '#FFB000', --amber
+		blacklist_commands = { TEXTCOLOR = true },
+		scrollback_size = 25,
+	},
+	['6.33'] = {
+		releaseyear = '1995',
+		version_string = '6.33',
+		textcolor = '#FFFFFF', -- white
+		blacklist_commands = { },
+		scrollback_size = 300,
+	},
 }
-
-local function add_outline(data, line)
-	table.insert(data.outlines, line)
-	if #data.outlines > 34 then -- maximum lines count
-		table.remove(data.outlines,1)
-	end
-end
-
-local function is_executable_app(mtos, app)
-	if not mtos.sysdata then -- cannot executed withoud sysdata
-		return false
-	elseif app and not app.view and -- app given
-			not app.appwindow_formspec_func and --not a launcher
-			app.name ~= 'removable' and -- skip this apps hard-coded
-			app.name ~= 'launcher_settings' then
-		return true
-	else
-		return false
-	end
-end
+os_version_attr.default = os_version_attr['6.33']
 
 local help_texts = {
 	CLS = "                  Clears the screen.",
@@ -47,9 +41,61 @@ local help_texts = {
 	LABEL = "              [new_label] Show / Set floppy label",
 }
 
-function numWithCommas(n)
+
+local function get_initial_message(data)
+	data.outlines = {
+			"BASIC OPERATING SYSTEM v"..data.os_attr.version_string,
+			"(C)COPYRIGHT "..data.os_attr.releaseyear.." CARDIFF-SOFT",
+			"128K RAM SYSTEM  77822 BYTES FREE",
+			"",
+			">"
+		}
+end
+
+local function add_outline(data, line)
+	table.insert(data.outlines, line)
+	if #data.outlines > data.scrollback_size then
+		table.remove(data.outlines,1)
+	end
+end
+
+local function is_executable_app(mtos, app)
+	if not mtos.sysdata then -- cannot executed withoud sysdata
+		return false
+	elseif app and not app.view and -- app given
+			not app.appwindow_formspec_func and --not a launcher
+			app.name ~= 'removable' and -- skip this apps hard-coded
+			app.name ~= 'launcher_settings' then
+		return true
+	else
+		return false
+	end
+end
+
+local function numWithCommas(n)
   return tostring(math.floor(n)):reverse():gsub("(%d%d%d)","%1,"):gsub(",(%-?)$","%1"):reverse()
 end
+
+local function initialize_data(data, sdata, mtos)
+	data.os_attr = os_version_attr.default
+	if mtos.hwdef.os_version then
+		data.os_attr = os_version_attr[mtos.hwdef.os_version]
+	end
+
+	if data.os_attr.blacklist_commands.TEXTCOLOR then
+		data.tty = data.os_attr.textcolor
+	else
+		data.tty = sdata.tty or data.tty or data.os_attr.textcolor
+	end
+
+	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or data.os_attr.scrollback_size
+		-- Set initial message on new session
+	if not data.outlines then
+		get_initial_message(data)
+	end
+	data.inputfield = data.inputfield or ""
+end
+
 
 laptop.register_app("cs-bos_launcher", {
 	app_name = "CS-BOS Prompt",
@@ -81,24 +127,13 @@ laptop.register_app("cs-bos_launcher", {
 			return formspec
 		end
 
-		data.inputfield = data.inputfield or ""
-			-- Apple ][ Green: #00FF33
-			-- PC Amber: #FFB000
-		sdata.tty = sdata.tty or data.tty or "#00FF33"
-		data.tty = sdata.tty
-
-		if not data.outlines then
-			data.outlines = {}
-			for _, line in ipairs(initial_message) do
-				add_outline(data, line)
-			end
-		end
+		initialize_data(data, sdata, mtos)
 
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
 				"field[0.020,9.93;15.6,1;inputfield;;"..minetest.formspec_escape(data.inputfield).."]"..
 				"tablecolumns[text]tableoptions[background=#000000;border=false;highlight=#000000;"..
-				"color="..sdata.tty..";highlight_text="..sdata.tty.."]"..
+				"color="..data.tty..";highlight_text="..data.tty.."]"..
 				"table[-0.35,-0.35;15.57, 10.12;outlines;"
 		for idx,line in ipairs(data.outlines) do
 			if idx > 1 then
@@ -114,9 +149,8 @@ laptop.register_app("cs-bos_launcher", {
 	receive_fields_func = function(cs_bos, mtos, sender, fields)
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
 		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
+		initialize_data(data, sdata, mtos)
 
-		data.outlines = data.outlines or {}
-		data.inputfield = data.inputfield or ""
 
 		if fields.inputfield then -- move received data to the formspec input field
 			data.inputfield = fields.inputfield
@@ -134,6 +168,9 @@ laptop.register_app("cs-bos_launcher", {
 				exec_command = exec_command:upper()
 			end
 			if exec_command == nil then --empty line
+			elseif data.os_attr.blacklist_commands[exec_command] then
+				add_outline(data, '?ERROR NOT IMPLEMENTED')
+				add_outline(data, '')
 			elseif exec_command == "HALT" then
 				-- same code as in node_fw on punch to disable the OS
 				if mtos.hwdef.next_node then
@@ -181,7 +218,7 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
 				add_outline(data, '')
 			elseif exec_command == "VER" then
-				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..version)
+				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..data.os_attr.version_string)
 				add_outline(data, '')
 			elseif exec_command == "MEM" then
 				local convent = math.random(30,99)
@@ -210,7 +247,6 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, '')
 				end
 				if textcolor ~= 'ERROR' then
-					data.tty = sdata.tty
 					add_outline(data, 'Color changed to '..textcolor)
 				end
 			elseif exec_command == "FORMAT" then
@@ -280,7 +316,9 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, '')
 						local help_sorted = {}
 						for k, v in pairs(help_texts) do
-							table.insert(help_sorted, k.."    "..v)
+							if not data.os_attr.blacklist_commands[k] then
+								table.insert(help_sorted, k.."    "..v)
+							end
 						end
 						table.sort(help_sorted)
 						for _, kv in ipairs(help_sorted) do
@@ -288,7 +326,13 @@ laptop.register_app("cs-bos_launcher", {
 						end
 					add_outline(data, '')
 				else
-					local help_text = help_texts[help_command:upper()] or "?SYNTAX ERROR"
+					help_command = help_command:upper()
+					local help_text
+					if data.os_attr.blacklist_commands[help_command] then
+						help_text = "?NOT IMPLEMENTED ERROR"
+					else
+						help_text = help_texts[help_command] or "?SYNTAX ERROR"
+					end
 					add_outline(data, help_command:upper().. "    "..help_text)
 						add_outline(data, '')
 				end
