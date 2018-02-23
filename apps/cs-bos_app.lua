@@ -18,7 +18,9 @@ end
 
 local function is_executable_app(app)
 	if app and not app.view and -- app given
-			not app.appwindow_formspec_func then--not a launcher
+			not app.appwindow_formspec_func and --not a launcher
+			app.name ~= 'removable' and -- skip this apps hard-coded
+			app.name ~= 'launcher_settings' then
 		return true
 	end
 end

@@ -68,6 +68,7 @@ end
 
 -- Register new app
 function laptop.register_app(name, def)
+	def.name = name
 	laptop.apps[name] = def
 end
 
