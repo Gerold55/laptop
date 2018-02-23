@@ -59,7 +59,7 @@ end
 
 -- Set current theme
 function os_class:set_theme(theme)
-	if laptop.themes[theme] then
+	if laptop.themes[theme] and self.sysdata then
 		self.sysdata.theme = theme
 		self.theme = self:get_theme()
 		self:swap_node()
@@ -146,6 +146,9 @@ end
 function os_class:pass_to_app(method, reshow, sender, ...)
 	local appname = self.sysram.current_app or self.hwdef.custom_launcher or "launcher"
 	local app = self:get_app(appname)
+	if not app then
+		self:set_app()
+	end
 	local ret = app:receive_data(method, reshow, sender, ...)
 	if sender then
 		self.sysram.last_player = sender:get_player_name()
