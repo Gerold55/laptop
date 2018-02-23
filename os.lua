@@ -155,6 +155,7 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 	local app = self:get_app(appname)
 	if not app then
 		self:set_app()
+		return
 	end
 	local ret = app:receive_data(method, reshow, sender, ...)
 	if sender then
