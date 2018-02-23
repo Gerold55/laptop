@@ -220,6 +220,43 @@ laptop.register_app("cs-bos_launcher", {
 						add_outline(data, k:upper().."*    " .. (v.app_info or ""))
 					end
 				end
+				local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
+				if txtdata then
+					for k, v in pairs(txtdata) do
+						add_outline(data, "HDD:"..k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
+					end
+				end
+				local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
+				if txtdata then
+					for k, v in pairs(txtdata) do
+							add_outline(data, "FDD:"..k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+					end
+				end
+			elseif exec_command == "TYPE" then
+				if exec_all[2] then
+					local filename = input_line:sub(6):gsub("^%s*(.-)%s*$", "%1")
+					local disk
+					if filename:sub(1,4):upper() == 'HDD:' then
+						disk = 'hdd'
+						filename = filename:sub(5)
+					elseif filename:sub(1,4):upper() == 'FDD:' then
+						disk = 'removable'
+						filename = filename:sub(5)
+					else
+						disk = 'system'
+					end
+					local txtdata = mtos.bdev:get_app_storage(disk, 'stickynote:files')
+					if txtdata then
+						local file = txtdata[filename]
+						if file and file.content then
+							for s in file.content:gmatch("[^\n]+") do
+								add_outline(data, s)
+							end
+						end
+					end
+				else
+					add_outline(data, '?SYNATX ERROR')
+				end
 			elseif exec_command == "CLS" then
 				data.outlines = {}
 			elseif exec_command == "TIME" then
