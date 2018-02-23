@@ -87,6 +87,7 @@ function bdev:get_removable_disk(removable_type)
 			self.stack = ItemStack(self.def.name)
 			self.meta = self.stack:get_meta()
 			self.meta:set_string("os_format", ftype or "")
+			self.os_format = ftype
 			self.label = label or ""
 		end
 

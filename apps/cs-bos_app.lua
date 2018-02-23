@@ -39,6 +39,8 @@ local help_texts = {
 	TIMEDATE = "       Displays the current system time and date.",
 	TODO = "               View TODO list for CS-BOS",
 	VER = "                  Displays CS-BOS version.",
+	FORMAT = "          [/E][/S][/D]  Show format info or format Disk. /E empty disk, /S creates boot disk, /D creates data disk",
+	LABEL = "              [new_label] Show / Set floppy label",
 }
 
 laptop.register_app("cs-bos_launcher", {
@@ -112,6 +114,7 @@ laptop.register_app("cs-bos_launcher", {
 		if fields.key_enter then
 		-- run the command
 			local exec_all = data.inputfield:split(" ")
+			local input_line = data.inputfield
 			local exec_command = exec_all[1] --further parameters are 2++
 			add_outline(data, "> "..data.inputfield)
 			data.inputfield = ""
@@ -190,9 +193,55 @@ laptop.register_app("cs-bos_launcher", {
 							sdata.tty="#FFFFFF"
 							add_outline(data, 'Color changed to '..textcolor)
 				else add_outline(data, '?SYNATX ERROR')
-				add_outline(data, '')
-			end
+					add_outline(data, '')
+				end
+			elseif exec_command == "FORMAT" then
+				local idata = mtos.bdev:get_removable_disk()
+				if not idata.stack then
+					add_outline(data, '?DISK NOT FOUND')
+					add_outline(data, '')
+				else
+					local fparam = exec_all[2]
+					local ftype, newlabel
+					if fparam == "/E" then
+						ftype = ""
+						newlabel = ""
+					elseif fparam == "/S" then
+						ftype = "boot"
+						newlabel = "Data "..idata.def.description
+					elseif fparam == "/D" then
+						ftype = "data"
+						newlabel = "CS-BOS Boot Disk"
+					end
+					if not ftype and fparam then
+						add_outline(data, "?SYNTAX ERROR")
+						add_outline(data, "")
+					else
+						if ftype then
+							add_outline(data, 'FORMATTING '..idata.def.description)
+							idata:format_disk(ftype, newlabel)
+						else
+							add_outline(data, 'MEDIA INFORMATION: '..idata.def.description)
+						end
 
+						add_outline(data, "FORMAT: "..idata.os_format)
+						add_outline(data, "LABEL: "..idata.label)
+						add_outline(data, "")
+					end
+
+				end
+			elseif exec_command == "LABEL" then
+				local idata = mtos.bdev:get_removable_disk()
+				if not idata.stack then
+					add_outline(data, '?DISK NOT FOUND')
+					add_outline(data, '')
+				else
+					if exec_all[2] then
+						idata.label = input_line:sub(6):gsub("^%s*(.-)%s*$", "%1")
+					end
+					add_outline(data, "LABEL: "..idata.label)
+					add_outline(data, "")
+				end
 ----TODO List----
 			elseif exec_command == "TODO" then
 				add_outline(data, 'cload: load a specific file from cassette')
