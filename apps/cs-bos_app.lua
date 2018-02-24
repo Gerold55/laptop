@@ -203,6 +203,8 @@ laptop.register_app("cs-bos_launcher", {
 					local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
 					if txtdata then
 						add_outline(data, 'VIEWING CONTENTS OF DISK 0: HDD')
+						add_outline(data, "FORMAT: BOOTABLE")
+						add_outline(data, "")
 						if sysos.booted_from ~= "removable" then
 							for k, v in pairs(laptop.apps) do
 								if is_executable_app(mtos, v) then
@@ -214,28 +216,35 @@ laptop.register_app("cs-bos_launcher", {
 							add_outline(data, k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
 						end
 						add_outline(data, '')
-					end
-				end
-
-				if not exec_all[2] or exec_all[2]:upper() == 'FDD' then
-					local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
-					if txtdata then
-						local idata = mtos.bdev:get_removable_disk()
-						add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
-						add_outline(data, "FORMAT: "..idata.os_format:upper())
-						if sysos.booted_from == "removable" then
-							for k, v in pairs(laptop.apps) do
-								if is_executable_app(mtos, v) then
-									add_outline(data, k:upper().."*    "..(v.app_info or ""))
-								end
-							end
-						end
-						for k, v in pairs(txtdata) do
-								add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
-						end
+						else add_outline(data, 'NO HARD DISK PRESENT')
 						add_outline(data, '')
 					end
-				end
+
+					elseif not exec_all[2] or exec_all[2]:upper() == 'FDD' then
+						local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
+						if txtdata then
+							local idata = mtos.bdev:get_removable_disk()
+							add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
+							add_outline(data, "FORMAT: "..idata.os_format:upper())
+							add_outline(data, "")
+							if sysos.booted_from == "removable" then
+								for k, v in pairs(laptop.apps) do
+									if is_executable_app(mtos, v) then
+										add_outline(data, k:upper().."*    "..(v.app_info or ""))
+									end
+								end
+							end
+							for k, v in pairs(txtdata) do
+									add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+							end
+							add_outline(data, '')
+							else add_outline(data, 'NO FLOPPY DISK PRESENT')
+							add_outline(data, '')
+						end
+						else add_outline(data, '?SYNTAX ERROR')
+						add_outline(data, '')
+					end
+
 			elseif exec_command == "TYPE" then
 				if exec_all[2] then
 					local filename = input_line:sub(6):gsub("^%s*(.-)%s*$", "%1")
