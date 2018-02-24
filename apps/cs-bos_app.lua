@@ -192,7 +192,7 @@ laptop.register_app("cs-bos_launcher", {
 				if success then
 					add_outline(data, 'DISK EJECTED')
 				else
-					add_outline(data, 'NO DISK FOUND')
+					add_outline(data, '!NO DISK FOUND')
 				end
 			elseif is_executable_app(mtos, laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCHED '..exec_command)
@@ -211,7 +211,7 @@ laptop.register_app("cs-bos_launcher", {
 							end
 						end
 						for k, v in pairs(txtdata) do
-							add_outline(data, "HDD:"..k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
+							add_outline(data, k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
 						end
 						add_outline(data, '')
 					end
@@ -231,7 +231,7 @@ laptop.register_app("cs-bos_launcher", {
 							end
 						end
 						for k, v in pairs(txtdata) do
-								add_outline(data, "FDD:"..k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+								add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
 						end
 						add_outline(data, '')
 					end
@@ -310,17 +310,17 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, '?DISK NOT FOUND')
 					add_outline(data, '')
 				else
-					local fparam = exec_all[2]
+					local fparam = exec_all[2]:upper()
 					local ftype, newlabel
 					if fparam == "/E" then
 						ftype = ""
 						newlabel = ""
 					elseif fparam == "/S" then
 						ftype = "boot"
-						newlabel = "Data "..idata.def.description
+						newlabel = "CS-BOS Boot Disk"
 					elseif fparam == "/D" then
 						ftype = "data"
-						newlabel = "CS-BOS Boot Disk"
+						newlabel = "Data "..idata.def.description
 					end
 					if not ftype and fparam then
 						add_outline(data, "?SYNTAX ERROR")
