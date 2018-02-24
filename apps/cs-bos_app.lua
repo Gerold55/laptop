@@ -192,7 +192,7 @@ laptop.register_app("cs-bos_launcher", {
 				if success then
 					add_outline(data, 'DISK EJECTED')
 				else
-					add_outline(data, '!NO DISK FOUND')
+					add_outline(data, 'NO DISK FOUND')
 				end
 			elseif is_executable_app(mtos, laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCHED '..exec_command)
