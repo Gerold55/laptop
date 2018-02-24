@@ -199,38 +199,42 @@ laptop.register_app("cs-bos_launcher", {
 				mtos:set_app(exec_command:lower())
 
 			elseif exec_command == "DIR" then
-				local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
-				if txtdata then
-					add_outline(data, 'VIEWING CONTENTS OF DISK 0: HDD')
-					if sysos.booted_from ~= "removable" then
-						for k, v in pairs(laptop.apps) do
-							if is_executable_app(mtos, v) then
-								add_outline(data, k:upper().."*    "..(v.app_info or ""))
+				if not exec_all[2] or exec_all[2]:upper() == 'HDD' then
+					local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
+					if txtdata then
+						add_outline(data, 'VIEWING CONTENTS OF DISK 0: HDD')
+						if sysos.booted_from ~= "removable" then
+							for k, v in pairs(laptop.apps) do
+								if is_executable_app(mtos, v) then
+									add_outline(data, k:upper().."*    "..(v.app_info or ""))
+								end
 							end
 						end
+						for k, v in pairs(txtdata) do
+							add_outline(data, "HDD:"..k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
+						end
+						add_outline(data, '')
 					end
-					for k, v in pairs(txtdata) do
-						add_outline(data, "HDD:"..k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
-					end
-					add_outline(data, '')
 				end
 
-				local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
-				if txtdata then
-					local idata = mtos.bdev:get_removable_disk()
-					add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
-					add_outline(data, "FORMAT: "..idata.os_format:upper())
-					if sysos.booted_from == "removable" then
-						for k, v in pairs(laptop.apps) do
-							if is_executable_app(mtos, v) then
-								add_outline(data, k:upper().."*    "..(v.app_info or ""))
+				if not exec_all[2] or exec_all[2]:upper() == 'FDD' then
+					local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
+					if txtdata then
+						local idata = mtos.bdev:get_removable_disk()
+						add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
+						add_outline(data, "FORMAT: "..idata.os_format:upper())
+						if sysos.booted_from == "removable" then
+							for k, v in pairs(laptop.apps) do
+								if is_executable_app(mtos, v) then
+									add_outline(data, k:upper().."*    "..(v.app_info or ""))
+								end
 							end
 						end
+						for k, v in pairs(txtdata) do
+								add_outline(data, "FDD:"..k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+						end
+						add_outline(data, '')
 					end
-					for k, v in pairs(txtdata) do
-							add_outline(data, "FDD:"..k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
-					end
-					add_outline(data, '')
 				end
 			elseif exec_command == "TYPE" then
 				if exec_all[2] then
