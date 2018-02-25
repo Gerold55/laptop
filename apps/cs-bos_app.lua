@@ -75,6 +75,74 @@ local function numWithCommas(n)
   return tostring(math.floor(n)):reverse():gsub("(%d%d%d)","%1,"):gsub(",(%-?)$","%1"):reverse()
 end
 
+--- Simple VFS for BOS Operations
+local simple_vfs_map = {}
+-- Hard disk
+simple_vfs_map.HDD = {
+	id = 'HDD',
+	dev = 'hdd',
+	longname = 'DISK 0:HDD',
+	check_inserted = function(disk, mtos)
+		return mtos.bdev:is_hw_capability('hdd')
+	end,
+	get_full_name = function(disk, mtos)
+		return disk.longname
+	end,
+	get_format = function(disk, mtos)
+		return 'BOOT'
+	end,
+}
+
+-- Floppy disk
+simple_vfs_map.FDD = {
+	id = 'FDD',
+	dev = 'removable',
+	longname = 'DISK 0:FDD',
+	check_inserted = function(disk, mtos)
+		local idata = mtos.bdev:get_removable_disk()
+		if idata.stack and ( idata.os_format == 'data' or idata.os_format == 'boot') then
+			return true
+		end
+	end,
+	get_full_name = function(disk, mtos)
+		local idata = mtos.bdev:get_removable_disk()
+		return disk.longname..": "..idata.label
+	end,
+	get_format = function(disk, mtos)
+		local idata = mtos.bdev:get_removable_disk()
+		return idata.os_format
+	end,
+}
+simple_vfs_map.REMOVABLE = simple_vfs_map.FDD
+
+
+local simple_vfs = {}
+-- Get the VFS disk object
+function simple_vfs.get_disk(mtos, device)
+	if not device then
+		return
+	end
+
+	local disk = simple_vfs_map[device:upper()]
+	local inserted
+	if disk then
+		inserted  = disk:check_inserted(mtos)
+	end
+	return disk, inserted
+end
+
+simple_vfs.parse_path(input_line)
+	local filename = input_line:gsub("^%s*(.-)%s*$", "%1") -- strip spaces
+	local diskname
+	if filename:sub(4,1) == ':' then
+		diskname = diskname:sub(1,3)
+		filename = filename:sub(5)
+	end
+	return filename, diskname
+end
+--- End for Simple VFS for BOS Operations
+
+
 local function initialize_data(data, sdata, mtos, sysos)
 	data.os_attr = os_version_attr.default
 	if mtos.hwdef.os_version then
@@ -100,7 +168,6 @@ local function initialize_data(data, sdata, mtos, sysos)
 			data.current_disk = 'HDD'
 		end
 	end
-
 	data.inputfield = data.inputfield or ""
 end
 
@@ -139,7 +206,8 @@ laptop.register_app("cs-bos_launcher", {
 
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
-				"field[0.020,9.93;15.6,1;inputfield;;"..minetest.formspec_escape(data.inputfield).."]"..
+				"label[-0.15,9.9;"..minetest.colorize(data.tty,data.current_disk..">").."]"..
+				"field[1.020,9.93;15.6,1;inputfield;;"..minetest.formspec_escape(data.inputfield).."]"..
 				"tablecolumns[text]tableoptions[background=#000000;border=false;highlight=#000000;"..
 				"color="..data.tty..";highlight_text="..data.tty.."]"..
 				"table[-0.35,-0.35;15.57, 10.12;outlines;"
@@ -209,94 +277,65 @@ laptop.register_app("cs-bos_launcher", {
 				mtos:set_app(exec_command:lower())
 
 			elseif exec_command == "CD" then
-				if not exec_all[2] then
-					add_outline(data, "?SYNTAX ERROR")
-				elseif exec_all[2]:upper() == 'HDD' then
-					data.current_disk = "HDD"
-					add_outline(data, "CURRENT DISK = DISK 0:HDD")
-					add_outline(data, '')
-				elseif exec_all[2]:upper() == "FDD" then
-					data.current_disk = "FDD"
-					local idata = mtos.bdev:get_removable_disk()
-					add_outline(data, "CURRENT DISK = DISK 1:"..idata.label)
-					add_outline(data, '')
+				local disk, inserted = simple_vfs.get_disk(mtos, exec_all[2])
+				if disk and inserted then
+					data.current_disk = disk.id
+					add_outline(data, "CURRENT DISK = "..disk:get_full_name(mtos))
+				elseif disk then
+					add_outline(data, 'NO DISK PRESENT: '..disk.longname)
 				else
 					add_outline(data, "?SYNTAX ERROR")
 				end
-
+				add_outline(data, '')
 			elseif exec_command == "DIR" then
-				local show_disk = exec_all[2] or data.current_disk
-				show_disk = show_disk:upper()
-				if show_disk == 'HDD' then
-					local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
-					if txtdata then
-						add_outline(data, 'VIEWING CONTENTS OF DISK 0: HDD')
-						add_outline(data, "FORMAT: BOOTABLE")
-						add_outline(data, "")
-						if sysos.booted_from ~= "removable" then
-							for k, v in pairs(laptop.apps) do
-								if is_executable_app(mtos, v) then
-									add_outline(data, k:upper().."*    "..(v.app_info or ""))
-								end
+				local disk, inserted = simple_vfs.get_disk(mtos, (exec_all[2] or data.current_disk))
+				if disk and inserted then
+					local txtdata = mtos.bdev:get_app_storage(disk.dev, 'stickynote:files')
+					add_outline(data, "VIEWING CONTENTS OF "..disk:get_full_name(mtos))
+					add_outline(data, "FORMAT: "..disk:get_format(mtos))
+					add_outline(data, "")
+					if sysos.booted_from == disk.dev then
+						for k, v in pairs(laptop.apps) do
+							if is_executable_app(mtos, v) then
+								add_outline(data, k:upper().."*    "..(v.app_info or ""))
 							end
 						end
-						for k, v in pairs(txtdata) do
-							add_outline(data, k.."      "..v.owner.."      "..os.date("%M:%S %p, %A %B %d, %Y", v.ctime))
-						end
-						add_outline(data, '')
-						else add_outline(data, 'NO HARD DISK PRESENT')
-						add_outline(data, '')
 					end
-				elseif show_disk == 'FDD' then
-					local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
-					if txtdata then
-						local idata = mtos.bdev:get_removable_disk()
-						add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
-						add_outline(data, "FORMAT: "..idata.os_format:upper())
-						add_outline(data, "")
-						if sysos.booted_from == "removable" then
-							for k, v in pairs(laptop.apps) do
-								if is_executable_app(mtos, v) then
-									add_outline(data, k:upper().."*    "..(v.app_info or ""))
-								end
-							end
-						end
-						for k, v in pairs(txtdata) do
-							add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
-						end
-						add_outline(data, '')
-					else add_outline(data, 'NO FLOPPY DISK PRESENT')
-						add_outline(data, '')
-					end
-				else
-					add_outline(data, '?SYNTAX ERROR')
-				end
 
-			elseif exec_command == "TYPE" then
-				if exec_all[2] then
-					local filename = input_line:sub(6):gsub("^%s*(.-)%s*$", "%1")
-					local disk
-					if filename:sub(1,4):upper() == 'HDD:' then
-						disk = 'hdd'
-						filename = filename:sub(5)
-					elseif filename:sub(1,4):upper() == 'FDD:' then
-						disk = 'removable'
-						filename = filename:sub(5)
-					else
-						disk = 'system'
+					for k, v in pairs(txtdata) do
+						add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
 					end
-					local txtdata = mtos.bdev:get_app_storage(disk, 'stickynote:files')
-					if txtdata then
-						local file = txtdata[filename]
-						if file and file.content then
-							for s in file.content:gmatch("[^\n]+") do
-								add_outline(data, s)
+					add_outline(data, '')
+				elseif disk then
+					add_outline(data, 'NO DISK PRESENT: '..disk.longname)
+				else
+					add_outline(data, "?SYNTAX ERROR")
+				end
+			elseif exec_command == "TYPE" then
+				local filename, diskname = simple_vfs.parse_path(input_line:sub(6))
+				if filename then
+					local disk, inserted = simple_vfs.get_disk(mtos, diskname or data.current_disk)
+					if disk and inserted then
+						local txtdata = mtos.bdev:get_app_storage(disk.dev, 'stickynote:files')
+						if txtdata then
+							local file = txtdata[filename]
+							if file and file.content then
+								for s in file.content:gmatch("[^\n]+") do
+									add_outline(data, s)
+								end
+							else
+								add_outline(data, 'FILE NOT FOUND: '..filename)
 							end
 						end
+					elseif disk then
+						add_outline(data, 'NO DISK PRESENT: '..disk.longname)
+					else
+						add_outline(data, "?SYNTAX ERROR")
 					end
 				else
 					add_outline(data, '?SYNATX ERROR')
 				end
+				add_outline(data, '')
 			elseif exec_command == "CLS" then
 				data.outlines = {}
 			elseif exec_command == "TIME" then
