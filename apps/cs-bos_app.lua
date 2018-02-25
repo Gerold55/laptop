@@ -2,61 +2,77 @@ local os_version_attr = {
 	['3.31'] = {
 		releaseyear = '1982',
 		version_string = '3.31',
-		textcolor = '#00FF33', -- green
+		textcolor = 'GREEN',
 		blacklist_commands = { TEXTCOLOR = true },
-		scrollback_size = 34,
+		min_scrollback_size = 25,
+		max_scrollback_size = 100,
 	},
 	['1.10'] = {
 		releaseyear = '1976',
 		version_string = '1.10',
-		textcolor = '#FFB000', --amber
+		textcolor = 'AMBER',
 		blacklist_commands = { TEXTCOLOR = true },
-		scrollback_size = 25,
+		min_scrollback_size = 20,
+		max_scrollback_size = 33,
 	},
 	['6.33'] = {
 		releaseyear = '1995',
 		version_string = '6.33',
-		textcolor = '#FFFFFF', -- white
+		textcolor = 'WHITE',
 		blacklist_commands = { },
-		scrollback_size = 300,
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
 	},
 }
 os_version_attr.default = os_version_attr['6.33']
 
+
 local help_texts = {
-	CLS = "                  Clears the screen.",
-	CD = "                    Change disk. CD [HDD,FDD]",
-	DATE = "                Displays the current system date.",
-	DIR = "                    Display directory of current disk. DIR [hdd, fdd] displays directory of specified disk.",
-	DEL = "                  Delete a file. DEL [FILENAME]",
-	HALT = "                 Shut down CS-BOS.",
-	HELP = "                Displays HELP menu. HELP [command] displays help on that command.",
-	MEM = "                 Displays memory usage table.",
-	EXIT = "                  Exit CS-BOS shell",
-	REBOOT = "          Perform a soft reboot.",
-	TEXTCOLOR = "  Change terminal text color. TEXTCOLOR [green, amber, or white]",
-	TIME = "                 Displays the current system time.",
-	TIMEDATE = "       Displays the current system time and date.",
-	VER = "                  Displays CS-BOS version.",
-	FORMAT = "          View format information or Format Disk. FORMAT [/E] Erase disk, [/S] Create system (boot) disk, [/D] Create data disk",
-	LABEL = "              Show/Set floppy label. LABEL [new_label]",
+	CLS = "                   Clears the screen.",
+	CD = "                     Change disk. CD [HDD,FDD]",
+	DATE = "                 Displays the current system date.",
+	DIR = "                     Display directory of current disk. DIR [hdd, fdd] displays directory of specified disk.",
+	DEL = "                   Delete a file. DEL [FILENAME]",
+	HALT = "                  Shut down CS-BOS.",
+	HELP = "                 Displays HELP menu. HELP [command] displays help on that command.",
+	MEM = "                  Displays memory usage table.",
+	EXIT = "                   Exit CS-BOS shell",
+	REBOOT = "           Perform a soft reboot.",
+	TEXTCOLOR = "   Change terminal text color. TEXTCOLOR [green, amber, or white]",
+	SCROLLBACK = "Change terminal scrollback size. SCROLLBACK [##]",
+	TIME = "                  Displays the current system time.",
+	TIMEDATE = "        Displays the current system time and date.",
+	VER = "                   Displays CS-BOS version.",
+	FORMAT = "           View format information or Format Disk. FORMAT [/E] Erase disk, [/S] Create system (boot) disk, [/D] Create data disk",
+	LABEL = "               Show/Set floppy label. LABEL [new_label]",
+}
+
+
+local supported_textcolors = {
+	GREEN = "#00FF33",
+	AMBER = "#FFB000",
+	WHITE = "#FFFFFF",
 }
 
 
 local function get_initial_message(data)
 	data.outlines = {
-			"BASIC OPERATING SYSTEM v"..data.os_attr.version_string,
-			"(C)COPYRIGHT "..data.os_attr.releaseyear.." CARDIFF-SOFT",
-			"128K RAM SYSTEM  77822 BYTES FREE",
-		}
+		"BASIC OPERATING SYSTEM v"..data.os_attr.version_string,
+		"(C)COPYRIGHT "..data.os_attr.releaseyear.." CARDIFF-SOFT",
+		"128K RAM SYSTEM  77822 BYTES FREE",
+	}
 end
+
 
 local function add_outline(data, line)
 	table.insert(data.outlines, line)
 	if #data.outlines > data.scrollback_size then
-		table.remove(data.outlines,1)
+		for i = data.scrollback_size, #data.outlines do
+			table.remove(data.outlines,1)
+		end
 	end
 end
+
 
 local function is_executable_app(mtos, app)
 	if not mtos.sysdata then -- cannot executed withoud sysdata
@@ -75,6 +91,7 @@ local function numWithCommas(n)
   return tostring(math.floor(n)):reverse():gsub("(%d%d%d)","%1,"):gsub(",(%-?)$","%1"):reverse()
 end
 
+
 --- Simple VFS for BOS Operations
 local simple_vfs_map = {}
 -- Hard disk
@@ -92,7 +109,6 @@ simple_vfs_map.HDD = {
 		return 'BOOT'
 	end,
 }
-
 -- Floppy disk
 simple_vfs_map.FDD = {
 	id = 'FDD',
@@ -122,7 +138,6 @@ function simple_vfs.get_disk(mtos, device)
 	if not device then
 		return
 	end
-
 	local disk = simple_vfs_map[device:upper()]
 	local inserted
 	if disk then
@@ -130,6 +145,7 @@ function simple_vfs.get_disk(mtos, device)
 	end
 	return disk, inserted
 end
+
 
 function simple_vfs.parse_path(input_line)
 	local filename = input_line:gsub("^%s*(.-)%s*$", "%1") -- strip spaces
@@ -153,9 +169,12 @@ local function initialize_data(data, sdata, mtos, sysos)
 		data.tty = data.os_attr.textcolor
 	else
 		data.tty = sdata.tty or data.tty or data.os_attr.textcolor
+		if not supported_textcolors[data.tty] then --compat hack
+			data.tty = data.os_attr.textcolor
+		end
 	end
 
-	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or data.os_attr.scrollback_size
+	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or data.os_attr.min_scrollback_size
 		-- Set initial message on new session
 	if not data.outlines then
 		get_initial_message(data)
@@ -203,13 +222,13 @@ laptop.register_app("cs-bos_launcher", {
 		end
 
 		initialize_data(data, sdata, mtos, sysos)
-
+		local tty = supported_textcolors[data.tty]
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
-				"label[-0.15,9.9;"..minetest.colorize(data.tty,data.current_disk..">").."]"..
+				"label[-0.15,9.9;"..minetest.colorize(tty,data.current_disk..">").."]"..
 				"field[1.020,9.93;15.6,1;inputfield;;"..minetest.formspec_escape(data.inputfield).."]"..
 				"tablecolumns[text]tableoptions[background=#000000;border=false;highlight=#000000;"..
-				"color="..data.tty..";highlight_text="..data.tty.."]"..
+				"color="..tty..";highlight_text="..tty.."]"..
 				"table[-0.35,-0.35;15.57, 10.12;outlines;"
 		for idx,line in ipairs(data.outlines) do
 			if idx > 1 then
@@ -217,8 +236,7 @@ laptop.register_app("cs-bos_launcher", {
 			end
 			formspec = formspec..minetest.formspec_escape(line)
 		end
-		formspec = formspec..";"..#data.outlines.."]"..
-				"field_close_on_enter[inputfield;false]"
+		formspec = formspec..";"..#data.outlines.."]".."field_close_on_enter[inputfield;false]"
 		return formspec
 	end,
 
@@ -228,14 +246,12 @@ laptop.register_app("cs-bos_launcher", {
 		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
 		initialize_data(data, sdata, mtos, sysos)
 
-
 		if fields.inputfield then -- move received data to the formspec input field
 			data.inputfield = fields.inputfield
 		end
 
---		if fields.key_up then -- load previous command back in inputfield
 		if fields.key_enter then
-		-- run the command
+			-- run the command
 			local exec_all = data.inputfield:split(" ")
 			local input_line = data.inputfield
 			local exec_command = exec_all[1] --further parameters are 2++
@@ -247,7 +263,6 @@ laptop.register_app("cs-bos_launcher", {
 			if exec_command == nil then --empty line
 			elseif data.os_attr.blacklist_commands[exec_command] then
 				add_outline(data, '?ERROR NOT IMPLEMENTED')
-				add_outline(data, '')
 			elseif exec_command == "HALT" then
 				-- same code as in node_fw on punch to disable the OS
 				if mtos.hwdef.next_node then
@@ -259,22 +274,20 @@ laptop.register_app("cs-bos_launcher", {
 						mtos:save()
 					end
 				end
-
-
 			elseif exec_command == "DEL" then
 				local filename, diskname = simple_vfs.parse_path(input_line:sub(5))
-					if filename then
-						local disk, inserted = simple_vfs.get_disk(mtos, diskname or data.current_disk)
-						if disk and inserted then
-							local txtdata = mtos.bdev:get_app_storage(disk.dev, 'stickynote:files')
-							if txtdata and txtdata[filename] then
-								txtdata[filename] = nil
-								add_outline(data, filename:upper()..' DELETED SUCCESSFULY')
-							else
-								add_outline(data, 'FILE NOT FOUND: '..filename)
-							end
+				if filename then
+					local disk, inserted = simple_vfs.get_disk(mtos, diskname or data.current_disk)
+					if disk and inserted then
+						local txtdata = mtos.bdev:get_app_storage(disk.dev, 'stickynote:files')
+						if txtdata and txtdata[filename] then
+							txtdata[filename] = nil
+							add_outline(data, filename:upper()..' DELETED SUCCESSFULY')
+						else
+							add_outline(data, 'FILE NOT FOUND: '..filename)
 						end
 					end
+				end
 			elseif exec_command == "EXIT" then
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- quit app (if in app mode)
@@ -291,7 +304,6 @@ laptop.register_app("cs-bos_launcher", {
 			elseif is_executable_app(mtos, laptop.apps[exec_command:lower()]) then
 				add_outline(data, 'LAUNCHED '..exec_command)
 				mtos:set_app(exec_command:lower())
-
 			elseif exec_command == "CD" then
 				local disk, inserted = simple_vfs.get_disk(mtos, exec_all[2])
 				if disk and inserted then
@@ -302,7 +314,6 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					add_outline(data, "?SYNTAX ERROR")
 				end
-				add_outline(data, '')
 			elseif exec_command == "DIR" then
 				local disk, inserted = simple_vfs.get_disk(mtos, (exec_all[2] or data.current_disk))
 				if disk and inserted then
@@ -326,7 +337,6 @@ laptop.register_app("cs-bos_launcher", {
 					if not file_found then
 						add_outline(data, 'NO FILES ON THIS DISK')
 					end
-					add_outline(data, '')
 				elseif disk then
 					add_outline(data, 'NO DISK PRESENT: '..disk.longname)
 				else
@@ -356,21 +366,16 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					add_outline(data, '?SYNATX ERROR')
 				end
-				add_outline(data, '')
 			elseif exec_command == "CLS" then
 				data.outlines = {}
 			elseif exec_command == "TIME" then
 				add_outline(data, os.date("%I:%M:%S %p"))
-				add_outline(data, '')
 			elseif exec_command == "DATE" then
 				add_outline(data, os.date("%A %B %d, %Y"))
-				add_outline(data, '')
 			elseif exec_command == "TIMEDATE" then
 				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
-				add_outline(data, '')
 			elseif exec_command == "VER" then
 				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..data.os_attr.version_string)
-				add_outline(data, '')
 			elseif exec_command == "MEM" then
 				local convent = math.random(30,99)
 				local upper = math.random(10,99)
@@ -383,30 +388,42 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'Extended (XMS)*         130,309           '..numWithCommas(xms)..'            '..numWithCommas(130309-xms))
 				add_outline(data, '------------------------       -------------        -------------       -------------')
 				add_outline(data, 'Total Memory                131,072            '..numWithCommas(convent+upper+xms)..'           '..numWithCommas(131072-(convent+upper+xms)))
-				add_outline(data, '')
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
-				if textcolor == "green" then
-					sdata.tty="#00FF33"
-				elseif textcolor == "amber" then
-					sdata.tty="#FFB000"
-				elseif textcolor == "white" then
-					sdata.tty="#FFFFFF"
-				else
-					textcolor = 'ERROR'
+				if textcolor and supported_textcolors[textcolor:upper()] then
+					sdata.tty = textcolor:upper()
+					add_outline(data, 'SET TEXTCOLOR TO: '..sdata.tty)
+				elseif textcolor then
 					add_outline(data, '?SYNATX ERROR')
-					add_outline(data, '')
+				else
+					add_outline(data, 'TEXTCOLOR: '..sdata.tty)
 				end
-				if textcolor ~= 'ERROR' then
-					add_outline(data, 'Color changed to '..textcolor)
+			elseif exec_command == "SCROLLBACK" then
+				if exec_all[2] then
+					local newsize = tonumber(exec_all[2])
+					if newsize then
+						if newsize >= data.os_attr.min_scrollback_size and newsize <= data.os_attr.max_scrollback_size then
+							sdata.scrollback_size = newsize
+							add_outline(data, 'SET SCROLLBACK TO: '..newsize)
+						else
+							add_outline(data, "?OUT OF RANGE")
+						end
+					else
+						add_outline(data, "?SYNTAX ERROR")
+					end
+				else
+					add_outline(data, "SCROLLBACK: "..data.scrollback_size)
+					add_outline(data, "SUPPORTED: "..data.os_attr.min_scrollback_size.."-"..data.os_attr.max_scrollback_size)
 				end
 			elseif exec_command == "FORMAT" then
 				local idata = mtos.bdev:get_removable_disk()
 				if not idata.stack then
 					add_outline(data, '?DISK NOT FOUND')
-					add_outline(data, '')
 				else
-					local fparam = exec_all[2]:upper()
+					local fparam
+					if exec_all[2] then
+						fparam = exec_all[2]:upper()
+					end
 					local ftype, newlabel
 					if fparam == "/E" then
 						ftype = ""
@@ -420,7 +437,6 @@ laptop.register_app("cs-bos_launcher", {
 					end
 					if not ftype and fparam then
 						add_outline(data, "?SYNTAX ERROR")
-						add_outline(data, "")
 					else
 						if ftype then
 							add_outline(data, 'FORMATTING '..idata.def.description)
@@ -428,43 +444,35 @@ laptop.register_app("cs-bos_launcher", {
 						else
 							add_outline(data, 'MEDIA INFORMATION: '..idata.def.description)
 						end
-
 						add_outline(data, "FORMAT: "..idata.os_format)
 						add_outline(data, "LABEL: "..idata.label)
-						add_outline(data, "")
 					end
-
 				end
 			elseif exec_command == "LABEL" then
 				local idata = mtos.bdev:get_removable_disk()
 				if not idata.stack then
 					add_outline(data, '?DISK NOT FOUND')
-					add_outline(data, '')
 				else
 					if exec_all[2] then
 						idata.label = input_line:sub(6):gsub("^%s*(.-)%s*$", "%1")
 					end
 					add_outline(data, "LABEL: "..idata.label)
-					add_outline(data, "")
 				end
-
-----help commands----
 			elseif exec_command == "HELP" then
 				local help_command = exec_all[2]
 				if not help_command then -- no argument, print all
 					add_outline(data, 'These shell commands are defined internally.')
 					add_outline(data, '')
-						local help_sorted = {}
-						for k, v in pairs(help_texts) do
-							if not data.os_attr.blacklist_commands[k] then
-								table.insert(help_sorted, k.."    "..v)
-							end
+					local help_sorted = {}
+					for k, v in pairs(help_texts) do
+						if not data.os_attr.blacklist_commands[k] then
+							table.insert(help_sorted, k.."    "..v)
 						end
-						table.sort(help_sorted)
-						for _, kv in ipairs(help_sorted) do
-							add_outline(data, kv)
-						end
-					add_outline(data, '')
+					end
+					table.sort(help_sorted)
+					for _, kv in ipairs(help_sorted) do
+						add_outline(data, kv)
+					end
 				else
 					help_command = help_command:upper()
 					local help_text
@@ -474,12 +482,11 @@ laptop.register_app("cs-bos_launcher", {
 						help_text = help_texts[help_command] or "?  NO HELP IS AVAILABLE FOR THAT TOPIC"
 					end
 					add_outline(data, help_command:upper().. "    "..help_text)
-						add_outline(data, '')
 				end
 			else
 				add_outline(data, "?SYNTAX ERROR")
-				add_outline(data, '')
 			end
+			add_outline(data, '')
 		end
 	end,
 
