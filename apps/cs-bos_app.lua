@@ -49,9 +49,8 @@ local function is_executable_app(mtos, app)
 	if not mtos.sysdata then -- cannot executed withoud sysdata
 		return false
 	elseif app and not app.view and -- app given
-			not app.appwindow_formspec_func and --not a launcher
-			app.name ~= 'removable' and -- skip this apps hard-coded
-			app.name ~= 'launcher_settings' then
+			app.name ~= 'cs-bos_launcher' and -- No recursive calls
+			mtos:is_app_compatible(app.name) then
 		return true
 	else
 		return false

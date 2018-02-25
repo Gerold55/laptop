@@ -26,8 +26,16 @@ local os_version_attr = {
 		min_scrollback_size = 25,
 		max_scrollback_size = 300,
 	},
+	['10.00'] = {
+		releaseyear = '2010',
+		version_string = '10.00',
+		textcolor = 'WHITE',
+		blacklist_commands = { },
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
+	},
 }
-os_version_attr.default = os_version_attr['6.33']
+os_version_attr.default = os_version_attr['10.00']
 
 
 -----------------------------------------------------
@@ -124,6 +132,21 @@ end
 -- Free stack
 function os_class:appstack_free()
 	self.sysram.stack = {}
+end
+
+-- Get new app instance
+function os_class:is_app_compatible(name)
+	local app_def = laptop.apps[name]
+	if not app_def then
+		return false
+	end
+	if app_def.os_min_version and (tonumber(app_def.os_min_version) > tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	if app_def.os_max_version and (tonumber(app_def.os_max_version) < tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	return true
 end
 
 -- Get new app instance
@@ -245,7 +268,7 @@ function laptop.os_get(pos)
 
 	self.os_attr = os_version_attr.default
 	if self.hwdef.os_version then
-		self.os_attr = os_version_attr[mtos.hwdef.os_version]
+		self.os_attr = os_version_attr[self.hwdef.os_version]
 	end
 	return self
 end

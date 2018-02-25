@@ -154,6 +154,7 @@ laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
 	custom_theme = "Circuit",
+	os_version = '6.33',
 	sequence = { "off", "on"},
 	hw_capabilities = { "hdd", "floppy", "net", "liveboot" },
 	node_defs = {

@@ -84,6 +84,8 @@
 - `app_name` - App name shown in launcher. If not defined the app is just a view, not visible in launcher but can be activated. This way multi-screen apps are possible
 - `app_icon` - Icon to be shown in launcher. If nothing given the default icon is used
 - `app_info` - Short app info visible in launcher tooltip
+- `os_min_version` - minimum version to be used (CS-BOS, optional)
+- `os_max_version` - maximum version to be used (CS-BOS, optional)
 - `fullscreen` - (boolean) Do not add app-background and window buttons
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
 - `formspec_func(app, mtos)` - Function, should return the app formspec (mandatory) During definition the "app" and the "mtos" are available
