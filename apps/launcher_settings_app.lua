@@ -1,17 +1,8 @@
--- Load available Themes
-local themes_tab = {}
-for name, _ in pairs(laptop.themes) do
-	if name ~= "default" then
-		table.insert(themes_tab, name)
-	end
-end
-table.sort(themes_tab)
-
 laptop.register_app("launcher_settings", {
 	app_name = "Settings",
 	app_icon = "laptop_setting_wrench.png",
 	app_info = "Change the computer's settings.",
-	os_min_version = '10.00',
+	os_min_version = '3.31',
 	formspec_func = function(app, mtos)
 		local settings_data = mtos.bdev:get_app_storage('ram', 'launcher_settings')
 
@@ -20,10 +11,19 @@ laptop.register_app("launcher_settings", {
 		local current_theme = mtos:get_theme(current_theme_name)
 		local current_idx
 
+		settings_data.themes_tab = {}
+		for name, _ in pairs(laptop.themes) do
+			if name ~= "default" and mtos:is_theme_compatible(name) then
+				table.insert(settings_data.themes_tab, name)
+			end
+		end
+		table.sort(settings_data.themes_tab)
+
+
 		local formspec = mtos.theme:get_label('0,0.5', "Select theme")
 
 		local formspec = formspec.."textlist[0,1;5,2;sel_theme;"
-		for i, theme in ipairs(themes_tab) do
+		for i, theme in ipairs(settings_data.themes_tab) do
 			if i > 1 then
 				formspec = formspec..','
 			end
@@ -52,7 +52,7 @@ laptop.register_app("launcher_settings", {
 		if fields.sel_theme then
 			-- CHG:<idx> for selected or DCL:<idx> for double-clicked
 			local selected_idx = tonumber(fields.sel_theme:sub(5))
-			settings_data.selected_theme = themes_tab[selected_idx]
+			settings_data.selected_theme = settings_data.themes_tab[selected_idx]
 		end
 
 		if fields.theme_apply and settings_data.selected_theme then

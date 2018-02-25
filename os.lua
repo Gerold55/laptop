@@ -150,6 +150,21 @@ function os_class:is_app_compatible(name)
 end
 
 -- Get new app instance
+function os_class:is_theme_compatible(name)
+	local theme_def = laptop.themes[name]
+	if not theme_def then
+		return false
+	end
+	if theme_def.os_min_version and (tonumber(theme_def.os_min_version) > tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	if theme_def.os_max_version and (tonumber(theme_def.os_max_version) < tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	return true
+end
+
+-- Get new app instance
 function os_class:get_app(name)
 	local template = laptop.apps[name]
 	if not template then

@@ -132,6 +132,8 @@ Definitiontable:
 - `contrast_background` dark background to place under white text elements that does not support textcolor
 - `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
+- `os_min_version` - minimum version to be used (CS-BOS, optional)
+- `os_max_version` - maximum version to be used (CS-BOS, optional)
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`
