@@ -198,7 +198,6 @@ laptop.register_app("cs-bos_launcher", {
 	app_icon = "laptop_cs_bos.png",
 
 	formspec_func = function(cs_bos, mtos)
-
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
 		local sysos = mtos.bdev:get_app_storage('ram', 'os')
 		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
@@ -315,24 +314,33 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, "?SYNTAX ERROR")
 				end
 			elseif exec_command == "DIR" then
-				local disk, inserted = simple_vfs.get_disk(mtos, (exec_all[2] or data.current_disk))
+				local searchstring, diskname = simple_vfs.parse_path(input_line:sub(5))
+				local disk, inserted = simple_vfs.get_disk(mtos, diskname or data.current_disk)
 				if disk and inserted then
 					local txtdata = mtos.bdev:get_app_storage(disk.dev, 'stickynote:files')
-					add_outline(data, "VIEWING CONTENTS OF "..disk:get_full_name(mtos))
+					local message = "VIEWING CONTENTS OF "..disk:get_full_name(mtos)
+					if searchstring and searchstring ~= '' then
+						message = message .. ' FILTER STRING '..searchstring
+					end
+					add_outline(data, message)
 					add_outline(data, "FORMAT: "..disk:get_format(mtos))
 					add_outline(data, "")
 					local file_found
 					if sysos.booted_from == disk.dev then
 						for k, v in pairs(laptop.apps) do
 							if is_executable_app(mtos, v) then
-								add_outline(data, k:upper().."*    "..(v.app_info or ""))
-								file_found = true
+								if not searchstring or searchstring == '' or k:upper():match('^'..searchstring:upper():gsub('*','.*')..'$' ) then
+									add_outline(data, k:upper().."*    "..(v.app_info or ""))
+									file_found = true
+								end
 							end
 						end
 					end
 					for k, v in pairs(txtdata) do
-						add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
-						file_found = true
+						if not searchstring or searchstring == '' or k:match('^'..searchstring:gsub('*','.*')..'$' ) then
+							add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+							file_found = true
+						end
 					end
 					if not file_found then
 						add_outline(data, 'NO FILES ON THIS DISK')
@@ -486,7 +494,9 @@ laptop.register_app("cs-bos_launcher", {
 			else
 				add_outline(data, "?SYNTAX ERROR")
 			end
-			add_outline(data, '')
+			if data.outlines then
+				add_outline(data, '')
+			end
 		end
 	end,
 
