@@ -31,6 +31,7 @@ local help_texts = {
 	CD = "                    Change disk. CD [HDD,FDD]",
 	DATE = "                Displays the current system date.",
 	DIR = "                    Display directory of current disk. DIR [hdd, fdd] displays directory of specified disk.",
+	DEL = "                  Delete a file. DEL [FILENAME]",
 	HALT = "                 Shut down CS-BOS.",
 	HELP = "                Displays HELP menu. HELP [command] displays help on that command.",
 	MEM = "                 Displays memory usage table.",
@@ -40,7 +41,6 @@ local help_texts = {
 	SCROLLBACK = "Change terminal scrollback size",
 	TIME = "                 Displays the current system time.",
 	TIMEDATE = "       Displays the current system time and date.",
-	TODO = "               View TODO list for CS-BOS",
 	VER = "                  Displays CS-BOS version.",
 	FORMAT = "          View format information or Format Disk. FORMAT [/E] Erase disk, [/S] Create system (boot) disk, [/D] Create data disk",
 	LABEL = "              Show/Set floppy label. LABEL [new_label]",
@@ -169,7 +169,7 @@ local function initialize_data(data, sdata, mtos, sysos)
 		end
 	end
 
-	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or  data.os_attr.min_scrollback_size
+	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or data.os_attr.min_scrollback_size
 		-- Set initial message on new session
 	if not data.outlines then
 		get_initial_message(data)
@@ -273,6 +273,22 @@ laptop.register_app("cs-bos_launcher", {
 						mtos:save()
 					end
 				end
+
+
+			elseif exec_command == "DEL" then
+				local filename, diskname = simple_vfs.parse_path(input_line:sub(5))
+					if filename then
+						local disk, inserted = simple_vfs.get_disk(mtos, diskname or data.current_disk)
+						if disk and inserted then
+							local txtdata = mtos.bdev:get_app_storage(disk.dev, 'stickynote:files')
+							if txtdata and txtdata[filename] then
+								txtdata[filename] = nil
+								add_outline(data, filename:upper()..' DELETED SUCCESSFULY')
+							else
+								add_outline(data, 'FILE NOT FOUND: '..filename)
+							end
+						end
+					end
 			elseif exec_command == "EXIT" then
 				data.outlines = nil  -- reset screen
 				mtos:set_app()  -- quit app (if in app mode)
@@ -308,16 +324,21 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, "VIEWING CONTENTS OF "..disk:get_full_name(mtos))
 					add_outline(data, "FORMAT: "..disk:get_format(mtos))
 					add_outline(data, "")
+					local file_found
 					if sysos.booted_from == disk.dev then
 						for k, v in pairs(laptop.apps) do
 							if is_executable_app(mtos, v) then
 								add_outline(data, k:upper().."*    "..(v.app_info or ""))
+								file_found = true
 							end
 						end
 					end
-
 					for k, v in pairs(txtdata) do
 						add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+						file_found = true
+					end
+					if not file_found then
+						add_outline(data, 'NO FILES ON THIS DISK')
 					end
 					add_outline(data, '')
 				elseif disk then
@@ -453,14 +474,6 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, "LABEL: "..idata.label)
 					add_outline(data, "")
 				end
-----TODO List----
-			elseif exec_command == "TODO" then
-				add_outline(data, 'cload: load a specific file from cassette')
-				add_outline(data, 'del: remove file from current disk or cassette')
-				add_outline(data, 'dir0: list files or apps on disk 0')
-				add_outline(data, 'dir1: list files or apps on disk 1')
-				add_outline(data, 'dir2: list files or apps on disk 2')
-				add_outline(data, '')
 
 ----help commands----
 			elseif exec_command == "HELP" then
@@ -502,3 +515,4 @@ appwindow_formspec_func = function(...)
 	return laptop.apps["launcher"].appwindow_formspec_func(...)
 end,
 })
+
