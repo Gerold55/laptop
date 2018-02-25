@@ -2,23 +2,26 @@ local os_version_attr = {
 	['3.31'] = {
 		releaseyear = '1982',
 		version_string = '3.31',
-		textcolor = '#00FF33', -- green
+		textcolor = 'GREEN',
 		blacklist_commands = { TEXTCOLOR = true },
-		scrollback_size = 34,
+		min_scrollback_size = 25,
+		max_scrollback_size = 100,
 	},
 	['1.10'] = {
 		releaseyear = '1976',
 		version_string = '1.10',
-		textcolor = '#FFB000', --amber
+		textcolor = 'AMBER',
 		blacklist_commands = { TEXTCOLOR = true },
-		scrollback_size = 25,
+		min_scrollback_size = 20,
+		max_scrollback_size = 33,
 	},
 	['6.33'] = {
 		releaseyear = '1995',
 		version_string = '6.33',
-		textcolor = '#FFFFFF', -- white
+		textcolor = 'WHITE',
 		blacklist_commands = { },
-		scrollback_size = 300,
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
 	},
 }
 os_version_attr.default = os_version_attr['6.33']
@@ -34,6 +37,7 @@ local help_texts = {
 	EXIT = "                  Exit CS-BOS shell",
 	REBOOT = "          Perform a soft reboot.",
 	TEXTCOLOR = "  Change terminal text color. TEXTCOLOR [green, amber, or white]",
+	SCROLLBACK = "Change terminal scrollback size",
 	TIME = "                 Displays the current system time.",
 	TIMEDATE = "       Displays the current system time and date.",
 	TODO = "               View TODO list for CS-BOS",
@@ -42,6 +46,11 @@ local help_texts = {
 	LABEL = "              Show/Set floppy label. LABEL [new_label]",
 }
 
+local supported_textcolors = {
+	GREEN = "#00FF33",
+	AMBER = "#FFB000",
+	WHITE = "#FFFFFF",
+}
 
 local function get_initial_message(data)
 	data.outlines = {
@@ -54,7 +63,9 @@ end
 local function add_outline(data, line)
 	table.insert(data.outlines, line)
 	if #data.outlines > data.scrollback_size then
-		table.remove(data.outlines,1)
+		for i = data.scrollback_size, #data.outlines do
+			table.remove(data.outlines,1)
+		end
 	end
 end
 
@@ -153,9 +164,12 @@ local function initialize_data(data, sdata, mtos, sysos)
 		data.tty = data.os_attr.textcolor
 	else
 		data.tty = sdata.tty or data.tty or data.os_attr.textcolor
+		if not supported_textcolors[data.tty] then --compat hack
+			data.tty = data.os_attr.textcolor
+		end
 	end
 
-	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or data.os_attr.scrollback_size
+	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or  data.os_attr.min_scrollback_size
 		-- Set initial message on new session
 	if not data.outlines then
 		get_initial_message(data)
@@ -203,13 +217,13 @@ laptop.register_app("cs-bos_launcher", {
 		end
 
 		initialize_data(data, sdata, mtos, sysos)
-
+		local tty = supported_textcolors[data.tty]
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
-				"label[-0.15,9.9;"..minetest.colorize(data.tty,data.current_disk..">").."]"..
+				"label[-0.15,9.9;"..minetest.colorize(tty,data.current_disk..">").."]"..
 				"field[1.020,9.93;15.6,1;inputfield;;"..minetest.formspec_escape(data.inputfield).."]"..
 				"tablecolumns[text]tableoptions[background=#000000;border=false;highlight=#000000;"..
-				"color="..data.tty..";highlight_text="..data.tty.."]"..
+				"color="..tty..";highlight_text="..tty.."]"..
 				"table[-0.35,-0.35;15.57, 10.12;outlines;"
 		for idx,line in ipairs(data.outlines) do
 			if idx > 1 then
@@ -365,20 +379,33 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, '')
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
-				if textcolor == "green" then
-					sdata.tty="#00FF33"
-				elseif textcolor == "amber" then
-					sdata.tty="#FFB000"
-				elseif textcolor == "white" then
-					sdata.tty="#FFFFFF"
-				else
-					textcolor = 'ERROR'
+				if textcolor and supported_textcolors[textcolor:upper()] then
+					sdata.tty = textcolor:upper()
+					add_outline(data, 'SET TEXTCOLOR TO: '..sdata.tty)
+				elseif textcolor then
 					add_outline(data, '?SYNATX ERROR')
-					add_outline(data, '')
+				else
+					add_outline(data, 'TEXTCOLOR: '..sdata.tty)
 				end
-				if textcolor ~= 'ERROR' then
-					add_outline(data, 'Color changed to '..textcolor)
+				add_outline(data, '')
+			elseif exec_command == "SCROLLBACK" then
+				if exec_all[2] then
+					local newsize = tonumber(exec_all[2])
+					if newsize then
+						if newsize >= data.os_attr.min_scrollback_size and newsize <= data.os_attr.max_scrollback_size then
+							data.scrollback_size = newsize
+							add_outline(data, 'SET SCROLLBACK TO: '..newsize)
+						else
+							add_outline(data, "?OUT OF RANGE")
+						end
+					else
+						add_outline(data, "?SYNTAX ERROR")
+					end
+				else
+					add_outline(data, "SCROLLBACK: "..data.scrollback_size)
+					add_outline(data, "SUPPORTED: "..data.os_attr.min_scrollback_size.."-"..data.os_attr.max_scrollback_size)
 				end
+				add_outline(data, '')
 			elseif exec_command == "FORMAT" then
 				local idata = mtos.bdev:get_removable_disk()
 				if not idata.stack then
