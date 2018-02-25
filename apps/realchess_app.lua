@@ -28,8 +28,8 @@ function realchess.move(data, pos, from_list, from_index, to_list, to_index, _, 
 	end
 
 	local inv = meta:get_inventory()
-	local pieceFrom = inv:get_stack(from_list, from_index):get_name()
-	local pieceTo = inv:get_stack(to_list, to_index):get_name()
+	local pieceFrom = inv:get_stack(from_list, from_index):get_name():sub(8) --:sub(8) cuts "laptop:"
+	local pieceTo = inv:get_stack(to_list, to_index):get_name():sub(8) --:sub(8) cuts "laptop:"
 	local thisMove -- will replace lastMove when move is legal
 
 	if pieceFrom:find("white") then
