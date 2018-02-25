@@ -23,10 +23,13 @@ local os_version_attr = {
 }
 os_version_attr.default = os_version_attr['6.33']
 
+current_disk = "HDD"
+
 local help_texts = {
 	CLS = "                  Clears the screen.",
+	CD = "                    Change disk. CD [HDD,FDD]",
 	DATE = "                Displays the current system date.",
-	DIR = "                    Displays directory of current disk.",
+	DIR = "                    Display directory of current disk. DIR [hdd, fdd] displays directory of specified disk.",
 	HALT = "                 Shut down CS-BOS.",
 	HELP = "                Displays HELP menu. HELP [command] displays help on that command.",
 	MEM = "                 Displays memory usage table.",
@@ -198,8 +201,22 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'LAUNCHED '..exec_command)
 				mtos:set_app(exec_command:lower())
 
+			elseif exec_command == "CD" then
+				if not exec_all[2] then add_outline(data, "?SYNTAX ERROR")
+				elseif exec_all[2]:upper() == 'HDD' then
+						current_disk = "HDD"
+						add_outline(data, "CURRENT DISK = DISK 0:HDD")
+						add_outline(data, '')
+				elseif exec_all[2]:upper() == "FDD" then
+					current_disk = "FDD"
+					local idata = mtos.bdev:get_removable_disk()
+					add_outline(data, "CURRENT DISK = DISK 1:"..idata.label)
+					add_outline(data, '')
+				else add_outline(data, "?SYNTAX ERROR")
+				end
+
 			elseif exec_command == "DIR" then
-				if not exec_all[2] or exec_all[2]:upper() == 'HDD' then
+				if (not exec_all[2] and current_disk=="HDD") or (exec_all[2] and exec_all[2]:upper() == 'HDD') then
 					local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
 					if txtdata then
 						add_outline(data, 'VIEWING CONTENTS OF DISK 0: HDD')
@@ -220,7 +237,7 @@ laptop.register_app("cs-bos_launcher", {
 						add_outline(data, '')
 					end
 
-					elseif not exec_all[2] or exec_all[2]:upper() == 'FDD' then
+				elseif (not exec_all[2] and current_disk=="FDD") or (exec_all[2] and exec_all[2]:upper() == 'FDD') then
 						local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
 						if txtdata then
 							local idata = mtos.bdev:get_removable_disk()
