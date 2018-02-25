@@ -153,8 +153,8 @@ laptop.register_hardware("laptop:printer", {
 laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
+	custom_theme = "Circuit",
 	sequence = { "off", "on"},
-	custom_theme = "Shell",
 	hw_capabilities = { "hdd", "floppy", "net", "liveboot" },
 	node_defs = {
 		["on"] = {
@@ -268,6 +268,7 @@ laptop.register_hardware("laptop:fruit_zero", {
 laptop.register_hardware("laptop:bell_crossover", {
 	description = "Bell CrossOver",
 	infotext = "Bell CrossOver",
+	custom_theme = "Clouds",
 	sequence = { "off", "on"},
 	node_defs = {
 		["on"] = {
@@ -324,7 +325,7 @@ laptop.register_hardware("laptop:bell_crossover", {
 	}
 })
 
---Old PC--
+--Kodiak 1000--
 laptop.register_hardware("laptop:kodiak_1000", {
 	description = "Kodiak 1000",
 	infotext = "Kodiak 1000",
@@ -384,10 +385,11 @@ laptop.register_hardware("laptop:kodiak_1000", {
 	}
 })
 
--- Laptop v2.0
+-- Portable Workstation
 laptop.register_hardware("laptop:portable_workstation_2", {
 	description = "Portable Workstation 2",
 	infotext = "Portable Workstation 2",
+custom_theme = "Argyle",
 	sequence = { "closed", "open", "open_on"},
 	node_defs = {
 		["closed"] = {
