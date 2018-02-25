@@ -131,11 +131,11 @@ function simple_vfs.get_disk(mtos, device)
 	return disk, inserted
 end
 
-simple_vfs.parse_path(input_line)
+function simple_vfs.parse_path(input_line)
 	local filename = input_line:gsub("^%s*(.-)%s*$", "%1") -- strip spaces
 	local diskname
-	if filename:sub(4,1) == ':' then
-		diskname = diskname:sub(1,3)
+	if filename:sub(4,4) == ':' then
+		diskname = filename:sub(1,3)
 		filename = filename:sub(5)
 	end
 	return filename, diskname
