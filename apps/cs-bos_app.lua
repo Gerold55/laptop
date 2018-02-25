@@ -23,8 +23,6 @@ local os_version_attr = {
 }
 os_version_attr.default = os_version_attr['6.33']
 
-current_disk = "HDD"
-
 local help_texts = {
 	CLS = "                  Clears the screen.",
 	CD = "                    Change disk. CD [HDD,FDD]",
@@ -77,7 +75,7 @@ local function numWithCommas(n)
   return tostring(math.floor(n)):reverse():gsub("(%d%d%d)","%1,"):gsub(",(%-?)$","%1"):reverse()
 end
 
-local function initialize_data(data, sdata, mtos)
+local function initialize_data(data, sdata, mtos, sysos)
 	data.os_attr = os_version_attr.default
 	if mtos.hwdef.os_version then
 		data.os_attr = os_version_attr[mtos.hwdef.os_version]
@@ -94,6 +92,15 @@ local function initialize_data(data, sdata, mtos)
 	if not data.outlines then
 		get_initial_message(data)
 	end
+
+	if not data.current_disk then
+		if sysos.booted_from == 'removable' then
+			data.current_disk = 'FDD'
+		else
+			data.current_disk = 'HDD'
+		end
+	end
+
 	data.inputfield = data.inputfield or ""
 end
 
@@ -128,7 +135,7 @@ laptop.register_app("cs-bos_launcher", {
 			return formspec
 		end
 
-		initialize_data(data, sdata, mtos)
+		initialize_data(data, sdata, mtos, sysos)
 
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
@@ -151,7 +158,7 @@ laptop.register_app("cs-bos_launcher", {
 		local data = mtos.bdev:get_app_storage('ram', 'cs_bos')
 		local sysos = mtos.bdev:get_app_storage('ram', 'os')
 		local sdata = mtos.bdev:get_app_storage('system', 'cs_bos') or {} -- handle temporary if no sysdata given
-		initialize_data(data, sdata, mtos)
+		initialize_data(data, sdata, mtos, sysos)
 
 
 		if fields.inputfield then -- move received data to the formspec input field
@@ -202,21 +209,25 @@ laptop.register_app("cs-bos_launcher", {
 				mtos:set_app(exec_command:lower())
 
 			elseif exec_command == "CD" then
-				if not exec_all[2] then add_outline(data, "?SYNTAX ERROR")
+				if not exec_all[2] then
+					add_outline(data, "?SYNTAX ERROR")
 				elseif exec_all[2]:upper() == 'HDD' then
-						current_disk = "HDD"
-						add_outline(data, "CURRENT DISK = DISK 0:HDD")
-						add_outline(data, '')
+					data.current_disk = "HDD"
+					add_outline(data, "CURRENT DISK = DISK 0:HDD")
+					add_outline(data, '')
 				elseif exec_all[2]:upper() == "FDD" then
-					current_disk = "FDD"
+					data.current_disk = "FDD"
 					local idata = mtos.bdev:get_removable_disk()
 					add_outline(data, "CURRENT DISK = DISK 1:"..idata.label)
 					add_outline(data, '')
-				else add_outline(data, "?SYNTAX ERROR")
+				else
+					add_outline(data, "?SYNTAX ERROR")
 				end
 
 			elseif exec_command == "DIR" then
-				if (not exec_all[2] and current_disk=="HDD") or (exec_all[2] and exec_all[2]:upper() == 'HDD') then
+				local show_disk = exec_all[2] or data.current_disk
+				show_disk = show_disk:upper()
+				if show_disk == 'HDD' then
 					local txtdata = mtos.bdev:get_app_storage('hdd', 'stickynote:files')
 					if txtdata then
 						add_outline(data, 'VIEWING CONTENTS OF DISK 0: HDD')
@@ -236,31 +247,30 @@ laptop.register_app("cs-bos_launcher", {
 						else add_outline(data, 'NO HARD DISK PRESENT')
 						add_outline(data, '')
 					end
-
-				elseif (not exec_all[2] and current_disk=="FDD") or (exec_all[2] and exec_all[2]:upper() == 'FDD') then
-						local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
-						if txtdata then
-							local idata = mtos.bdev:get_removable_disk()
-							add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
-							add_outline(data, "FORMAT: "..idata.os_format:upper())
-							add_outline(data, "")
-							if sysos.booted_from == "removable" then
-								for k, v in pairs(laptop.apps) do
-									if is_executable_app(mtos, v) then
-										add_outline(data, k:upper().."*    "..(v.app_info or ""))
-									end
+				elseif show_disk == 'FDD' then
+					local txtdata = mtos.bdev:get_app_storage('removable', 'stickynote:files')
+					if txtdata then
+						local idata = mtos.bdev:get_removable_disk()
+						add_outline(data, "VIEWING CONTENTS OF DISK 1: "..idata.label)
+						add_outline(data, "FORMAT: "..idata.os_format:upper())
+						add_outline(data, "")
+						if sysos.booted_from == "removable" then
+							for k, v in pairs(laptop.apps) do
+								if is_executable_app(mtos, v) then
+									add_outline(data, k:upper().."*    "..(v.app_info or ""))
 								end
 							end
-							for k, v in pairs(txtdata) do
-									add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
-							end
-							add_outline(data, '')
-							else add_outline(data, 'NO FLOPPY DISK PRESENT')
-							add_outline(data, '')
 						end
-						else add_outline(data, '?SYNTAX ERROR')
+						for k, v in pairs(txtdata) do
+							add_outline(data, k.."      "..v.owner.."      "..os.date("%I:%M:%S %p, %A %B %d, %Y", v.ctime))
+						end
+						add_outline(data, '')
+					else add_outline(data, 'NO FLOPPY DISK PRESENT')
 						add_outline(data, '')
 					end
+				else
+					add_outline(data, '?SYNTAX ERROR')
+				end
 
 			elseif exec_command == "TYPE" then
 				if exec_all[2] then
