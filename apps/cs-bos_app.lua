@@ -515,4 +515,3 @@ appwindow_formspec_func = function(...)
 	return laptop.apps["launcher"].appwindow_formspec_func(...)
 end,
 })
-
