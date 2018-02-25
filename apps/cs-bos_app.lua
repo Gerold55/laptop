@@ -1,32 +1,3 @@
-local os_version_attr = {
-	['3.31'] = {
-		releaseyear = '1982',
-		version_string = '3.31',
-		textcolor = 'GREEN',
-		blacklist_commands = { TEXTCOLOR = true },
-		min_scrollback_size = 25,
-		max_scrollback_size = 100,
-	},
-	['1.10'] = {
-		releaseyear = '1976',
-		version_string = '1.10',
-		textcolor = 'AMBER',
-		blacklist_commands = { TEXTCOLOR = true },
-		min_scrollback_size = 20,
-		max_scrollback_size = 33,
-	},
-	['6.33'] = {
-		releaseyear = '1995',
-		version_string = '6.33',
-		textcolor = 'WHITE',
-		blacklist_commands = { },
-		min_scrollback_size = 25,
-		max_scrollback_size = 300,
-	},
-}
-os_version_attr.default = os_version_attr['6.33']
-
-
 local help_texts = {
 	CLS = "                   Clears the screen.",
 	CD = "                     Change disk. CD [HDD,FDD]",
@@ -55,10 +26,10 @@ local supported_textcolors = {
 }
 
 
-local function get_initial_message(data)
+local function get_initial_message(mtos, data)
 	data.outlines = {
-		"BASIC OPERATING SYSTEM v"..data.os_attr.version_string,
-		"(C)COPYRIGHT "..data.os_attr.releaseyear.." CARDIFF-SOFT",
+		"BASIC OPERATING SYSTEM v"..mtos.os_attr.version_string,
+		"(C)COPYRIGHT "..mtos.os_attr.releaseyear.." CARDIFF-SOFT",
 		"128K RAM SYSTEM  77822 BYTES FREE",
 	}
 end
@@ -160,24 +131,19 @@ end
 
 
 local function initialize_data(data, sdata, mtos, sysos)
-	data.os_attr = os_version_attr.default
-	if mtos.hwdef.os_version then
-		data.os_attr = os_version_attr[mtos.hwdef.os_version]
-	end
-
-	if data.os_attr.blacklist_commands.TEXTCOLOR then
-		data.tty = data.os_attr.textcolor
+	if mtos.os_attr.blacklist_commands.TEXTCOLOR then
+		data.tty = mtos.os_attr.textcolor
 	else
-		data.tty = sdata.tty or data.tty or data.os_attr.textcolor
+		data.tty = sdata.tty or data.tty or mtos.os_attr.textcolor
 		if not supported_textcolors[data.tty] then --compat hack
-			data.tty = data.os_attr.textcolor
+			data.tty = mtos.os_attr.textcolor
 		end
 	end
 
-	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or data.os_attr.min_scrollback_size
+	data.scrollback_size = sdata.scrollback_size or data.scrollback_size or mtos.os_attr.min_scrollback_size
 		-- Set initial message on new session
 	if not data.outlines then
-		get_initial_message(data)
+		get_initial_message(mtos, data)
 	end
 
 	if not data.current_disk then
@@ -260,7 +226,7 @@ laptop.register_app("cs-bos_launcher", {
 				exec_command = exec_command:upper()
 			end
 			if exec_command == nil then --empty line
-			elseif data.os_attr.blacklist_commands[exec_command] then
+			elseif mtos.os_attr.blacklist_commands[exec_command] then
 				add_outline(data, '?ERROR NOT IMPLEMENTED')
 			elseif exec_command == "HALT" then
 				-- same code as in node_fw on punch to disable the OS
@@ -383,7 +349,7 @@ laptop.register_app("cs-bos_launcher", {
 			elseif exec_command == "TIMEDATE" then
 				add_outline(data, os.date("%I:%M:%S %p, %A %B %d, %Y"))
 			elseif exec_command == "VER" then
-				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..data.os_attr.version_string)
+				add_outline(data, 'CARDIFF-SOFT BASIC OPERATING SYSTEM v'..mtos.os_attr.version_string)
 			elseif exec_command == "MEM" then
 				local convent = math.random(30,99)
 				local upper = math.random(10,99)
@@ -410,7 +376,7 @@ laptop.register_app("cs-bos_launcher", {
 				if exec_all[2] then
 					local newsize = tonumber(exec_all[2])
 					if newsize then
-						if newsize >= data.os_attr.min_scrollback_size and newsize <= data.os_attr.max_scrollback_size then
+						if newsize >= mtos.os_attr.min_scrollback_size and newsize <= mtos.os_attr.max_scrollback_size then
 							sdata.scrollback_size = newsize
 							add_outline(data, 'SET SCROLLBACK TO: '..newsize)
 						else
@@ -421,7 +387,7 @@ laptop.register_app("cs-bos_launcher", {
 					end
 				else
 					add_outline(data, "SCROLLBACK: "..data.scrollback_size)
-					add_outline(data, "SUPPORTED: "..data.os_attr.min_scrollback_size.."-"..data.os_attr.max_scrollback_size)
+					add_outline(data, "SUPPORTED: "..mtos.os_attr.min_scrollback_size.."-"..mtos.os_attr.max_scrollback_size)
 				end
 			elseif exec_command == "FORMAT" then
 				local idata = mtos.bdev:get_removable_disk()
@@ -473,7 +439,7 @@ laptop.register_app("cs-bos_launcher", {
 					add_outline(data, '')
 					local help_sorted = {}
 					for k, v in pairs(help_texts) do
-						if not data.os_attr.blacklist_commands[k] then
+						if not mtos.os_attr.blacklist_commands[k] then
 							table.insert(help_sorted, k.."    "..v)
 						end
 					end
@@ -484,7 +450,7 @@ laptop.register_app("cs-bos_launcher", {
 				else
 					help_command = help_command:upper()
 					local help_text
-					if data.os_attr.blacklist_commands[help_command] then
+					if mtos.os_attr.blacklist_commands[help_command] then
 						help_text = "?NOT IMPLEMENTED ERROR"
 					else
 						help_text = help_texts[help_command] or "?  NO HELP IS AVAILABLE FOR THAT TOPIC"

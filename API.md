@@ -7,7 +7,7 @@
 - `hwdef.infotext` - Text shown if node is pointed
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
-- `hwdef.os_version` - optional - Set OS version, used in CS-BOS launcher only
+- `hwdef.os_version` - optional - Set OS version. ('1.10', '3.31' or '6.33') By default the latest version is used
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
@@ -70,6 +70,13 @@
 	`mtos.sysram` = System/OS ram partition, mtos.bdev:get_app_storage('ram', 'os')
 	`mtos.sysdata` = System/OS data partition, mtos.bdev:get_app_storage('system', 'os')
 	`mtos.theme` = Selected theme object
+	`mtos.os_attr` = Hard-coded attributes for OS version
+		`releaseyear`
+		`version_string`
+		`blacklist_commands`  CS-BOS interpreter
+		`textcolor`           CS-BOS Console
+		`min_scrollback_size` CS-BOS Buffer
+		`max_scrollback_size` CS-BOS Buffer
 
 ## Apps
 ### Definition attributes
