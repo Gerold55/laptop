@@ -26,6 +26,14 @@ local os_version_attr = {
 		min_scrollback_size = 25,
 		max_scrollback_size = 300,
 	},
+	['5.02'] = {
+		releaseyear = '2000',
+		version_string = '5.02',
+		textcolor = 'WHITE',
+		blacklist_commands = { },
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
+	},
 	['10.00'] = {
 		releaseyear = '2010',
 		version_string = '10.00',

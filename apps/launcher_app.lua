@@ -1,8 +1,9 @@
 
 laptop.register_app("launcher", {
-	app_name = "Main launcher", -- not in launcher list
+	app_name = "Main launcher",
+	app_info = "Desktop",
 	fullscreen = true,
-	os_min_version = '3.31',
+	os_min_version = '5.00',
 	formspec_func = function(launcher_app, mtos)
 
 		-- no system found. Error
@@ -32,7 +33,7 @@ laptop.register_app("launcher", {
 		end
 		local appslist_sorted = {}
 		for name, def in pairs(laptop.apps) do
-			if def.app_name and not def.view and def.name ~= 'launcher' and mtos:is_app_compatible(name)then
+			if def.app_name and not def.view and def.name ~= launcher_app.name and mtos:is_app_compatible(name)then
 				table.insert(appslist_sorted, {name = name, def = def})
 			end
 		end
