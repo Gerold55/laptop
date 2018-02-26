@@ -77,6 +77,7 @@ laptop.register_hardware("laptop:printer", {
 	sequence = { "off", "powersave", "on" },
 	custom_launcher = "printer_launcher",
 	os_version = "3.31",
+	custom_theme = "Blue",
 	hw_capabilities = {"hdd"},
 	node_defs = {
 
@@ -390,6 +391,7 @@ laptop.register_hardware("laptop:portable_workstation_2", {
 	description = "Portable Workstation 2",
 	infotext = "Portable Workstation 2",
 	os_version = "5.02",
+	custom_theme = "Argyle",
 	sequence = { "closed", "open", "open_on"},
 	node_defs = {
 		["closed"] = {
