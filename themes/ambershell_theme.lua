@@ -17,5 +17,5 @@ laptop.register_theme("Amber Shell", {
 	desktop_icon_label_textcolor = '#FFB000',
 	titlebar_textcolor = "#000000",
 	textcolor = "#FFB000",
-	os_max_version = '3.11',
+	os_max_version = '3.99',
 })
