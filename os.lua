@@ -10,7 +10,7 @@ local os_version_attr = {
 		custom_theme = "Amber Shell",
 		blacklist_commands = { TEXTCOLOR = true },
 		min_scrollback_size = 20,
-		max_scrollback_size = 33,
+		max_scrollback_size = 34,
 	},
 	['3.31'] = {
 		releaseyear = '1982',
@@ -23,7 +23,7 @@ local os_version_attr = {
 		max_scrollback_size = 100,
 	},
 	['5.02'] = {
-		releaseyear = '2000',
+		releaseyear = '1989',
 		version_string = '5.02',
 		textcolor = 'WHITE',
 		custom_theme = "Circuit",
@@ -44,6 +44,7 @@ local os_version_attr = {
 		releaseyear = '2010',
 		version_string = '10.00',
 		textcolor = 'WHITE',
+		custom_theme = "Freedom"
 		blacklist_commands = { },
 		min_scrollback_size = 25,
 		max_scrollback_size = 300,
