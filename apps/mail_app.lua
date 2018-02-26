@@ -3,7 +3,7 @@
 laptop.register_app("mail", {
 	app_name = "Mail",
 	app_icon = "laptop_email_letter.png",
-	app_info = "Write Mail to Other Players",
+	app_info = "Send Electronic Mail",
 	formspec_func = function(app, mtos)
 		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
 		if not cloud then

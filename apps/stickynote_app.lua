@@ -3,7 +3,7 @@ local store_area = 'stickynote:files'
 laptop.register_app("stickynote", {
 	app_name = "Notepad",
 	app_icon = "laptop_notes_pad.png",
-	app_info = "Write notes in a text document",
+	app_info = "Write Text Documents",
 	formspec_func = function(app, mtos)
 		local data = mtos.bdev:get_app_storage('system', 'stickynote')
 		data.files = data.files or {}

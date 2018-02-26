@@ -1,7 +1,7 @@
 
 laptop.register_app("launcher", {
 	app_name = "Main launcher",
-	app_info = "Desktop",
+	app_info = "Desktop Enviroment",
 	fullscreen = true,
 	os_min_version = '5.00',
 	formspec_func = function(launcher_app, mtos)

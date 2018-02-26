@@ -1,7 +1,7 @@
 laptop.register_app("calculator", {
 	app_name = "Calculator",
 	app_icon = "laptop_calculator.png",
-	app_info = "Calculate things",
+	app_info = "Perform Mathematical Calculations",
 	formspec_func = function(app, mtos)
 		local data = mtos.bdev:get_app_storage('ram', 'calculator')
 
