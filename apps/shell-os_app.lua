@@ -3,7 +3,7 @@ laptop.register_app("shell", {
 	app_info = "Graphical shell",
 	fullscreen = true,
 	app_icon = "laptop_????.png",
-	os_min_version = '3.30',
+	os_min_version = '1.00',
 	os_max_version = "4.99",
 	formspec_func = function(...)
 		--re-use the default launcher screen
