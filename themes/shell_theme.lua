@@ -14,5 +14,5 @@ laptop.register_theme("Shell", {
 	desktop_icon_label_button = "laptop_theme_shell_desktop_icon_label_button.png",
 	desktop_icon_label_textcolor = '#000000',
 	titlebar_textcolor = "#000000",
-	os_max_version = '6.33',
+	os_max_version = '5.00',
 })

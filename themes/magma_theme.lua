@@ -6,4 +6,5 @@ laptop.register_theme("Magma", {
 	back_button = "laptop_theme_magma_back_button.png",
 	exit_button = "laptop_theme_magma_exit_button.png",
 	desktop_icon_button = "laptop_theme_magma_desktop_icon_button.png",
+	os_min_version = '7.00',
 })
