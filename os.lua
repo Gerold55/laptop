@@ -6,6 +6,8 @@ local os_version_attr = {
 		releaseyear = '1976',
 		version_string = '1.10',
 		textcolor = 'AMBER',
+		custom_launcher = "cs-bos_launcher",
+		custom_theme = "Amber Shell",
 		blacklist_commands = { TEXTCOLOR = true },
 		min_scrollback_size = 20,
 		max_scrollback_size = 33,
@@ -14,22 +16,26 @@ local os_version_attr = {
 		releaseyear = '1982',
 		version_string = '3.31',
 		textcolor = 'GREEN',
+		custom_launcher = "cs-bos_launcher",
+		custom_theme = "Green Shell",
 		blacklist_commands = { TEXTCOLOR = true },
 		min_scrollback_size = 25,
 		max_scrollback_size = 100,
-	},
-	['6.33'] = {
-		releaseyear = '1995',
-		version_string = '6.33',
-		textcolor = 'WHITE',
-		blacklist_commands = { },
-		min_scrollback_size = 25,
-		max_scrollback_size = 300,
 	},
 	['5.02'] = {
 		releaseyear = '2000',
 		version_string = '5.02',
 		textcolor = 'WHITE',
+		custom_theme = "Circuit",
+		blacklist_commands = { },
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
+	},
+	['6.33'] = {
+		releaseyear = '1995',
+		version_string = '6.33',
+		textcolor = 'WHITE',
+		custom_theme = "Clouds",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
 		max_scrollback_size = 300,
@@ -104,7 +110,7 @@ function os_class:get_theme(theme)
 			theme = self.sysdata.theme
 		end
 		if not theme then
-			theme = self.hwdef.custom_theme
+			theme = self.hwdef.custom_theme or self.os_attr.custom_theme
 		end
 	end
 	return laptop.get_theme(theme)
@@ -186,7 +192,7 @@ end
 
 -- Activate the app
 function os_class:set_app(appname)
-	local launcher = self.hwdef.custom_launcher or "launcher"
+	local launcher = self.hwdef.custom_launcher or self.os_attr.custom_launcher or "launcher"
 	local newapp = appname or launcher
 	if newapp == launcher then
 		self:appstack_free()
@@ -229,7 +235,7 @@ end
 
 -- Handle input processing
 function os_class:pass_to_app(method, reshow, sender, ...)
-	local appname = self.sysram.current_app or self.hwdef.custom_launcher or "launcher"
+	local appname = self.sysram.current_app or self.hwdef.custom_launcher or self.os_attr.custom_launcher or "launcher"
 	local app = self:get_app(appname)
 	if not app then
 		self:set_app()
@@ -287,11 +293,11 @@ function laptop.os_get(pos)
 	self.sysram.stack = self.sysram.stack or {}
 	self.sysram.app_timer = self.sysram.app_timer or {}
 	self.sysdata = self.bdev:get_app_storage('system', 'os')
-	self.theme = self:get_theme()
 
 	self.os_attr = os_version_attr.default
 	if self.hwdef.os_version then
 		self.os_attr = os_version_attr[self.hwdef.os_version]
 	end
+	self.theme = self:get_theme()
 	return self
 end

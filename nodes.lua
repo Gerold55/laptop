@@ -77,7 +77,6 @@ laptop.register_hardware("laptop:printer", {
 	sequence = { "off", "powersave", "on" },
 	custom_launcher = "printer_launcher",
 	os_version = "3.31",
-	custom_theme = "Green Shell",
 	hw_capabilities = {"hdd"},
 	node_defs = {
 
@@ -155,7 +154,6 @@ laptop.register_hardware("laptop:printer", {
 laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
-	custom_theme = "Circuit",
 	os_version = '5.02',
 	sequence = { "off", "on"},
 	hw_capabilities = { "hdd", "floppy", "net", "liveboot" },
@@ -272,7 +270,6 @@ laptop.register_hardware("laptop:fruit_zero", {
 laptop.register_hardware("laptop:bell_crossover", {
 	description = "Bell CrossOver",
 	infotext = "Bell CrossOver",
-	custom_theme = "Clouds",
 	os_version = "6.33",
 	sequence = { "off", "on"},
 	node_defs = {
@@ -335,9 +332,7 @@ laptop.register_hardware("laptop:kodiak_1000", {
 	description = "Kodiak 1000",
 	infotext = "Kodiak 1000",
 	sequence = { "off", "on"},
-	custom_launcher = "cs-bos_launcher",
 	os_version = "3.31",
-	custom_theme = "Green Shell",
 	hw_capabilities = { "floppy", "liveboot" },
 	node_defs = {
 		["on"] = {
@@ -394,7 +389,6 @@ laptop.register_hardware("laptop:kodiak_1000", {
 laptop.register_hardware("laptop:portable_workstation_2", {
 	description = "Portable Workstation 2",
 	infotext = "Portable Workstation 2",
-custom_theme = "Argyle",
 	os_version = "5.02",
 	sequence = { "closed", "open", "open_on"},
 	node_defs = {
