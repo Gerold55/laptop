@@ -11,4 +11,5 @@ laptop.register_theme("Argyle", {
 	exit_textcolor = "#000000",
 	desktop_icon_label_textcolor = "#000000",
 	desktop_icon_label_button = "laptop_theme_desktop_icon_label_button_grey.png",
+	os_max_version = '6.99',
 })

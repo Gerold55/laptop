@@ -13,4 +13,5 @@ laptop.register_theme("Boing!", {
 	taskbar_clock_position_and_size = "11,-.25;4,0.4",
 	desktop_icon_label_button = "laptop_theme_boing_major_button.png",
 	titlebar_textcolor = "#000000",
+	os_max_version = '7.99',
 })

@@ -9,4 +9,5 @@ laptop.register_theme("Circuit", {
 	taskbar_clock_position_and_size = "11,-.38;4,0.7",
 	exit_character = " ",
 	titlebar_textcolor = "#000000",
+	os_max_version = '6.99',
 })
