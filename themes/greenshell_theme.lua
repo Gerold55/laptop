@@ -9,6 +9,8 @@ laptop.register_theme("Green Shell", {
 	back_textcolor = "#000000",
 	exit_button = "laptop_theme_greenshell_exit_button.png",
 	exit_character = " ",
+	contrast_background = "laptop_theme_greenshell_major_button.png",
+	contrast_textcolor = "#00ff33",
 	desktop_icon_button = "laptop_theme_desktop_icon_label_button_black.png",
 	taskbar_clock_position_and_size = "9,3.5;4,2",
 	desktop_icon_label_button = "laptop_theme_desktop_icon_label_button_black.png",

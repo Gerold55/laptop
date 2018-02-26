@@ -130,6 +130,7 @@ Definitiontable:
 - `titlebar_textcolor` Sets the color of text on app titlebar
 - `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
 - `contrast_background` dark background to place under white text elements that does not support textcolor
+- `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
 - `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
 - `os_min_version` - minimum version to be used (CS-BOS, optional)
