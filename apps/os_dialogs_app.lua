@@ -103,7 +103,7 @@ laptop.register_view('os:select_file', {
 		-- Buttons
 		if param.mode == 'save' then
 			formspec = formspec .. "background[1.5,8.8;11,1.2;"..mtos.theme.contrast_background.."]" .. 
-					'label[1.6,9.1;File name:]'.."field[3.2,9.3;5.5,0.8;filename;;"..(param.selected_file_name or "").."]"
+					mtos.theme:get_label("1.6,9.1", "File name:", "contrast").."field[3.2,9.3;5.5,0.8;filename;;"..(param.selected_file_name or "").."]"
 		else
 			formspec = formspec .. mtos.theme:get_label('1.5, 9.3', "Selected file: "..(param.selected_file_name or ""))
 		end

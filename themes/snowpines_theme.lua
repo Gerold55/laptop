@@ -9,6 +9,8 @@ laptop.register_theme("Snow Pines", {
 	back_textcolor = "#000000",
 	exit_button = "laptop_theme_snowpines_exit_button.png",
 	exit_textcolor = "#000000",
+	contrast_background = "laptop_theme_snowpines_major_button.png",
 	desktop_icon_button = "blank.png",
 	taskbar_clock_position_and_size = "5.5,-.31;4,0.7",
+	os_min_version = '7.00',
 })

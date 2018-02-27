@@ -3,7 +3,7 @@
 laptop.register_app("mail", {
 	app_name = "Mail",
 	app_icon = "laptop_email_letter.png",
-	app_info = "Write Mail to Other Players",
+	app_info = "Send Electronic Mail",
 	formspec_func = function(app, mtos)
 		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
 		if not cloud then
@@ -25,7 +25,7 @@ laptop.register_app("mail", {
 		account.selected_index = nil -- will be new determinated by selectedmessage
 		local box = account[account.selected_box] -- inbox or outbox
 
-		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player.."]"
+		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player
 		local formspec =
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
@@ -218,7 +218,7 @@ laptop.register_view("mail:newplayer", {
 
 laptop.register_view("mail:nonet", {
 	formspec_func = function(app, mtos)
-		return mtos.theme:get_label('1,3', "No internet available on this computer")
+		return mtos.theme:get_label('1,3', "NO NETWORK CONNECTION")
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
 		app:exit_app()
@@ -234,11 +234,11 @@ laptop.register_view("mail:compose", {
 		local message = account.newmessage
 
 		local formspec = "background[0,0.4;8,2.4;"..mtos.theme.contrast_background.."]"..
-				"label[0.25,2;Subject:]".."field[2.7,2;5,1;subject;;"..minetest.formspec_escape(message.subject or "").."]"..
+				mtos.theme:get_label("0.25,2", "Subject:", "contrast").."field[2.7,2;5,1;subject;;"..minetest.formspec_escape(message.subject or "").."]"..
 				"background[0,3.05;7.95,3.44;"..mtos.theme.contrast_background.."]"..
 				"textarea[0.25,3;8,4;body;;"..minetest.formspec_escape(message.body or "").."]"..
 				mtos.theme:get_button("0,8;2,1", "major", "send", "Send message")..
-				"label[0.25,0.75;Receiver:]".."dropdown[2.4,0.75;5.2,1;receiver;"
+				mtos.theme:get_label("0.25,0.75", "Receiver:", "contrast").."dropdown[2.4,0.75;5.2,1;receiver;"
 
 		local sortedtab = {}
 		for playername,_ in pairs(cloud) do

@@ -7,6 +7,7 @@
 - `hwdef.infotext` - Text shown if node is pointed
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
+- `hwdef.os_version` - optional - Set OS version. ('1.10', '3.31' or '6.33') By default the latest version is used
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
@@ -69,6 +70,15 @@
 	`mtos.sysram` = System/OS ram partition, mtos.bdev:get_app_storage('ram', 'os')
 	`mtos.sysdata` = System/OS data partition, mtos.bdev:get_app_storage('system', 'os')
 	`mtos.theme` = Selected theme object
+	`mtos.os_attr` = Hard-coded attributes for OS version
+		`releaseyear`
+		`version_string`
+		`blacklist_commands`  CS-BOS interpreter
+		`textcolor`           CS-BOS Console
+		`min_scrollback_size` CS-BOS Buffer
+		`max_scrollback_size` CS-BOS Buffer
+		`custom_launcher`     Custom launcher for OS (can be overriden on node level)
+		`custom_theme`        Custom theme for OS (can be overriden on node level)
 
 ## Apps
 ### Definition attributes
@@ -76,6 +86,8 @@
 - `app_name` - App name shown in launcher. If not defined the app is just a view, not visible in launcher but can be activated. This way multi-screen apps are possible
 - `app_icon` - Icon to be shown in launcher. If nothing given the default icon is used
 - `app_info` - Short app info visible in launcher tooltip
+- `os_min_version` - minimum version to be used (CS-BOS, optional)
+- `os_max_version` - maximum version to be used (CS-BOS, optional)
 - `fullscreen` - (boolean) Do not add app-background and window buttons
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
 - `formspec_func(app, mtos)` - Function, should return the app formspec (mandatory) During definition the "app" and the "mtos" are available
@@ -120,8 +132,11 @@ Definitiontable:
 - `titlebar_textcolor` Sets the color of text on app titlebar
 - `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
 - `contrast_background` dark background to place under white text elements that does not support textcolor
+- `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
 - `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
+- `os_min_version` - minimum version to be used (CS-BOS, optional)
+- `os_max_version` - maximum version to be used (CS-BOS, optional)
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`
@@ -158,6 +173,8 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 - `bdev.rtype` - Removable type. "usb" or "floppy"
 - `bdev.storage` - Data table used for app storage, if format is data compatible
 - `bdev:reload(stack)` - Reload all data from node inventory. If stack is given, the stack will be inserted to slot
+- `bdev:eject()` - Remove item from slot and drop them to the world nearly computer
+- `bdev:format_disk(ftype, label)` - Format the disk. ftype can be "" or nil, "data" "backup" or "boot"
 
 ## Compatible Items
 There is no own compatible items registrator. The item needs to match the item group to be usable with the laptops

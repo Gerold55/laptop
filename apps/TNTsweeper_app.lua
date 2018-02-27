@@ -138,9 +138,9 @@ laptop.register_app("tntsweeper", {
 			end
 		end
 
-		formspec = formspec .. "background[12,0.5;3,1;"..mtos.theme.contrast_background..
-				"]label[12,0.5;Open fields: "..sweeper.data.open_count.."/"..sweeper.data.open_all..
-				"]label[12,1;Bomb: "..sweeper.data.bomb_count.."/"..sweeper.data.bomb_all.."]"..
+		formspec = formspec .. "background[12,0.5;3,1;"..mtos.theme.contrast_background..']'..
+				mtos.theme:get_label("12,0.5", "Open fields: "..sweeper.data.open_count.."/"..sweeper.data.open_all, "contrast")..
+				mtos.theme:get_label("12,1", "Bomb: "..sweeper.data.bomb_count.."/"..sweeper.data.bomb_all, "contrast")..
 				mtos.theme:get_button('12.5,2;1.5,0.8', 'major', 'reset', 'Small')..
 				mtos.theme:get_button('12.5,3;1.5,0.8', 'major', 'reset', 'Small hard')..
 				mtos.theme:get_button('12.5,4;1.5,0.8', 'major', 'reset', 'Midsize')..

@@ -99,13 +99,13 @@ laptop.register_app("printer_launcher", {
 		local dye_button = 'minor'
 		if mtos.sysdata.selected_view == 'paper' then
 			paper_button = 'major'
-			formspec = formspec .."background[6.2,0.8;2.5,0.7;"..mtos.theme.contrast_background..']'
+			--formspec = formspec .."background[6.2,0.8;2.5,0.7;"..mtos.theme.contrast_background..']'
 		elseif mtos.sysdata.selected_view == 'dye' then
 			dye_button = 'major'
-			formspec = formspec .."background[6.2,1.5;2.5,0.7;"..mtos.theme.contrast_background..']'
+			--formspec = formspec .."background[6.2,1.5;2.5,0.7;"..mtos.theme.contrast_background..']'
 		elseif mtos.sysdata.selected_view == 'output' then
 			out_button = 'major'
-			formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_background..']'
+			--formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_background..']'
 		end
 
 --		formspec = formspec .."background[5.2,"..(mtos.sysdata.print_progress/2+0.55)..";1.5,"..((4.9-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_background..

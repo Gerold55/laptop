@@ -38,6 +38,7 @@ The mod includes next components:
 | os_dialogs | Select file dialog | by bell07 |
 | os_print | Printer OS and driver | by bell07 |
 | removable | Removable storage manager | by bell07 |
+| CS-BOS | Text based Operating System | by Grizzly Adam and bell07 |
 
 ### Office
 | Name | Description | Author |
@@ -55,6 +56,7 @@ The mod includes next components:
 ## Themes
 | Name | Description | Author |
 | - | - | - |
+| amber shell | | by Grizzly Adam |
 | argyle | | by Grizzly Adam |
 | basic | | by v-rob |
 | blue | | by v-rob |
@@ -64,8 +66,10 @@ The mod includes next components:
 | clouds | | by Grizzly Adam |
 | cubic | | by v-rob |
 | fruit | | by veNext |
+| green shell | | by Grizzly Adam |
 | magma | | by v-rob |
 | red | | by v-rob |
+| shell | | by Grizzly Adam |
 | snow pines | | by Grizzly Adam |
 
 

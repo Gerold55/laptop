@@ -1,4 +1,59 @@
 -----------------------------------------------------
+-- Hard-Coded version attributes
+-----------------------------------------------------
+local os_version_attr = {
+	['1.10'] = {
+		releaseyear = '1976',
+		version_string = '1.10',
+		textcolor = 'AMBER',
+		custom_launcher = "cs-bos_launcher",
+		custom_theme = "Amber Shell",
+		blacklist_commands = { TEXTCOLOR = true },
+		min_scrollback_size = 20,
+		max_scrollback_size = 34,
+	},
+	['3.31'] = {
+		releaseyear = '1982',
+		version_string = '3.31',
+		textcolor = 'GREEN',
+		custom_launcher = "cs-bos_launcher",
+		custom_theme = "Green Shell",
+		blacklist_commands = { TEXTCOLOR = true },
+		min_scrollback_size = 25,
+		max_scrollback_size = 100,
+	},
+	['5.02'] = {
+		releaseyear = '1989',
+		version_string = '5.02',
+		textcolor = 'WHITE',
+		custom_theme = "Circuit",
+		blacklist_commands = { },
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
+	},
+	['6.33'] = {
+		releaseyear = '1995',
+		version_string = '6.33',
+		textcolor = 'WHITE',
+		custom_theme = "Clouds",
+		blacklist_commands = { },
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
+	},
+	['10.00'] = {
+		releaseyear = '2010',
+		version_string = '10.00',
+		textcolor = 'WHITE',
+		custom_theme = "Freedom",
+		blacklist_commands = { },
+		min_scrollback_size = 25,
+		max_scrollback_size = 300,
+	},
+}
+os_version_attr.default = os_version_attr['10.00']
+
+
+-----------------------------------------------------
 -- Operating System class
 -----------------------------------------------------
 local os_class = {}
@@ -51,8 +106,13 @@ end
 
 -- Get given or current theme
 function os_class:get_theme(theme)
-	if not theme and self.sysdata then
-		theme = self.sysdata.theme
+	if not theme then
+		if self.sysdata then
+			theme = self.sysdata.theme
+		end
+		if not theme then
+			theme = self.hwdef.custom_theme or self.os_attr.custom_theme
+		end
 	end
 	return laptop.get_theme(theme)
 end
@@ -60,7 +120,9 @@ end
 -- Set current theme
 function os_class:set_theme(theme)
 	if laptop.themes[theme] then
-		self.sysdata.theme = theme
+		if self.sysdata then
+			self.sysdata.theme = theme
+		end
 		self.theme = self:get_theme()
 		self:swap_node()
 		self:save()
@@ -88,6 +150,36 @@ function os_class:appstack_free()
 end
 
 -- Get new app instance
+function os_class:is_app_compatible(name)
+	local app_def = laptop.apps[name]
+	if not app_def then
+		return false
+	end
+	if app_def.os_min_version and (tonumber(app_def.os_min_version) > tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	if app_def.os_max_version and (tonumber(app_def.os_max_version) < tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	return true
+end
+
+-- Get new app instance
+function os_class:is_theme_compatible(name)
+	local theme_def = laptop.themes[name]
+	if not theme_def then
+		return false
+	end
+	if theme_def.os_min_version and (tonumber(theme_def.os_min_version) > tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	if theme_def.os_max_version and (tonumber(theme_def.os_max_version) < tonumber(self.os_attr.version_string)) then
+		return false
+	end
+	return true
+end
+
+-- Get new app instance
 function os_class:get_app(name)
 	local template = laptop.apps[name]
 	if not template then
@@ -101,7 +193,7 @@ end
 
 -- Activate the app
 function os_class:set_app(appname)
-	local launcher = self.hwdef.custom_launcher or "launcher"
+	local launcher = self.hwdef.custom_launcher or self.os_attr.custom_launcher or "launcher"
 	local newapp = appname or launcher
 	if newapp == launcher then
 		self:appstack_free()
@@ -144,8 +236,12 @@ end
 
 -- Handle input processing
 function os_class:pass_to_app(method, reshow, sender, ...)
-	local appname = self.sysram.current_app or self.hwdef.custom_launcher or "launcher"
+	local appname = self.sysram.current_app or self.hwdef.custom_launcher or self.os_attr.custom_launcher or "launcher"
 	local app = self:get_app(appname)
+	if not app then
+		self:set_app()
+		return
+	end
 	local ret = app:receive_data(method, reshow, sender, ...)
 	if sender then
 		self.sysram.last_player = sender:get_player_name()
@@ -198,6 +294,11 @@ function laptop.os_get(pos)
 	self.sysram.stack = self.sysram.stack or {}
 	self.sysram.app_timer = self.sysram.app_timer or {}
 	self.sysdata = self.bdev:get_app_storage('system', 'os')
+
+	self.os_attr = os_version_attr.default
+	if self.hwdef.os_version then
+		self.os_attr = os_version_attr[self.hwdef.os_version]
+	end
 	self.theme = self:get_theme()
 	return self
 end

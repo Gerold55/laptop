@@ -2,6 +2,7 @@ laptop.register_hardware("laptop:core", {
 	description = "CP Core",
 	infotext = 'CP Core',
 	sequence = { "closed", "open", "open_on" },
+	custom_theme = "Red",
 	hw_capabilities = { 'hdd', 'usb', 'net' },
 	node_defs = {
 		["open"] = {
@@ -75,6 +76,7 @@ laptop.register_hardware("laptop:printer", {
 	infotext = 'Flash Printex',
 	sequence = { "off", "powersave", "on" },
 	custom_launcher = "printer_launcher",
+	custom_theme = "Boing!",
 	hw_capabilities = {"hdd"},
 	node_defs = {
 
@@ -152,8 +154,8 @@ laptop.register_hardware("laptop:printer", {
 laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
+	os_version = '5.02',
 	sequence = { "off", "on"},
-	custom_theme = "Red",
 	hw_capabilities = { "hdd", "floppy", "net", "liveboot" },
 	node_defs = {
 		["on"] = {
@@ -206,10 +208,11 @@ laptop.register_hardware("laptop:cube", {
 	}
 })
 
-laptop.register_hardware("laptop:monitor2", {
+laptop.register_hardware("laptop:fruit_zero", {
 	description = "Fruit Zero",
 	infotext = "Fruit Zero",
 	sequence = { "off", "on"},
+	custom_theme = "Magma",
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
@@ -264,9 +267,10 @@ laptop.register_hardware("laptop:monitor2", {
 })
 
 
-laptop.register_hardware("laptop:monitor4", {
+laptop.register_hardware("laptop:bell_crossover", {
 	description = "Bell CrossOver",
 	infotext = "Bell CrossOver",
+	os_version = "6.33",
 	sequence = { "off", "on"},
 	node_defs = {
 		["on"] = {
@@ -323,11 +327,12 @@ laptop.register_hardware("laptop:monitor4", {
 	}
 })
 
---Old PC--
-laptop.register_hardware("laptop:monitor3", {
-	description = "Pentium 3",
-	infotext = "Pentium 3",
+--Kodiak 1000--
+laptop.register_hardware("laptop:kodiak_1000", {
+	description = "Kodiak 1000",
+	infotext = "Kodiak 1000",
 	sequence = { "off", "on"},
+	os_version = "3.31",
 	hw_capabilities = { "floppy", "liveboot" },
 	node_defs = {
 		["on"] = {
@@ -380,10 +385,12 @@ laptop.register_hardware("laptop:monitor3", {
 	}
 })
 
--- Laptop v2.0
-laptop.register_hardware("laptop:laptop", {
-	description = "laptop v2.0",
-	infotext = "laptop v2.0",
+-- Portable Workstation
+laptop.register_hardware("laptop:portable_workstation_2", {
+	description = "Portable Workstation 2",
+	infotext = "Portable Workstation 2",
+	os_version = "5.02",
+	custom_theme = "Argyle",
 	sequence = { "closed", "open", "open_on"},
 	node_defs = {
 		["closed"] = {
@@ -451,3 +458,18 @@ laptop.register_hardware("laptop:laptop", {
 		}
 	}
 })
+
+
+-- Conversion from older laptop version, before 2018-03
+minetest.register_alias("laptop:monitor2_off", "laptop:fruit_zero_off")
+minetest.register_alias("laptop:monitor2_on", "laptop:fruit_zero_on")
+
+minetest.register_alias("laptop:monitor4_off", "laptop:bell_crossover_off")
+minetest.register_alias("laptop:monitor4_on", "laptop:bell_crossover_on")
+
+minetest.register_alias("laptop:monitor3_off", "laptop:kodiak_1000_off")
+minetest.register_alias("laptop:monitor3_on", "laptop:kodiak_1000_on")
+
+minetest.register_alias("laptop:laptop_closed", "laptop:portable_workstation_2_closed")
+minetest.register_alias("laptop:laptop_open", "laptop:portable_workstation_2_open")
+minetest.register_alias("laptop:laptop_open_on", "laptop:portable_workstation_2_open_on")

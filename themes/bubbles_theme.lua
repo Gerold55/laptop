@@ -8,4 +8,5 @@ laptop.register_theme("Bubbles", {
 	desktop_icon_button = "laptop_theme_blue_desktop_icon_button.png",
 	desktop_icon_label_textcolor = "#0000FF",
 	desktop_icon_label_button = "laptop_theme_desktop_icon_label_button_grey.png",
+	os_min_version = '5.00',
 })
