@@ -52,6 +52,7 @@ The mod includes next components:
 | - | - | - |
 | tetris | Tetris clone | by kilbith (Ported from homedecor by bell07) |
 | TNTsweeper | Minesweeper clone | by bell07 |
+| realchess | Chess game | by kilbith (Ported from realchess by bell07) |
 
 ## Themes
 | Name | Description | Author |
