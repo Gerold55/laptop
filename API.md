@@ -77,6 +77,8 @@
 		`textcolor`           CS-BOS Console
 		`min_scrollback_size` CS-BOS Buffer
 		`max_scrollback_size` CS-BOS Buffer
+		`custom_launcher`     Custom launcher for OS (can be overriden on node level)
+		`custom_theme`        Custom theme for OS (can be overriden on node level)
 
 ## Apps
 ### Definition attributes
