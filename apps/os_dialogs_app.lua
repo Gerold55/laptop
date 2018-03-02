@@ -80,7 +80,7 @@ laptop.register_view('os:select_file', {
 		formspec = formspec .. mtos.theme:get_button('0,7.7;1.4,1', 'minor', 'mount', 'Mount')
 
 		-- Files table
-		formspec = formspec .. "tablecolumns[" ..
+		formspec = formspec .. mtos.theme:get_tableoptions().."tablecolumns[" ..
 						"text;".. -- subject
 						"text,padding=1.5;".. -- owner
 						"text,padding=1.5,align=right]".. -- date

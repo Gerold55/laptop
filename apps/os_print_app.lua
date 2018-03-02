@@ -79,7 +79,7 @@ laptop.register_app("printer_launcher", {
 		local idata = mtos.bdev:get_removable_disk()
 
 		-- queue
-		formspec = formspec ..
+		formspec = formspec .. mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
 						"text;".. -- label
 						"text;".. -- author
@@ -220,7 +220,7 @@ laptop.register_view("printer:app", {
 					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(printer.status_color,printer.status))
 		end
 
-		formspec = formspec ..
+		formspec = formspec .. mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
 						"text;".. -- Printer name
 						"text;".. -- Printer position

@@ -20,6 +20,11 @@ laptop.themes = {
 		contrast_textcolor = "#FFFFFF",
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		node_color = 0,
+		tableoptions_background='#000000',
+		tableoptions_color='#FFFFFF',
+		tableoptions_highlight='#FFFF00',
+		tableoptions_highlight_text='#0000FF',
+		tableoptions_border='false',
 	},
 }
 
@@ -70,6 +75,25 @@ function theme_class:get_label(area, label, color_prefix)
 		return 'label['..area..';'..minetest.colorize(self.textcolor, minetest.formspec_escape(label))..']'
 	end
 end
+
+function theme_class:get_tableoptions()
+	local formspec
+	for k, v in pairs(self) do
+		if k:sub(1,12) == 'tableoptions' then
+			if not formspec then
+				formspec = k:sub(14,-1)..'='..v
+			else
+				formspec = formspec..';'..k:sub(14,-1)..'='..v
+			end
+		end
+	end
+	if formspec then
+		return "tableoptions["..formspec.."]"
+	else
+		return ""
+	end
+end
+
 
 function laptop.get_theme(theme_name)
 	local self = setmetatable(table.copy(laptop.themes.default), theme_class)

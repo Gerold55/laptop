@@ -26,7 +26,7 @@ laptop.register_app("mail", {
 		local box = account[account.selected_box] -- inbox or outbox
 
 		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player
-		local formspec =
+		local formspec = mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
 						"color;"..	-- subject and date color

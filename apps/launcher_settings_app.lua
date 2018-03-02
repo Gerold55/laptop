@@ -22,7 +22,9 @@ laptop.register_app("launcher_settings", {
 
 		local formspec = mtos.theme:get_label('0,0.5', "Select theme")
 
-		local formspec = formspec.."textlist[0,1;5,2;sel_theme;"
+		local formspec = formspec..mtos.theme:get_tableoptions()..
+				"tablecolumns[text]"..
+				"table[0,1;5,2;sel_theme;"
 		for i, theme in ipairs(settings_data.themes_tab) do
 			if i > 1 then
 				formspec = formspec..','
@@ -48,11 +50,9 @@ laptop.register_app("launcher_settings", {
 
 	receive_fields_func = function(app, mtos, sender, fields)
 		local settings_data = mtos.bdev:get_app_storage('ram', 'launcher_settings')
-
 		if fields.sel_theme then
-			-- CHG:<idx> for selected or DCL:<idx> for double-clicked
-			local selected_idx = tonumber(fields.sel_theme:sub(5))
-			settings_data.selected_theme = settings_data.themes_tab[selected_idx]
+			local event = minetest.explode_table_event(fields.sel_theme)
+			settings_data.selected_theme = settings_data.themes_tab[event.row]
 		end
 
 		if fields.theme_apply and settings_data.selected_theme then
