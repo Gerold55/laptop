@@ -20,11 +20,11 @@ laptop.themes = {
 		contrast_textcolor = "#FFFFFF",
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		node_color = 0,
-		tableoptions_background='#000000',
-		tableoptions_color='#FFFFFF',
-		tableoptions_highlight='#FFFF00',
-		tableoptions_highlight_text='#0000FF',
-		tableoptions_border='false',
+		table_background='#000000',
+		table_color='#FFFFFF',
+		table_highlight='#FFFF00',
+		table_highlight_text='#0000FF',
+		table_border='false',
 	},
 }
 
@@ -79,11 +79,11 @@ end
 function theme_class:get_tableoptions()
 	local formspec
 	for k, v in pairs(self) do
-		if k:sub(1,12) == 'tableoptions' then
+		if k:sub(1,5) == 'table' then
 			if not formspec then
-				formspec = k:sub(14,-1)..'='..v
+				formspec = k:sub(7,-1)..'='..v
 			else
-				formspec = formspec..';'..k:sub(14,-1)..'='..v
+				formspec = formspec..';'..k:sub(7,-1)..'='..v
 			end
 		end
 	end

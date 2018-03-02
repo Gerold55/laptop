@@ -137,6 +137,11 @@ Definitiontable:
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
 - `os_min_version` - minimum version to be used (CS-BOS, optional)
 - `os_max_version` - maximum version to be used (CS-BOS, optional)
+- `table_background` - Table background
+- `table_color` - Table text color
+- `table_highlight` - Table highlighted background
+- `table_highlight_text` - Table highlighted textcolor
+- `table_border` -  draw border (true or false)
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`
