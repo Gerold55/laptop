@@ -75,7 +75,7 @@ laptop.register_app("printer_launcher", {
 				"list[current_player;main;0.3,5.08;8,3;8]" ..
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
 				"listring[current_player;main]"..
-				"label[0,0;"..mtos.hwdef.description.."]"
+				mtos.theme:get_label('0,0', mtos.hwdef.description, 'titlebar')
 		local idata = mtos.bdev:get_removable_disk()
 
 		-- queue
@@ -108,10 +108,9 @@ laptop.register_app("printer_launcher", {
 			formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_background..']'
 		end
 
---		formspec = formspec .."background[5.2,"..(mtos.sysdata.print_progress/2+0.55)..";1.5,"..((4.9-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_background..
-		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_background..
-				']label[5.3,0.8;Paper: '..mtos.sysdata.paper_count..
-				']label[5.3,1.3;Dye: '..mtos.sysdata.dye_count..']'..
+		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_background..']'..
+				mtos.theme:get_label('5.3,0.8', 'Paper: '..mtos.sysdata.paper_count, 'contrast')..
+				mtos.theme:get_label('5.3,1.3', 'Dye: '..mtos.sysdata.dye_count, 'contrast')..
 				mtos.theme:get_button('6.8,0.8;1.5,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
 				mtos.theme:get_button('6.8,1.5;1.5,0.7', dye_button, 'view_dye', 'Dye tray', 'Insert black dye')..
 				mtos.theme:get_button('6.8,2.2;1.5,0.7', out_button, 'view_out', 'Output tray', 'Get printed paper')..
