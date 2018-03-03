@@ -144,13 +144,14 @@ Definitiontable:
 - `table_highlight_bgcolor` - Table highlighted background
 - `table_highlight_textcolor` - Table highlighted textcolor
 - `table_border` -  draw border (true or false)
+- `texture_replacements` - A table with texture replacements, defined as { ['orig_texture_name.png'] = 'themed_texture_name.png', }
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`
 - `theme:get_button(area, prefix, code, text)` get a themed [prefix]_button in area 'x,y;w,h' with code and text
 - `theme:get_image_button(area, prefix, code, image, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an image and text. Text is colorized by [prefix]_textcolor or textcolor
 - `theme:get_label(pos, text, color_prefix)` get a themed label text starting at pos 'x,y', colorize theme by color prefix (usually the button text colors)
-
+- `theme:get_texture(image)` get replacement for texture image if set in theme or the image. Called internally from get_image_button()
 
 ## Block devices / Data objects
 `mtos.bdev = laptop.get_bdev_handler(mtos)`

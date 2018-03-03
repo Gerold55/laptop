@@ -25,6 +25,7 @@ laptop.themes = {
 		table_highlight_bgcolor='#FFFF00',
 		table_highlight_textcolor='#0000FF',
 		table_border='false',
+		texture_replacements = {}, -- No replacements in default theme
 	},
 }
 
@@ -59,7 +60,7 @@ end
 
 -- get prepared button textures
 function theme_class:get_image_button(area, prefix, code, image, text, tooltip)
-	local formspec = 'image_button['..area..';'..self[prefix.."_button"]..'^'..image..';'..code..';'.. minetest.colorize(self[prefix.."_textcolor"] or self.textcolor,minetest.formspec_escape(text))..']'
+	local formspec = 'image_button['..area..';'..self[prefix.."_button"]..'^'..self:get_texture(image)..';'..code..';'.. minetest.colorize(self[prefix.."_textcolor"] or self.textcolor,minetest.formspec_escape(text))..']'
 	if tooltip then
 		formspec = formspec.."tooltip["..code..";"..minetest.formspec_escape(tooltip).."]"
 	end
@@ -74,6 +75,11 @@ function theme_class:get_label(area, label, color_prefix)
 	else
 		return 'label['..area..';'..minetest.colorize(self.textcolor, minetest.formspec_escape(label))..']'
 	end
+end
+
+-- Get themed texture name
+function theme_class:get_texture(texture_name)
+	return self.texture_replacements[texture_name] or texture_name
 end
 
 function theme_class:get_tableoptions()

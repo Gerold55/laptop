@@ -125,7 +125,7 @@ laptop.register_app("tntsweeper", {
 				local field = sweeper.data.board[w][h]
 				if not field.is_revealed then
 					if field.bomb_marked then
-						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button.."^laptop_tnt.png;field:"..w..":"..h..";]"
+						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button.."^"..mtos.theme:get_texture("laptop_tnt.png")..";field:"..w..":"..h..";]"
 					else
 						formspec = formspec .. "image_button["..pos..";"..config.icon_size..","..config.icon_size..";"..mtos.theme.minor_button..";field:"..w..":"..h..";]"
 					end
