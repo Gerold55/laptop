@@ -8,6 +8,7 @@
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.os_version` - optional - Set OS version. ('1.10', '3.31' or '6.33') By default the latest version is used
+- `hwdef.csbos_textcolor` - optional - override CS-BOS console textcolor
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
@@ -137,10 +138,10 @@ Definitiontable:
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
 - `os_min_version` - minimum version to be used (CS-BOS, optional)
 - `os_max_version` - maximum version to be used (CS-BOS, optional)
-- `table_background` - Table background
-- `table_color` - Table text color
-- `table_highlight` - Table highlighted background
-- `table_highlight_text` - Table highlighted textcolor
+- `table_bgcolor` - Table background color
+- `table_textcolor` - Table text color
+- `table_highlight_bgcolor` - Table highlighted background
+- `table_highlight_textcolor` - Table highlighted textcolor
 - `table_border` -  draw border (true or false)
 
 ### Theme methods

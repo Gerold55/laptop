@@ -20,10 +20,10 @@ laptop.themes = {
 		contrast_textcolor = "#FFFFFF",
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		node_color = 0,
-		table_background='#000000',
-		table_color='#FFFFFF',
-		table_highlight='#FFFF00',
-		table_highlight_text='#0000FF',
+		table_bgcolor='#000000',
+		table_textcolor='#FFFFFF',
+		table_highlight_bgcolor='#FFFF00',
+		table_highlight_textcolor='#0000FF',
 		table_border='false',
 	},
 }
@@ -77,21 +77,11 @@ function theme_class:get_label(area, label, color_prefix)
 end
 
 function theme_class:get_tableoptions()
-	local formspec
-	for k, v in pairs(self) do
-		if k:sub(1,5) == 'table' then
-			if not formspec then
-				formspec = k:sub(7,-1)..'='..v
-			else
-				formspec = formspec..';'..k:sub(7,-1)..'='..v
-			end
-		end
-	end
-	if formspec then
-		return "tableoptions["..formspec.."]"
-	else
-		return ""
-	end
+	return "tableoptions[background="..self.table_bgcolor..
+			";color="..self.table_textcolor..
+			";highlight="..self.table_highlight_bgcolor..
+			";highlight_text="..self.table_highlight_textcolor..
+			";border="..self.table_border.."]"
 end
 
 
