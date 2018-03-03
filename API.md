@@ -43,6 +43,7 @@
 - `mtos:set_app(appname)` - Start/Enable/navigate to appname. If no appname given the launcher is called
 - `mtos:get_theme(theme)`- Get theme data current or requested (theme parameter is optional)
 - `mtos:set_theme(theme)`- Activate theme
+- `mtos:get_os_attr()`- Get OS-version attributes (see mtos.os_attr)
 - `mtos:save()` - Store all app-data to nodemeta. Called mostly internally so no explicit call necessary
 - `mtos:pass_to_app(method, reshow, sender, ...)` - call custom "method" on app object. Used internally. Reshow means update formspec after update
 - `mtos:select_file_dialog(param)` - call the select file dialog ('os:select_file')
