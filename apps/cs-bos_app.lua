@@ -131,11 +131,11 @@ end
 
 local function initialize_data(data, sdata, mtos, sysos)
 	if mtos.os_attr.blacklist_commands.TEXTCOLOR then
-		data.tty = mtos.os_attr.textcolor
+		data.tty = mtos.os_attr.tty_style
 	else
-		data.tty = sdata.tty or data.tty or mtos.os_attr.textcolor
+		data.tty = sdata.tty or data.tty or mtos.os_attr.tty_style
 		if not supported_textcolors[data.tty] then --compat hack
-			data.tty = mtos.os_attr.textcolor
+			data.tty = mtos.os_attr.tty_style
 		end
 	end
 
@@ -369,7 +369,7 @@ laptop.register_app("cs-bos_launcher", {
 				elseif textcolor then
 					add_outline(data, '?SYNATX ERROR')
 				else
-					add_outline(data, 'TEXTCOLOR: '..sdata.tty)
+					add_outline(data, 'TEXTCOLOR: '..data.tty)
 				end
 			elseif exec_command == "SCROLLBACK" then
 				if exec_all[2] then

@@ -8,7 +8,7 @@
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.os_version` - optional - Set OS version. ('1.10', '3.31' or '6.33') By default the latest version is used
-- `hwdef.csbos_textcolor` - optional - override CS-BOS console textcolor
+- `hwdef.tty_style` - optional - override CS-BOS console textcolor
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
@@ -75,7 +75,7 @@
 		`releaseyear`
 		`version_string`
 		`blacklist_commands`  CS-BOS interpreter
-		`textcolor`           CS-BOS Console
+		`tty_style`           CS-BOS Console color. Supported GREEN, AMBER, WHITE
 		`min_scrollback_size` CS-BOS Buffer
 		`max_scrollback_size` CS-BOS Buffer
 		`custom_launcher`     Custom launcher for OS (can be overriden on node level)

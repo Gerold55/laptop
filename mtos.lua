@@ -5,7 +5,7 @@ local os_version_attr = {
 	['1.10'] = {
 		releaseyear = '1976',
 		version_string = '1.10',
-		textcolor = 'AMBER',
+		tty_style = 'AMBER',
 		custom_launcher = "cs-bos_launcher",
 		custom_theme = "Amber Shell",
 		blacklist_commands = { TEXTCOLOR = true, EXIT = true },
@@ -15,7 +15,7 @@ local os_version_attr = {
 	['3.31'] = {
 		releaseyear = '1982',
 		version_string = '3.31',
-		textcolor = 'GREEN',
+		tty_style = 'GREEN',
 		custom_launcher = "cs-bos_launcher",
 		custom_theme = "Green Shell",
 		blacklist_commands = { TEXTCOLOR = true, EXIT = true },
@@ -25,7 +25,7 @@ local os_version_attr = {
 	['5.02'] = {
 		releaseyear = '1989',
 		version_string = '5.02',
-		textcolor = 'WHITE',
+		tty_style = 'WHITE',
 		custom_theme = "Circuit",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
@@ -34,7 +34,7 @@ local os_version_attr = {
 	['6.33'] = {
 		releaseyear = '1995',
 		version_string = '6.33',
-		textcolor = 'WHITE',
+		tty_style = 'WHITE',
 		custom_theme = "Clouds",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
@@ -43,7 +43,7 @@ local os_version_attr = {
 	['10.00'] = {
 		releaseyear = '2010',
 		version_string = '10.00',
-		textcolor = 'WHITE',
+		tty_style = 'WHITE',
 		custom_theme = "Freedom",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
@@ -134,7 +134,7 @@ function os_class:get_os_attr()
 	if self.hwdef.os_version then
 		os_attr = table.copy(os_version_attr[self.hwdef.os_version])
 	end
-	os_attr.textcolor = self.hwdef.csbos_textcolor or os_attr.textcolor
+	os_attr.tty_style = self.hwdef.tty_style or os_attr.tty_style
 	return os_attr
 end
 
