@@ -129,6 +129,15 @@ function os_class:set_theme(theme)
 	end
 end
 
+function os_class:get_os_attr()
+	local os_attr = os_version_attr.default
+	if self.hwdef.os_version then
+		os_attr = table.copy(os_version_attr[self.hwdef.os_version])
+	end
+	os_attr.textcolor = self.hwdef.csbos_textcolor or os_attr.textcolor
+	return os_attr
+end
+
 -- Add app to stack (before starting new)
 function os_class:appstack_add(appname)
 	table.insert(self.sysram.stack, appname)
@@ -294,11 +303,7 @@ function laptop.os_get(pos)
 	self.sysram.stack = self.sysram.stack or {}
 	self.sysram.app_timer = self.sysram.app_timer or {}
 	self.sysdata = self.bdev:get_app_storage('system', 'os')
-
-	self.os_attr = os_version_attr.default
-	if self.hwdef.os_version then
-		self.os_attr = os_version_attr[self.hwdef.os_version]
-	end
+	self.os_attr = self:get_os_attr()
 	self.theme = self:get_theme()
 	return self
 end
