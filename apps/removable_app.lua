@@ -1,6 +1,6 @@
 laptop.register_app("removable", {
 	app_name = "Removable Storage",
-	app_icon = "laptop_hard_drive.png",
+	app_icon = "laptop_removable.png",
 	app_info = "Interface with Removable Media",
 	formspec_func = function(app, mtos)
 		local formspec = 
