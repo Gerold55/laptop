@@ -212,6 +212,13 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craftitem("laptop:floppy", {
+	description = 'High density floppy',
+	inventory_image = "laptop_diskette.png",
+	groups = {laptop_removable_floppy = 1},
+	stack_max = 1,
+})
+
 minetest.register_craft({
 	output = 'laptop:floppy',
 	recipe = {
@@ -219,6 +226,13 @@ minetest.register_craft({
 	{'default:steel_ingot', 'mesecons_fpga:programmer', 'default:steel_ingot', },
 	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
 	}
+})
+
+minetest.register_craftitem("laptop:usbstick", {
+	description = 'USB storage stick',
+	inventory_image = "laptop_usb.png",
+	groups = {laptop_removable_usb = 1},
+	stack_max = 1,
 })
 
 minetest.register_craft({
@@ -247,68 +261,4 @@ minetest.register_craftitem("laptop:printed_paper", {
 	return itemstack
 	end
 
-})
-
---Computers--
-minetest.register_craft({
-	output = 'laptop:core_closed',
-	recipe = {
-	{'dye:red', 'laptop:lcd', 'dye:red', },
-	{'laptop:HDD', 'laptop:motherboard', 'laptop:gpu', },
-	{'laptop:bat', 'laptop:case', 'dye:red', },
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:printer_off',
-	recipe = {
-	{'', 'laptop:motherboard', '', },
-	{'', 'laptop:psu', '', },
-	{'', 'laptop:case', '', },
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:cube_off',
-	recipe = {
-	{'', 'laptop:crt', '', },
-	{'laptop:HDD', 'laptop:motherboard', 'laptop:psu', },
-	{'laptop:cpu_65536', 'laptop:case', '', },
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:fruit_zero_off',
-	recipe = {
-	{'dye:white', 'laptop:lcd', 'dye:white', },
-	{'laptop:gpu', 'laptop:motherboard', 'laptop:HDD', },
-	{'laptop:cpu_jetcore', 'laptop:case', 'laptop:psu', },
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:bell_crossover_off',
-	recipe = {
-	{'dye:dark_grey', 'laptop:lcd', 'dye:dark_grey', },
-	{'laptop:psu', 'laptop:motherboard', 'laptop:HDD', },
-	{'laptop:cpu_d75a', 'laptop:case', 'dye:dark_grey', },
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:kodiak_1000_off',
-	recipe = {
-	{'', 'laptop:crt_green', '', },
-	{'laptop:cpu_c6', 'laptop:motherboard', 'laptop:psu', },
-	{'laptop:HDD', 'laptop:case', '', },
-	}
-})
-
-minetest.register_craft({
-	output = 'laptop:portable_workstation_2_closed',
-	recipe = {
-	{'dye:dark_grey', 'laptop:lcd', 'dye:dark_grey', },
-	{'laptop:HDD', 'laptop:motherboard', 'laptop:cpu_d75a', },
-	{'laptop:bat', 'laptop:case', 'dye:dark_grey', },
-	}
 })
