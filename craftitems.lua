@@ -1,3 +1,5 @@
+local rc = laptop.recipe_compat -- Recipe items from other mods
+
 ----------------------------
 ---------PROCESSORS---------
 ----------------------------
@@ -10,9 +12,9 @@ minetest.register_craftitem("laptop:cpu_c6", {
 minetest.register_craft({
 	output = 'laptop:cpu_c6',
 	recipe = {
-	{'', '', '', },
-	{'mesecons_materials:silicon', 'mesecons_gates:diode_off', 'default:tin_ingot', },
-	{'mesecons_gates:and_off', 'mesecons_gates:or_off', 'mesecons_gates:nand_off', },
+		{'', '', ''},
+		{rc.silicon, rc.gates_diode, rc.tin},
+		{rc.gates_and, rc.gates_or, rc.gates_nand},
 	}
 })
 
@@ -24,9 +26,9 @@ minetest.register_craftitem("laptop:cpu_d75a", {
 minetest.register_craft({
 	output = 'laptop:cpu_d75a',
 	recipe = {
-	{'mesecons_materials:silicon', 'mesecons_materials:silicon', 'mesecons_materials:silicon', },
-	{'mesecons_gates:xor_off', 'default:copper_ingot', 'mesecons_gates:nand_off', },
-	{'mesecons_fpga:fpga0000', 'mesecons_fpga:programmer', 'mesecons_fpga:fpga0000', },
+		{rc.silicon, rc.silicon, rc.silicon},
+		{rc.gates_xor, rc.copper, rc.gates_nand},
+		{rc.fpga, rc.programmer, rc.fpga},
 	}
 })
 
@@ -38,9 +40,9 @@ minetest.register_craftitem("laptop:cpu_jetcore", {
 minetest.register_craft({
 	output = 'laptop:cpu_jetcore',
 	recipe = {
-	{'mesecons_materials:silicon', 'mesecons_materials:silicon', 'mesecons_materials:silicon', },
-	{'mesecons_materials:fiber', 'default:gold_ingot', 'mesecons_delayer:delayer_off_1', },
-	{'mesecons_fpga:fpga0000', 'mesecons_luacontroller:luacontroller0000', 'mesecons_fpga:programmer', },
+		{rc.silicon, rc.silicon, rc.silicon},
+		{rc.fiber, rc.gold, rc.delayer},
+		{rc.fpga, rc.controller, rc.programmer},
 	}
 })
 
@@ -52,9 +54,9 @@ minetest.register_craftitem("laptop:cpu_65536", {
 minetest.register_craft({
 	output = 'laptop:cpu_65536',
 	recipe = {
-	{'', '', '', },
-	{'mesecons_materials:silicon', 'default:copper_ingot', 'mesecons_materials:silicon', },
-	{'mesecons_gates:not_off', 'mesecons_fpga:fpga0000', 'mesecons_delayer:delayer_off_1', },
+		{'', '', ''},
+		{rc.silicon, rc.copper, rc.silicon},
+		{rc.gates_not, rc.fpga, rc.delayer},
 	}
 })
 
@@ -66,9 +68,9 @@ minetest.register_craftitem("laptop:bat", {
 minetest.register_craft({
 	output = 'laptop:bat',
 	recipe = {
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'default:steel_ingot', 'mesecons_gates:diode_off', 'default:steel_ingot', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.gates_diode, rc.steel},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -80,9 +82,9 @@ minetest.register_craftitem("laptop:case", {
 minetest.register_craft({
 	output = 'laptop:case',
 	recipe = {
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'default:steel_ingot', '', 'default:steel_ingot', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, '', rc.steel},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -94,9 +96,9 @@ minetest.register_craftitem("laptop:crt", {
 minetest.register_craft({
 	output = 'laptop:crt',
 	recipe = {
-	{'default:glass', 'default:glass', 'default:glass', },
-	{'mesecons_lightstone:lightstone_red_off', 'mesecons_lightstone:lightstone_green_off', 'mesecons_lightstone:lightstone_blue_off', },
-	{'default:steel_ingot', 'mesecons_luacontroller:luacontroller0000', 'default:steel_ingot', },
+		{rc.glass, rc.glass, rc.glass},
+		{rc.light_red , rc.light_green, rc.light_blue},
+		{rc.steel, rc.controller, rc.steel},
 	}
 })
 
@@ -108,9 +110,9 @@ minetest.register_craftitem("laptop:crt_amber", {
 minetest.register_craft({
 	output = 'laptop:crt_amber',
 	recipe = {
-	{'default:glass', 'dye:orange', 'default:glass', },
-	{'mesecons_lightstone:lightstone_red_off', 'mesecons_lightstone:lightstone_green_off', 'mesecons_lightstone:lightstone_blue_off', },
-	{'default:steel_ingot', 'mesecons_luacontroller:luacontroller0000', 'default:steel_ingot', },
+		{rc.glass, 'dye:orange', rc.glass},
+		{rc.light_red , rc.light_green, rc.light_blue},
+		{rc.steel, rc.controller, rc.steel},
 	}
 })
 
@@ -122,9 +124,9 @@ minetest.register_craftitem("laptop:crt_green", {
 minetest.register_craft({
 	output = 'laptop:crt_green',
 	recipe = {
-	{'default:glass', 'dye:green', 'default:glass', },
-	{'mesecons_lightstone:lightstone_red_off', 'mesecons_lightstone:lightstone_green_off', 'mesecons_lightstone:lightstone_blue_off', },
-	{'default:steel_ingot', 'mesecons_luacontroller:luacontroller0000', 'default:steel_ingot', },
+		{rc.glass, 'dye:green', rc.glass},
+		{rc.light_red , rc.light_green, rc.light_blue},
+		{rc.steel, rc.controller, rc.steel},
 	}
 })
 
@@ -136,9 +138,9 @@ minetest.register_craftitem("laptop:lcd", {
 minetest.register_craft({
 	output = 'laptop:lcd',
 	recipe = {
-	{'mesecons_lightstone:lightstone_red_off', 'mesecons_lightstone:lightstone_green_off', 'mesecons_lightstone:lightstone_blue_off', },
-	{'dye:black', 'mesecons_luacontroller:luacontroller0000', 'dye:black', },
-	{'default:steel_ingot', 'default:diamond', 'default:steel_ingot', },
+		{rc.light_red , rc.light_green, rc.light_blue},
+		{'dye:black', rc.controller, 'dye:black'},
+		{rc.steel, rc.diamond, rc.steel},
 	}
 })
 
@@ -150,9 +152,9 @@ minetest.register_craftitem("laptop:gpu", {
 minetest.register_craft({
 	output = 'laptop:gpu',
 	recipe = {
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'default:steel_ingot', 'mesecons_fpga:fpga0000', 'default:steel_ingot', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.fpga, rc.steel},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -164,9 +166,9 @@ minetest.register_craftitem("laptop:HDD", {
 minetest.register_craft({
 	output = 'laptop:HDD',
 	recipe = {
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'default:steel_ingot', 'mesecons_luacontroller:luacontroller0000', 'default:steel_ingot', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.controller, rc.steel},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -178,9 +180,9 @@ minetest.register_craftitem("laptop:motherboard", {
 minetest.register_craft({
 	output = 'laptop:motherboard',
 	recipe = {
-	{'mesecons_luacontroller:luacontroller0000', 'mesecons_fpga:fpga0000', 'mesecons_gates:nand_off', },
-	{'dye:dark_green', 'dye:dark_green', 'dye:dark_green', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.controller, rc.fpga, rc.gates_nand},
+		{'dye:dark_green', 'dye:dark_green', 'dye:dark_green'},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -192,9 +194,9 @@ minetest.register_craftitem("laptop:fan", {
 minetest.register_craft({
 	output = 'laptop:fan',
 	recipe = {
-	{'', 'default:steel_ingot', '', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'', 'default:steel_ingot', '', },
+		{'', rc.steel, ''},
+		{rc.steel, rc.steel, rc.steel},
+		{'', rc.steel, ''},
 	}
 })
 
@@ -206,9 +208,9 @@ minetest.register_craftitem("laptop:psu", {
 minetest.register_craft({
 	output = 'laptop:psu',
 	recipe = {
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'mesecons_luacontroller:luacontroller0000', 'mesecons_fpga:fpga0000', 'laptop:fan', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.steel, rc.steel, rc.steel},
+		{rc.controller, rc.fpga, 'laptop:fan'},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -222,9 +224,9 @@ minetest.register_craftitem("laptop:floppy", {
 minetest.register_craft({
 	output = 'laptop:floppy',
 	recipe = {
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
-	{'default:steel_ingot', 'mesecons_fpga:programmer', 'default:steel_ingot', },
-	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
+		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.programmer, rc.steel},
+		{rc.steel, rc.steel, rc.steel},
 	}
 })
 
@@ -238,9 +240,9 @@ minetest.register_craftitem("laptop:usbstick", {
 minetest.register_craft({
 	output = 'laptop:usbstick',
 	recipe = {
-	{'', 'default:steel_ingot', '', },
-	{'', 'mesecons_fpga:programmer', '', },
-	{'', 'default:steel_ingot', '', },
+		{'', rc.steel, ''},
+		{'', rc.programmer, ''},
+		{'', rc.steel, ''},
 	}
 })
 
