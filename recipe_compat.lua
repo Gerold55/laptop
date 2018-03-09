@@ -1,11 +1,13 @@
 laptop.recipe_compat = {
 	-- Init all used vars to avoid crash if missed
-	tin = '', copper = '', gold = '', steel = '', glass = '', diamond = '',
-	silicon = '', fiber = '',
-	gates_diode = '', gates_and = '', gates_or = '', gates_nand = '',
-	gates_xor = '', gates_not = '',	fpga = '', programmer = '',
-	delayer = '', controller = '', light_red = '', light_green = '',
-	light_blue = ''
+	tin = '-unknown-', copper = '-unknown-', gold = '-unknown-',
+	steel = '-unknown-', glass = '-unknown-', diamond = '-unknown-',
+	silicon = '-unknown-', fiber = '-unknown-',
+	gates_diode = '-unknown-', gates_and = '-unknown-', gates_or = '-unknown-',
+	gates_nand = '-unknown-', gates_xor = '-unknown-', gates_not = '-unknown-',
+	fpga = '-unknown-', programmer = '-unknown-', delayer = '-unknown-',
+	controller = '-unknown-', light_red = '-unknown-', light_green = '-unknown-',
+	light_blue = '-unknown-',
 }
 
 local rc = laptop.recipe_compat
