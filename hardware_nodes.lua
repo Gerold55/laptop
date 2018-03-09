@@ -71,6 +71,15 @@ laptop.register_hardware("laptop:core", {
 	}
 })
 
+minetest.register_craft({
+	output = 'laptop:core_closed',
+	recipe = {
+	{'dye:red', 'laptop:lcd', 'dye:red', },
+	{'laptop:HDD', 'laptop:motherboard', 'laptop:gpu', },
+	{'laptop:bat', 'laptop:case', 'dye:red', },
+	}
+})
+
 laptop.register_hardware("laptop:printer", {
 	description = "Flash Printex",
 	infotext = 'Flash Printex',
@@ -151,6 +160,15 @@ laptop.register_hardware("laptop:printer", {
 	}
 })
 
+minetest.register_craft({
+	output = 'laptop:printer_off',
+	recipe = {
+	{'', 'laptop:motherboard', '', },
+	{'', 'laptop:psu', '', },
+	{'', 'laptop:case', '', },
+	}
+})
+
 laptop.register_hardware("laptop:cube", {
 	description = "CUBE PC",
 	infotext = "CUBE PC",
@@ -205,6 +223,15 @@ laptop.register_hardware("laptop:cube", {
 				}
 			}
 		}
+	}
+})
+
+minetest.register_craft({
+	output = 'laptop:cube_off',
+	recipe = {
+	{'', 'laptop:crt', '', },
+	{'laptop:HDD', 'laptop:motherboard', 'laptop:psu', },
+	{'laptop:cpu_65536', 'laptop:case', '', },
 	}
 })
 
@@ -266,6 +293,14 @@ laptop.register_hardware("laptop:fruit_zero", {
 	}
 })
 
+minetest.register_craft({
+	output = 'laptop:fruit_zero_off',
+	recipe = {
+	{'dye:white', 'laptop:lcd', 'dye:white', },
+	{'laptop:gpu', 'laptop:motherboard', 'laptop:HDD', },
+	{'laptop:cpu_jetcore', 'laptop:case', 'laptop:psu', },
+	}
+})
 
 laptop.register_hardware("laptop:bell_crossover", {
 	description = "Bell CrossOver",
@@ -327,6 +362,15 @@ laptop.register_hardware("laptop:bell_crossover", {
 	}
 })
 
+minetest.register_craft({
+	output = 'laptop:bell_crossover_off',
+	recipe = {
+	{'dye:dark_grey', 'laptop:lcd', 'dye:dark_grey', },
+	{'laptop:psu', 'laptop:motherboard', 'laptop:HDD', },
+	{'laptop:cpu_d75a', 'laptop:case', 'dye:dark_grey', },
+	}
+})
+
 --Kodiak 1000--
 laptop.register_hardware("laptop:kodiak_1000", {
 	description = "Kodiak 1000",
@@ -382,6 +426,15 @@ laptop.register_hardware("laptop:kodiak_1000", {
 				}
 			}
 		}
+	}
+})
+
+minetest.register_craft({
+	output = 'laptop:kodiak_1000_off',
+	recipe = {
+	{'', 'laptop:crt_green', '', },
+	{'laptop:cpu_c6', 'laptop:motherboard', 'laptop:psu', },
+	{'laptop:HDD', 'laptop:case', '', },
 	}
 })
 
@@ -459,6 +512,14 @@ laptop.register_hardware("laptop:portable_workstation_2", {
 	}
 })
 
+minetest.register_craft({
+	output = 'laptop:portable_workstation_2_closed',
+	recipe = {
+	{'dye:dark_grey', 'laptop:lcd', 'dye:dark_grey', },
+	{'laptop:HDD', 'laptop:motherboard', 'laptop:cpu_d75a', },
+	{'laptop:bat', 'laptop:case', 'dye:dark_grey', },
+	}
+})
 
 -- Conversion from older laptop version, before 2018-03
 minetest.register_alias("laptop:monitor2_off", "laptop:fruit_zero_off")
