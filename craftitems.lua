@@ -212,6 +212,13 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craftitem("laptop:floppy", {
+	description = 'High density floppy',
+	inventory_image = "laptop_diskette.png",
+	groups = {laptop_removable_floppy = 1},
+	stack_max = 1,
+})
+
 minetest.register_craft({
 	output = 'laptop:floppy',
 	recipe = {
@@ -219,6 +226,13 @@ minetest.register_craft({
 	{'default:steel_ingot', 'mesecons_fpga:programmer', 'default:steel_ingot', },
 	{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot', },
 	}
+})
+
+minetest.register_craftitem("laptop:usbstick", {
+	description = 'USB storage stick',
+	inventory_image = "laptop_usb.png",
+	groups = {laptop_removable_usb = 1},
+	stack_max = 1,
 })
 
 minetest.register_craft({
