@@ -22,6 +22,18 @@ if minetest.get_modpath('default') then
 	rc.diamond = 'default:diamond'
 end
 
+if minetest.get_modpath('homedecor') then
+	rc.gates_diode = 'homedecor:paraffin'
+	rc.gates_and = 'homedecor:power_crystal'
+	rc.gates_or = 'homedecor:steel_strip'
+	rc.gates_nand = 'homedecor:steel_wire'
+	rc.gates_xor = 'homedecor:copper_wire'
+	rc.gates_not = 'homedecor:copper_strip'
+	rc.fpga = 'homedecor:ic'
+	rc.programmer = 'homedecor:heating_element'
+	rc.controller = 'homedecor:motor'
+end
+
 if minetest.get_modpath('mesecons_materials') then
 	rc.silicon = 'mesecons_materials:silicon'
 	rc.fiber = 'mesecons_materials:fiber'
@@ -45,7 +57,7 @@ if minetest.get_modpath('mesecons_delayer') then
 	rc.delayer = 'mesecons_delayer:delayer_off_1'
 end
 
-if minetest.get_modpath('mesecons_delayer') then
+if minetest.get_modpath('mesecons_luacontroller') then
 	rc.controller = 'mesecons_luacontroller:luacontroller0000'
 end
 
