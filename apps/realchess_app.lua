@@ -575,7 +575,8 @@ register_piece("king")
 			end
 			local formspec =
 					"bgcolor[#080808BB;true]background[3,1;8,8;laptop_realchess_chess_bg.png]"..
-					"button[12,1.5;2,2;new;New game]list[context;board;3,1;8,8;]"..
+					mtos.theme:get_button('12,1;2,2', 'major', 'new', 'New Game', 'Start a new game')..
+					"list[context;board;3,1;8,8;]"..
 					"listcolors[#00000000;#00000000;#00000000;#30434C;#FFF]"
 					if data.messageOther then
 						formspec = formspec..mtos.theme:get_label('4,9.3', mtos.sysram.last_player.." "..data.messageOther)
