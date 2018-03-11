@@ -12,5 +12,9 @@ laptop.register_theme("Snow Pines", {
 	contrast_background = "laptop_theme_snowpines_major_button.png",
 	desktop_icon_button = "blank.png",
 	taskbar_clock_position_and_size = "5.5,-.31;4,0.7",
+	table_bgcolor="#FFFFFF",
+	table_textcolor="#000000",
+	table_highlight_bgcolor='#000000',
+	table_highlight_textcolor='#FFFFFF',
 	os_min_version = '7.00',
 })

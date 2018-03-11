@@ -9,5 +9,9 @@ laptop.register_theme("Basic", {
 	exit_button = "blank.png",
 	desktop_icon_button = "blank.png",
 	textcolor = "#000000",
+	table_bgcolor="#E0E0E0",
+	table_textcolor="#000000",
+	table_highlight_bgcolor='#999999',
+	table_highlight_textcolor='#000000',
 	os_min_version = '7.00',
 })
