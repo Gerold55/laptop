@@ -12,7 +12,7 @@ laptop.register_app("calculator", {
 			table.insert(data.tab, {})
 		end
 
-		local formspec = mtos.theme:get_tableoptions().."tablecolumns[" ..
+		local formspec = mtos.theme:get_tableoptions(false).."tablecolumns[" ..
 			"text,align=right,padding=1.5,width=10;".. -- first value
 			"text,align=right,padding=1.5;".. -- operator
 			"text,align=right,padding=1.5,width=10]".. -- last value
