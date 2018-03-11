@@ -152,6 +152,7 @@ Definitiontable:
 - `theme:get_image_button(area, prefix, code, image, text)` get a themed [prefix]_button in area 'x,y;w,h' with code an image and text. Text is colorized by [prefix]_textcolor or textcolor
 - `theme:get_label(pos, text, color_prefix)` get a themed label text starting at pos 'x,y', colorize theme by color prefix (usually the button text colors)
 - `theme:get_texture(image)` get replacement for texture image if set in theme or the image. Called internally from get_image_button()
+- `theme:get_tableoptions(show_select_bar)` get themed tableoptions string before table[]. If show_select_bar is set to false, the highlight values are the same as non-highlight so no selection is visible
 
 ## Block devices / Data objects
 `mtos.bdev = laptop.get_bdev_handler(mtos)`

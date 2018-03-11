@@ -20,10 +20,10 @@ laptop.themes = {
 		contrast_textcolor = "#FFFFFF",
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		node_color = 0,
-		table_bgcolor='#000000',
-		table_textcolor='#FFFFFF',
-		table_highlight_bgcolor='#FFFF00',
-		table_highlight_textcolor='#0000FF',
+		table_bgcolor="#E0E0E0",
+		table_textcolor="#000000",
+		table_highlight_bgcolor='#2E5433',
+		table_highlight_textcolor='#FFFFFF',
 		table_border='false',
 		texture_replacements = {}, -- No replacements in default theme
 	},
@@ -82,12 +82,20 @@ function theme_class:get_texture(texture_name)
 	return self.texture_replacements[texture_name] or texture_name
 end
 
-function theme_class:get_tableoptions()
-	return "tableoptions[background="..self.table_bgcolor..
-			";color="..self.table_textcolor..
-			";highlight="..self.table_highlight_bgcolor..
-			";highlight_text="..self.table_highlight_textcolor..
-			";border="..self.table_border.."]"
+function theme_class:get_tableoptions(show_select_bar)
+	if show_select_bar == false then
+		return "tableoptions[background="..self.table_bgcolor..
+				";color="..self.table_textcolor..
+				";highlight="..self.table_bgcolor..
+				";highlight_text="..self.table_textcolor..
+				";border="..self.table_border.."]"
+	else
+		return "tableoptions[background="..self.table_bgcolor..
+				";color="..self.table_textcolor..
+				";highlight="..self.table_highlight_bgcolor..
+				";highlight_text="..self.table_highlight_textcolor..
+				";border="..self.table_border.."]"
+	end
 end
 
 
