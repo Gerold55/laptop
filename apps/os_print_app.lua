@@ -257,7 +257,7 @@ laptop.register_view("printer:app", {
 
 		formspec = formspec .. "background[7.15,0.4;7.6,1;"..mtos.theme.contrast_background.."]"..
 				"label[7.3,0.6;Heading:]".."field[9.7,0.7;5,1;label;;"..minetest.formspec_escape(param.label or "").."]"..
-				mtos.theme:get_label('9.7,1.7'," by "..(mtos.sysram.last_player or ""))..
+				mtos.theme:get_label('9.7,1.7'," by "..(mtos.sysram.current_player or ""))..
 				"background[7.15,2.55;7.6,6.0;"..mtos.theme.contrast_background.."]"..
 				"textarea[7.5,2.5;7.5,7;;"..(minetest.formspec_escape(param.text) or "")..";]"
 
