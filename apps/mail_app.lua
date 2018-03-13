@@ -10,23 +10,24 @@ laptop.register_app("mail", {
 			mtos:set_app("mail:nonet")
 			return false
 		end
-		if not mtos.sysram.current_player then
+
+		if not mtos.sysram.last_player then
 			mtos:set_app() -- no player. Back to launcher
 			return false
 		end
 
-		if not cloud[mtos.sysram.current_player] then
+		if not cloud[mtos.sysram.last_player] then
 			mtos:set_app("mail:newplayer")
 			return false
 		end
-		local account = cloud[mtos.sysram.current_player]
+		local account = cloud[mtos.sysram.last_player]
 		account.selected_box = account.selected_box or "inbox"
 		account.selected_index = nil -- will be new determinated by selectedmessage
 		local box = account[account.selected_box] -- inbox or outbox
 
-		app.app_info = app.app_info.." - Welcome "..mtos.sysram.current_player
-		local formspec = "background[-0.19,0.23;15.38,10.275;"..mtos.theme.bgcolor2.."]"..--full window background
-				mtos.theme:get_tableoptions()..
+		app.app_info = app.app_info.." - Welcome "..mtos.sysram.last_player
+		local formspec = mtos.theme:get_tableoptions()..
+				"background[-0.19,0.23;15.38,10.275;"..mtos.theme.bgcolor2.."]"..--full window background
 				"tablecolumns[" ..
 						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
 						"color;"..	-- subject and date color
@@ -120,13 +121,13 @@ laptop.register_app("mail", {
 		return formspec
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
-		if mtos.sysram.current_player ~= mtos.sysram.last_player then
+		if sender:get_player_name() ~= mtos.sysram.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
 		end
 
 		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
-		local account = cloud[mtos.sysram.current_player]
+		local account = cloud[mtos.sysram.last_player]
 		if not account then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
@@ -195,17 +196,17 @@ laptop.register_app("mail", {
 
 laptop.register_view("mail:newplayer", {
 	formspec_func = function(app, mtos)
-		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.sysram.current_player.. " found. Do you like to create a new account?")..
+		return mtos.theme:get_label('1,3', "No mail account for player "..mtos.sysram.last_player.. " found. Do you like to create a new account?")..
 				mtos.theme:get_button('1,4;3,1', 'major', 'create', 'Create Account')
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
-		if mtos.sysram.current_player ~= mtos.sysram.last_player then
+		if sender:get_player_name() ~= mtos.sysram.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
 		end
 		if fields.create then
 			local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
-			cloud[mtos.sysram.current_player] = {
+			cloud[mtos.sysram.last_player] = {
 				inbox = {},
 				sentbox = {}
 			}
@@ -229,7 +230,7 @@ laptop.register_view("mail:nonet", {
 laptop.register_view("mail:compose", {
 	formspec_func = function(app, mtos)
 		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
-		local account = cloud[mtos.sysram.current_player]
+		local account = cloud[mtos.sysram.last_player]
 		account.newmessage = account.newmessage or {}
 		local message = account.newmessage
 
@@ -261,18 +262,18 @@ laptop.register_view("mail:compose", {
 		return formspec
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
-		if mtos.sysram.current_player ~= mtos.sysram.last_player then
+		if sender:get_player_name() ~= mtos.sysram.last_player then
 			mtos:set_app() -- wrong player. Back to launcher
 			return
 		end
 
 		local cloud = mtos.bdev:get_app_storage('cloud', 'mail')
-		local account = cloud[mtos.sysram.current_player]
+		local account = cloud[mtos.sysram.last_player]
 		account.newmessage = account.newmessage or {}
 		local message = account.newmessage
 
 		message.receiver = fields.receiver or message.receiver
-		message.sender = mtos.sysram.current_player
+		message.sender = mtos.sysram.last_player
 		message.time = os.time()
 		message.subject = fields.subject or message.subject
 		message.body = fields.body or message.body
