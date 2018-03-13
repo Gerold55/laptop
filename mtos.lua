@@ -251,16 +251,25 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 		self:set_app()
 		return
 	end
-	local ret = app:receive_data(method, reshow, sender, ...)
 	if sender then
-		self.sysram.last_player = sender:get_player_name()
+		self.sysram.current_player = sender:get_player_name()
+	else
+		self.sysram.current_player = nil
 	end
+	local ret = app:receive_data(method, reshow, sender, ...)
+
 	if self.sysram.current_app == appname and reshow then
 		local formspec = app:get_formspec()
 		if formspec ~= false then
 			self.meta:set_string('formspec', formspec)
 		end
 	end
+	if sender then
+		self.sysram.last_player = sender:get_player_name()
+	else
+		self.sysram.last_player = nil
+	end
+
 	self:save()
 	return ret
 end
