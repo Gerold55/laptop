@@ -579,7 +579,7 @@ register_piece("king")
 					"list[context;board;3,1;8,8;]"..
 					"listcolors[#00000000;#00000000;#00000000;#30434C;#FFF]"
 					if data.messageOther then
-						formspec = formspec..mtos.theme:get_label('4,9.3', mtos.sysram.last_player.." "..data.messageOther)
+						formspec = formspec..mtos.theme:get_label('4,9.3', mtos.sysram.current_player.." "..data.messageOther)
 					else
 						formspec=formspec..
 								mtos.theme:get_label('2,0.3', data.playerBlack.." "..(data.messageBlack or ""))..
