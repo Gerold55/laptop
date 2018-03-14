@@ -22,4 +22,18 @@ laptop.register_theme("Amber Shell", {
 	table_highlight_textcolor = '#000000',
 	muted_textcolor = "#6b4900",
 	os_max_version = '3.99',
+	texture_replacements = {
+		['laptop_mail.png'] = 'laptop_theme_ambershell_email_letter_new.png', --make new launcher icon
+		['laptop_email_letter.png'] = 'laptop_theme_ambershell_mail.png',
+		['laptop_mail_received.png'] = 'laptop_theme_ambershell_mail_received.png',
+		['laptop_mail_sentbox.png'] = 'laptop_theme_ambershell_mail_sentbox.png',
+		['laptop_email_new.png'] = 'laptop_theme_ambershell_email_new.png',
+		['laptop_email_edit.png'] = 'laptop_theme_ambershell_email_edit.png',
+		['laptop_email_reply.png'] = 'laptop_theme_ambershell_email_reply.png',
+		['laptop_email_forward.png'] = 'laptop_theme_ambershell_email_forward.png',
+		['laptop_email_trash.png'] = 'laptop_theme_ambershell_email_trash.png',
+		['laptop_mail_button.png'] = 'laptop_theme_ambershell_mail_button.png',
+		['printer_button.png'] = 'laptop_theme_ambershell_printer_button.png',
+		['laptop_boom.png'] = 'laptop_theme_ambershell_laptop_boom.png',
+	}
 })
