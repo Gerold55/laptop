@@ -28,7 +28,7 @@ laptop.register_app("mail", {
 		local formspec = "background[-0.19,0.23;15.38,10.275;"..mtos.theme.bgcolor2.."]"..--full window background
 				mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
-						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
+						"image,align=center,1="..mtos.theme:get_texture('laptop_mail.png')..",2="..mtos.theme:get_texture('laptop_mail_read.png')..";"..  --icon column
 						"color;"..	-- subject and date color
 						"text;".. -- subject
 						"text,padding=1.5;".. -- sender
