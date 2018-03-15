@@ -29,6 +29,9 @@ laptop.themes = {
 		table_highlight_textcolor = '#000000',
 		table_border = 'yes',
 		texture_replacements = {}, -- No replacements in default theme
+		status_online_textcolor = "#00FF00",
+		status_disabled_textcolor = "#FF0000",
+		status_off_textcolor = "#888888",
 	},
 }
 
