@@ -139,6 +139,9 @@ Definitiontable:
 - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
 - `os_min_version` - minimum version to be used (CS-BOS, optional)
 - `os_max_version` - maximum version to be used (CS-BOS, optional)
+- `status_online_textcolor` - Sets "online" text color for peripherals
+- `status_disabled_textcolor` - Sets "disabled" text color for peripherals
+- `status_off_textcolor =` - Sets "offline" text color for peripherals
 - `table_bgcolor` - Table background color
 - `table_textcolor` - Table text color
 - `table_highlight_bgcolor` - Table highlighted background
