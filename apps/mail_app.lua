@@ -25,9 +25,10 @@ laptop.register_app("mail", {
 		local box = account[account.selected_box] -- inbox or outbox
 
 		app.app_info = app.app_info.." - Welcome "..mtos.sysram.current_player
-		local formspec = mtos.theme:get_tableoptions()..
+		local formspec = "background[-0.19,0.23;15.38,10.275;"..mtos.theme.bgcolor2.."]"..--full window background
+				mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
-						"image,align=center,1=laptop_mail.png,2=laptop_mail_read.png;"..  --icon column
+						"image,align=center,1="..mtos.theme:get_texture('laptop_mail.png')..",2="..mtos.theme:get_texture('laptop_mail_read.png')..";"..  --icon column
 						"color;"..	-- subject and date color
 						"text;".. -- subject
 						"text,padding=1.5;".. -- sender
@@ -41,11 +42,11 @@ laptop.register_app("mail", {
 				end
 				-- set read/unread status
 				if account.selected_box == "sentbox" then
-					formspec = formspec .. "1,#88FF88," -- unread
+					formspec = formspec .. "1,"..mtos.theme.muted_textcolor..","  -- unread
 				elseif not message.is_read then
-					formspec = formspec .. "1,#FFFFFF," -- unread
+					formspec = formspec .. "1,"..mtos.theme.table_textcolor.."," -- unread
 				else
-					formspec = formspec .. "2,#888888," -- read
+					formspec = formspec .. "1,"..mtos.theme.muted_textcolor.."," -- read
 				end
 
 				-- set subject
@@ -113,8 +114,8 @@ laptop.register_app("mail", {
 			end
 
 			formspec = formspec .. mtos.theme:get_label('8,1', "Subject: "..(account.selectedmessage.subject or ""))..
-					"background[8,1.55;6.92,7.3;"..mtos.theme.contrast_background.."]"..
-					"textarea[8.35,1.6;6.8,8.25;;"..(minetest.formspec_escape(account.selectedmessage.body) or "")..";]"
+					"background[8,1.55;6.92,7.3;"..mtos.theme.bgcolor1.."]"..
+					"textarea[8.35,1.6;6.8,8.25;;"..minetest.colorize(mtos.theme.table_textcolor, minetest.formspec_escape(account.selectedmessage.body) or "")..";]"
 		end
 		return formspec
 	end,

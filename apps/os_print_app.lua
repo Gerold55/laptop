@@ -186,13 +186,13 @@ local function get_printer_info(pos)
 			}
 		if not minetest.registered_items[hw_os.node.name].groups.laptop_printer then
 			printer.status =  'off'
-			printer.status_color = '#FF0000'
+--			printer.status_color = '#FF0000'
 		elseif not hw_os.sysram.current_app or hw_os.sysram.current_app == 'os:power_off' then
 			printer.status =  'disabled'
-			printer.status_color = '#FF0000'
+--			printer.status_color = '#FF0000'
 		else
 			printer.status = 'online'
-			printer.status_color = '#00FF00'
+--			printer.status_color = '#00FF00'
 		end
 	end
 	return printer
@@ -217,7 +217,7 @@ laptop.register_view("printer:app", {
 			end
 			formspec = formspec .. 'item_image[0.5,1.5;1,1;'..printer.nodename..']'..
 					mtos.theme:get_label('1.5,1.7', minetest.formspec_escape(printer.name)..' '..
-					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(printer.status_color,printer.status))
+					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(mtos.theme["status_"..printer.status.."_textcolor"],printer.status))
 		end
 
 		formspec = formspec .. mtos.theme:get_tableoptions()..
@@ -237,7 +237,7 @@ laptop.register_view("printer:app", {
 
 				formspec = formspec..minetest.formspec_escape(printer.name)..','..
 						minetest.formspec_escape(minetest.pos_to_string(printer.pos))..','..
-						printer.status_color..','..printer.status
+						mtos.theme["status_"..printer.status.."_textcolor"]..','..printer.status
 				if sysstore.selected_printer and vector.distance(printer.pos, sysstore.selected_printer.pos) == 0 then
 					sel_idx = idx
 				end
