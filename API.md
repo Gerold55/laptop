@@ -9,6 +9,7 @@
 - `hwdef.custom_launcer` - optional - custom launcher name
 - `hwdef.os_version` - optional - Set OS version. ('1.10', '3.31' or '6.33') By default the latest version is used
 - `hwdef.tty_style` - optional - override CS-BOS console textcolor
+- `hwdef.tty_monochrome` - Old computer with monochrome CRT screen
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
@@ -77,6 +78,7 @@
 		`version_string`
 		`blacklist_commands`  CS-BOS interpreter
 		`tty_style`           CS-BOS Console color. Supported GREEN, AMBER, WHITE
+		`tty_monochrome`      CS-BOS Console is monochrome, no color change supported
 		`min_scrollback_size` CS-BOS Buffer
 		`max_scrollback_size` CS-BOS Buffer
 		`custom_launcher`     Custom launcher for OS (can be overriden on node level)
@@ -156,6 +158,7 @@ Definitiontable:
 - `theme:get_label(pos, text, color_prefix)` get a themed label text starting at pos 'x,y', colorize theme by color prefix (usually the button text colors)
 - `theme:get_texture(image)` get replacement for texture image if set in theme or the image. Called internally from get_image_button()
 - `theme:get_tableoptions(show_select_bar)` get themed tableoptions string before table[]. If show_select_bar is set to false, the highlight values are the same as non-highlight so no selection is visible
+- `theme:get_bgcolor_box(area, prefix)` get plain box colorized by [prefix]_bgcolor or bgcolor
 
 ## Block devices / Data objects
 `mtos.bdev = laptop.get_bdev_handler(mtos)`

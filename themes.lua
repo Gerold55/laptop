@@ -2,12 +2,15 @@ laptop.themes = {
 	default = { --Fallback theme
 		desktop_background = "blank.png",
 		app_background = "blank.png",
+		app_bgcolor = '#999999',
 		bgcolor1 = "laptop_theme_desktop_icon_label_button_white.png",
 		bgcolor2 = "laptop_theme_colors_light_grey.png",
 		major_button = "laptop_theme_blue_major_button.png",
 		major_textcolor = "#000000",
+		major_bgcolor = "#A0A0A0",
 		minor_button = "laptop_theme_minor_button.png",
 		minor_textcolor = "#000000",
+		minor_bgcolor = "#B0B0B0",
 		back_button = "laptop_theme_blue_back_button.png",
 		back_textcolor = "#FFFF00",
 		exit_button = "laptop_theme_blue_exit_button.png",
@@ -18,8 +21,10 @@ laptop.themes = {
 		desktop_icon_label_textcolor = '#FFFFFF',
 		titlebar_textcolor = "#FFFFFF",
 		textcolor = "#000000",
+		bgcolor = "#E0E0E0",
 		muted_textcolor = "#666666",
 		contrast_background = "gui_formbg.png",
+		contrast_bgcolor = "#000000",
 		contrast_textcolor = "#FFFFFF",
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		node_color = 0,
@@ -83,6 +88,10 @@ end
 -- Get themed texture name
 function theme_class:get_texture(texture_name)
 	return self.texture_replacements[texture_name] or texture_name
+end
+
+function theme_class:get_bgcolor_box(area, color_prefix)
+	return 'box['..area..';'..(self[color_prefix.."_bgcolor"] or self.bgcolor)..']'
 end
 
 function theme_class:get_tableoptions(show_select_bar)
