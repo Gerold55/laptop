@@ -30,6 +30,7 @@ laptop.register_theme("Amber Shell", {
 		['laptop_mail_received.png'] = 'laptop_theme_ambershell_mail_received.png',
 		['laptop_mail_sentbox.png'] = 'laptop_theme_ambershell_mail_sentbox.png',
 		['laptop_email_new.png'] = 'laptop_theme_ambershell_email_new.png',
+		['laptop_mail_read_button.png'] = 'laptop_theme_ambershell_email_read.png',
 		['laptop_email_edit.png'] = 'laptop_theme_ambershell_email_edit.png',
 		['laptop_email_reply.png'] = 'laptop_theme_ambershell_email_reply.png',
 		['laptop_email_forward.png'] = 'laptop_theme_ambershell_email_forward.png',
