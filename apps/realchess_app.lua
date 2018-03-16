@@ -516,7 +516,7 @@ register_piece("king")
 		app_name = "Realchess",
 		app_icon = "laptop_realchess_chessboard_icon.png",
 		app_info = "A Chess game",
-
+		os_min_version = "5.00",
 		formspec_func = function(app, mtos)
 			local data = mtos.bdev:get_app_storage('ram', 'realchess')
 			if not data.init_done then
