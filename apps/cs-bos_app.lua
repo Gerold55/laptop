@@ -130,7 +130,7 @@ end
 
 
 local function initialize_data(data, sdata, mtos, sysos)
-	if mtos.os_attr.blacklist_commands.TEXTCOLOR then
+	if mtos.os_attr.tty_monochrome then
 		data.tty = mtos.os_attr.tty_style
 	else
 		data.tty = sdata.tty or data.tty or mtos.os_attr.tty_style
