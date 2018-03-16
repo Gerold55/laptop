@@ -18,14 +18,6 @@ local help_texts = {
 	LABEL = "               Show/Set floppy label. LABEL [new_label]",
 }
 
-
-local supported_textcolors = {
-	GREEN = "#00FF33",
-	AMBER = "#FFB000",
-	WHITE = "#FFFFFF",
-}
-
-
 local function get_initial_message(mtos, data)
 	data.outlines = {
 		"BASIC OPERATING SYSTEM v"..mtos.os_attr.version_string,
@@ -134,7 +126,7 @@ local function initialize_data(data, sdata, mtos, sysos)
 		data.tty = mtos.os_attr.tty_style
 	else
 		data.tty = sdata.tty or data.tty or mtos.os_attr.tty_style
-		if not supported_textcolors[data.tty] then --compat hack
+		if not laptop.supported_textcolors[data.tty] then --compat hack
 			data.tty = mtos.os_attr.tty_style
 		end
 	end
@@ -186,7 +178,7 @@ laptop.register_app("cs-bos_launcher", {
 		end
 
 		initialize_data(data, sdata, mtos, sysos)
-		local tty = supported_textcolors[data.tty]
+		local tty = laptop.supported_textcolors[data.tty]
 		local formspec =
 				"size[15,10]background[15,10;0,0;laptop_theme_desktop_icon_label_button_black.png;true]"..
 				"label[-0.15,9.9;"..minetest.colorize(tty,data.current_disk..">").."]"..
@@ -363,7 +355,7 @@ laptop.register_app("cs-bos_launcher", {
 				add_outline(data, 'Total Memory                131,072            '..numWithCommas(convent+upper+xms)..'           '..numWithCommas(131072-(convent+upper+xms)))
 			elseif exec_command == "TEXTCOLOR" then
 				local textcolor = exec_all[2]
-				if textcolor and supported_textcolors[textcolor:upper()] then
+				if textcolor and laptop.supported_textcolors[textcolor:upper()] then
 					sdata.tty = textcolor:upper()
 					add_outline(data, 'SET TEXTCOLOR TO: '..sdata.tty)
 				elseif textcolor then

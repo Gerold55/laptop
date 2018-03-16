@@ -1,7 +1,7 @@
 -----------------------------------------------------
 -- Hard-Coded version attributes
 -----------------------------------------------------
-local os_version_attr = {
+laptop.os_version_attr = {
 	['1.10'] = {
 		releaseyear = '1976',
 		version_string = '1.10',
@@ -52,7 +52,16 @@ local os_version_attr = {
 		max_scrollback_size = 300,
 	},
 }
-os_version_attr.default = os_version_attr['10.00']
+laptop.os_version_attr.default = laptop.os_version_attr['10.00']
+
+-----------------------------------------------------
+-- Hard-Coded supported monochrome colors
+-----------------------------------------------------
+laptop.supported_textcolors = {
+	GREEN = "#00FF33",
+	AMBER = "#FFB000",
+	WHITE = "#FFFFFF",
+}
 
 
 -----------------------------------------------------
@@ -132,9 +141,9 @@ function os_class:set_theme(theme)
 end
 
 function os_class:get_os_attr()
-	local os_attr = table.copy(os_version_attr.default)
+	local os_attr = table.copy(laptop.os_version_attr.default)
 	if self.hwdef.os_version then
-		os_attr = table.copy(os_version_attr[self.hwdef.os_version])
+		os_attr = table.copy(laptop.os_version_attr[self.hwdef.os_version])
 	end
 	os_attr.tty_style = self.hwdef.tty_style or os_attr.tty_style
 	if self.hwdef.tty_monochrome ~= nil then

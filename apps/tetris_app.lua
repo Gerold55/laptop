@@ -43,26 +43,6 @@ local close = "]"
 local concat = table.concat
 local insert = table.insert
 
-
-
-local draw_shape = function(id, x, y, rot, posx, posy)
-	local d = shapes[id][rot]
-	local scr = {}
-	local ins = #scr
-	for i=1,4 do
-		local tmp = { "image[",
-			(d.x[i]+x)*sizex+posx, comma,
-			(d.y[i]+y)*sizey+posy, semi,
-			size, comma, size, semi,
-			colors[id], close }
-
-		ins = ins + 1
-		scr[ins] = concat(tmp)
-	end
-	return concat(scr)
-end
-
-
 local tetris_class = {}
 tetris_class.__index = tetris_class
 
@@ -79,7 +59,7 @@ function tetris_class:new_game()
 	self.data.t = {
 			board = {},
 			boardstring = "",
-			previewstring = draw_shape(nex, 0, 0, 1, 6.5, 0.8),
+			previewstring = self:draw_shape(nex, 0, 0, 1, 6.5, 0.8),
 			score = 0,
 			cur = math.random(7),
 			nex = nex,
@@ -92,13 +72,19 @@ end
 function tetris_class:update_boardstring()
 	local scr = {}
 	local ins = #scr
+	local fixed_color
+	if self.app.os.os_attr.tty_monochrome then
+		fixed_color = base_color_texture.."^[colorize:"..
+				laptop.supported_textcolors[self.app.os.os_attr.tty_style]..
+				":"..base_color_alpha
+	end
 	for i, line in pairs(self.data.t.board) do
 		for _, tile in pairs(line) do
 			local tmp = { "image[",
 				tile[1]*sizex+boardx, comma,
 				i*sizey+boardy, semi,
 				size, comma, size, semi,
-				colors[tile[2]], close }
+				fixed_color or colors[tile[2]], close }
 
 			ins = ins + 1
 			scr[ins] = concat(tmp)
@@ -167,7 +153,7 @@ function tetris_class:tick()
 		self:update_boardstring()
 		t.cur, t.nex = t.nex, math.random(7)
 		t.x, t.y, t.rot = 4, 0, 1
-		t.previewstring = draw_shape(t.nex, 0, 0, 1, 6.5, 0.8)
+		t.previewstring = self:draw_shape(t.nex, 0, 0, 1, 6.5, 0.8)
 	else
 		t.y = t.y + 1
 	end
@@ -221,6 +207,29 @@ function tetris_class:key(fields)
 	end
 end
 
+function tetris_class:draw_shape(id, x, y, rot, posx, posy)
+	local d = shapes[id][rot]
+	local scr = {}
+	local ins = #scr
+	local color = colors[id]
+	if self.app.os.os_attr.tty_monochrome then
+		color = base_color_texture.."^[colorize:"..
+				laptop.supported_textcolors[self.app.os.os_attr.tty_style]..
+				":"..base_color_alpha
+	end
+	for i=1,4 do
+		local tmp = { "image[",
+			(d.x[i]+x)*sizex+posx, comma,
+			(d.y[i]+y)*sizey+posy, semi,
+			size, comma, size, semi,
+			color, close }
+
+		ins = ins + 1
+		scr[ins] = concat(tmp)
+	end
+	return concat(scr)
+end
+
 
 laptop.register_app("tetris", {
 	app_name = "Tetris",
@@ -246,7 +255,7 @@ laptop.register_app("tetris", {
 		local t = tetris.data.t
 		return 'container[3,1]background[0,-0.05;4.35,9;'.. mtos.theme.contrast_background .. ']' ..
 			t.boardstring .. t.previewstring ..
-			draw_shape(t.cur, t.x, t.y, t.rot, boardx, boardy) ..
+			tetris:draw_shape(t.cur, t.x, t.y, t.rot, boardx, boardy) ..
 			mtos.theme:get_label('6.5,0.1', 'Next...') ..
 			mtos.theme:get_label('6.5,2.7', 'Score:...'..t.score) ..
 			buttons .. 'container_end[]'
