@@ -26,7 +26,7 @@ laptop.register_app("mail", {
 
 		app.app_info = app.app_info.." - Welcome "..mtos.sysram.current_player
 		local formspec =
-				"background[-0.19,0.28;15.39,10.275;"..mtos.theme.alt_background.."]"..--full window background
+				"background[-0.19,0.23;15.39,10.275;"..mtos.theme.alt_background.."]"..--full window background
 				mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
 						"image,align=center,1="..mtos.theme:get_texture('laptop_mail.png')..",2="..mtos.theme:get_texture('laptop_mail_read.png')..";"..  --icon column

@@ -23,7 +23,7 @@ laptop.register_app("launcher_settings", {
 		local formspec = mtos.theme:get_label('0,0.5', "Select theme")
 
 		local formspec = formspec..mtos.theme:get_tableoptions()..
-				"background[-0.19,0.28;15.39,10.275;"..mtos.theme.alt_background.."]"..--full window background
+				"background[-0.19,0.23;15.39,10.275;"..mtos.theme.alt_background.."]"..--full window background
 				"tablecolumns[text]"..
 				"table[0,1;5,2;sel_theme;"
 		for i, theme in ipairs(settings_data.themes_tab) do
