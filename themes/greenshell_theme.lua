@@ -15,5 +15,5 @@ laptop.register_theme("Green Shell", {
 	desktop_icon_label_textcolor = '#00FF33',
 	titlebar_textcolor = "#000000",
 	textcolor = "#00FF33",
-	os_max_version = '3.99',
+	os_max_version = '5.50',
 })

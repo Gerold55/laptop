@@ -6,5 +6,6 @@ laptop.register_theme("Freedom", {
 	back_textcolor = "#FFFF00",
 	exit_button = "laptop_theme_freedom_exit_button.png",
 	desktop_icon_button = "laptop_theme_freedom_desktop_icon_button.png",
-	table_highlight_bgcolor='#2E5433',
+	table_highlight_bgcolor='#17863f',
+	muted_textcolor = "#555555",
 })

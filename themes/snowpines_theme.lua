@@ -13,7 +13,8 @@ laptop.register_theme("Snow Pines", {
 	desktop_icon_button = "blank.png",
 	taskbar_clock_position_and_size = "5.5,-.31;4,0.7",
 	table_bgcolor="#FFFFFF",
-	table_highlight_bgcolor='#000000',
+	table_highlight_bgcolor='#888888',
+	muted_textcolor = "#444444",
 	table_border = 'true',
 	os_min_version = '7.00',
 })

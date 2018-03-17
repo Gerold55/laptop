@@ -10,4 +10,5 @@ laptop.register_theme("Circuit", {
 	exit_character = " ",
 	titlebar_textcolor = "#000000",
 	os_max_version = '6.99',
+	table_highlight_bgcolor = '#cdf7da',
 })

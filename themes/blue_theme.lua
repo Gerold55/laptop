@@ -6,5 +6,6 @@ laptop.register_theme("Blue", {
 	exit_button = "laptop_theme_blue_exit_button.png",
 	desktop_icon_button = "laptop_theme_blue_desktop_icon_button.png",
 	table_highlight_bgcolor='#1c3c9e',
+	table_highlight_textcolor = '#cccccc',
 	os_min_version = '7.00',
 })

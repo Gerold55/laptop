@@ -1,6 +1,7 @@
-laptop.register_theme("Shell", {
+laptop.register_theme("CS-BOS Shell", {
 	desktop_background = "laptop_theme_shell_desktop_background.png",
 	app_background = "laptop_theme_shell_app_background.png",
+	alt_background = "laptop_theme_desktop_icon_label_button_darkblue.png",
 	major_button = "laptop_theme_shell_major_button.png",
 	minor_button = "laptop_theme_shell_minor_button.png",
 	minor_textcolor = "#FFFFFF",
@@ -13,5 +14,10 @@ laptop.register_theme("Shell", {
 	desktop_icon_label_button = "laptop_theme_shell_desktop_icon_label_button.png",
 	desktop_icon_label_textcolor = '#000000',
 	titlebar_textcolor = "#000000",
-	os_max_version = '5.00',
+	table_highlight_bgcolor = '#00ffff',
+	textcolor = "#ffffff",
+	texture_replacements = {
+		['laptop_removable.png'] = 'laptop_diskette.png',
+	},
+	os_max_version = '5.50',
 })

@@ -1,8 +1,8 @@
 laptop.register_theme("Amber Shell", {
 	desktop_background = "laptop_theme_ambershell_desktop_background.png",
 	app_background = "laptop_theme_ambershell_app_background.png",
-	bgcolor1 = "laptop_theme_ambershell_desktop_icon_label_button.png",
-	bgcolor2 = "laptop_theme_desktop_icon_label_button_black.png",
+	background = "laptop_theme_ambershell_desktop_icon_label_button.png",
+	alt_background = "laptop_theme_desktop_icon_label_button_black.png",
 	major_button = "laptop_theme_ambershell_major_button.png",
 	major_textcolor = "#FFB000",
 	minor_button = "laptop_theme_ambershell_minor_button.png",
@@ -24,7 +24,7 @@ laptop.register_theme("Amber Shell", {
 	status_online_textcolor = "#000000",
 	status_disabled_textcolor = "#a77200",
 	status_off_textcolor = "#000000",
-	os_max_version = '3.99',
+	os_max_version = '5.50',
 	texture_replacements = {
 		['laptop_mail.png'] = 'laptop_theme_ambershell_email_letter_new.png',
 		['laptop_mail_received.png'] = 'laptop_theme_ambershell_mail_received.png',
@@ -47,7 +47,5 @@ laptop.register_theme("Amber Shell", {
 		['laptop_realchess_chessboard_icon.png'] = 'laptop_theme_ambershell_realchess_chessboard_icon.png',
 		['laptop_calculator.png'] = 'laptop_theme_ambershell_calculator_icon.png',
 		['laptop_notes_pad.png'] = 'laptop_theme_ambershell_notepad_icon.png',
-		--chess
-		['laptop_realchess_chess_bg.png'] = 'laptop_theme_ambershell_realchess_chess_bg.png',
 	}
 })
