@@ -47,5 +47,6 @@ laptop.register_theme("Amber Shell", {
 		['laptop_realchess_chessboard_icon.png'] = 'laptop_theme_ambershell_realchess_chessboard_icon.png',
 		['laptop_calculator.png'] = 'laptop_theme_ambershell_calculator_icon.png',
 		['laptop_notes_pad.png'] = 'laptop_theme_ambershell_notepad_icon.png',
+		['laptop_setting_wrench.png'] = 'laptop_theme_ambershell_settings_icon.png',
 	}
 })
