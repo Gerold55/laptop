@@ -27,7 +27,7 @@ local shapes = {
       { x = {0, 1, 2, 1}, y = {1, 1, 1, 2} },
       { x = {0, 1, 1, 1}, y = {1, 0, 1, 2} } } }
 
-local base_color_texture = "tetris_block.png"
+local base_color_texture = "laptop_tetris_block.png"
 local base_color_alpha = '128'
 colors = { base_color_texture.."^[colorize:#00FFFF:"..base_color_alpha, base_color_texture.."^[colorize:#FF00FF:"..base_color_alpha, base_color_texture.."^[colorize:#FF0000:"..base_color_alpha,
 		base_color_texture.."^[colorize:#0000FF:"..base_color_alpha, base_color_texture.."^[colorize:#00FF00:"..base_color_alpha, base_color_texture.."^[colorize:#FF4500:"..base_color_alpha,
