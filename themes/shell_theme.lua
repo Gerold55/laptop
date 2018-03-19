@@ -15,7 +15,7 @@ laptop.register_theme("CS-BOS Shell", {
 	desktop_icon_label_textcolor = '#000000',
 	titlebar_textcolor = "#000000",
 	table_highlight_bgcolor = '#00ffff',
-	textcolor = "#ffffff",
+	textcolor = "#888888",
 	texture_replacements = {
 		['laptop_removable.png'] = 'laptop_diskette.png',
 	},
