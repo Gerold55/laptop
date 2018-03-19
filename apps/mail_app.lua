@@ -107,7 +107,7 @@ laptop.register_app("mail", {
 					formspec = formspec .. mtos.theme:get_image_button('6.7,9;1,1', 'minor', 'markunread', 'laptop_mail_button.png', '', 'Mark Message as Unread')
 				end
 			end
-			formspec = formspec .. mtos.theme:get_image_button('8,9;1,1', 'minor', 'print', 'printer_button.png', '', 'Print Email')
+			formspec = formspec .. mtos.theme:get_image_button('8,9;1,1', 'minor', 'print', 'laptop_printer_button.png', '', 'Print Email')
 			if account.selected_box == "inbox" then
 				formspec = formspec .. mtos.theme:get_label('8,0.5', "From: "..(account.selectedmessage.sender or ""))
 			else
