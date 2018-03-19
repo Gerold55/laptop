@@ -36,7 +36,7 @@ laptop.register_theme("Amber Shell", {
 		['laptop_email_forward.png'] = 'laptop_theme_ambershell_email_forward.png',
 		['laptop_email_trash.png'] = 'laptop_theme_ambershell_email_trash.png',
 		['laptop_mail_button.png'] = 'laptop_theme_ambershell_mail_button.png',
-		['printer_button.png'] = 'laptop_theme_ambershell_printer_button.png',
+		['laptop_printer_button.png'] = 'laptop_theme_ambershell_printer_button.png',
 		['laptop_boom.png'] = 'laptop_theme_ambershell_laptop_boom.png',
 		--shell icons
 		['laptop_email_letter.png'] = 'laptop_theme_ambershell_mail_icon.png',
