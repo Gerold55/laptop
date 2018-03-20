@@ -37,6 +37,7 @@ laptop.themes = {
 		status_online_textcolor = "#00FF00",
 		status_disabled_textcolor = "#FF0000",
 		status_off_textcolor = "#888888",
+		monochrome_textcolor = nil, -- If set, some colorizing is applied using this color
 	},
 }
 

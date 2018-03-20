@@ -18,6 +18,7 @@ laptop.register_theme("Green Shell", {
 	desktop_icon_label_textcolor = '#00FF33',
 	titlebar_textcolor = "#000000",
 	textcolor = "#00FF33",
+	monochrome_textcolor = "#00FF33",
 	table_highlight_bgcolor = '#00b71a',
 	table_highlight_textcolor = '#000000',
 	muted_textcolor = "#00540b",

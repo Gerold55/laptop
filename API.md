@@ -149,6 +149,7 @@ Definitiontable:
 - `table_highlight_bgcolor` - Table highlighted background
 - `table_highlight_textcolor` - Table highlighted textcolor
 - `table_border` -  draw border (true or false)
+- `monochrome_textcolor` - default is nil. if set to RGB, colorization is applied on some textures (like tetris shapes)
 - `texture_replacements` - A table with texture replacements, defined as { ['orig_texture_name.png'] = 'themed_texture_name.png', }
 
 ### Theme methods
