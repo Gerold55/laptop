@@ -63,11 +63,11 @@ laptop.register_view('os:select_file', {
 		app.app_info = param.message
 
 		-- available devices
-		local formspec = mtos.theme:get_bgcolor_box('0,1.5;1.2,6', 'minor')
+		local formspec = mtos.theme:get_bgcolor_box('0,1.5;1.2,6', 'contrast')
 		for idx, store in ipairs(storage_list) do
 			local icon_pos = '0.2,'..(idx+0.8)
 			if store == param.selected_disk_name then
-				formspec = formspec .. mtos.theme:get_bgcolor_box('0.1,'..(idx+0.7)..';1,1', 'major')
+				formspec = formspec .. mtos.theme:get_bgcolor_box('0.1,'..(idx+0.7)..';1,1', 'table_highlight')
 			end
 			if store == 'removable' then
 				formspec = formspec .. 'item_image_button['..icon_pos..';1,1;'.. mtos.bdev:get_removable_disk().def.name..';disksel_removable;]'

@@ -73,9 +73,9 @@ function tetris_class:update_boardstring()
 	local scr = {}
 	local ins = #scr
 	local fixed_color
-	if self.app.os.os_attr.tty_monochrome then
+	if self.app.os.theme.monochrome_textcolor then
 		fixed_color = base_color_texture.."^[colorize:"..
-				laptop.supported_textcolors[self.app.os.os_attr.tty_style]..
+				self.app.os.theme.monochrome_textcolor..
 				":"..base_color_alpha
 	end
 	for i, line in pairs(self.data.t.board) do
@@ -212,9 +212,9 @@ function tetris_class:draw_shape(id, x, y, rot, posx, posy)
 	local scr = {}
 	local ins = #scr
 	local color = colors[id]
-	if self.app.os.os_attr.tty_monochrome then
+	if self.app.os.theme.monochrome_textcolor then
 		color = base_color_texture.."^[colorize:"..
-				laptop.supported_textcolors[self.app.os.os_attr.tty_style]..
+				self.app.os.theme.monochrome_textcolor..
 				":"..base_color_alpha
 	end
 	for i=1,4 do

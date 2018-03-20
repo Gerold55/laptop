@@ -118,38 +118,77 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 ## Themes
 ### Theme definition
 `laptop.register_theme(name, definitiontable)` - add a new theme. All parameters optional, if missed, the default is used
-Definitiontable:
-- `desktop_background` Desktop background image
-- `app_background` Apps background image, adds titlebar
-- `major_button` Major (highlighted) button image
-- `major_textcolor` Major (highlighted) button text color
-- `minor_button` Minor button image
-- `minor_textcolor` Minor button text color
-- `back_button` Back Button image
-- `back_textcolor` Back Button textclolor (for '<' character)
-- `exit_button` Exit button image
-- `exit_textcolor` Exit button textcolor (for 'X' character)
-- `exit_character` Sets the character that shows up in the close box, X is default
-- `desktop_icon_button` App button background in launcher
-- `desktop_icon_label_button` Background texture for icon label text. Black, grey and white are supplied
-- `desktop_icon_label_textcolor` Icon label text color
-- `titlebar_textcolor` Sets the color of text on app titlebar
-- `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
-- `contrast_background` dark background to place under white text elements that does not support textcolor
-- `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
-- `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
-- `node_color` Palette number to set if the node is paramtype2 = "colorfacedir"
-- `os_min_version` - minimum version to be used (CS-BOS, optional)
-- `os_max_version` - maximum version to be used (CS-BOS, optional)
-- `status_online_textcolor` - Sets "online" text color for peripherals
-- `status_disabled_textcolor` - Sets "disabled" text color for peripherals
-- `status_off_textcolor =` - Sets "offline" text color for peripherals
-- `table_bgcolor` - Table background color
-- `table_textcolor` - Table text color
-- `table_highlight_bgcolor` - Table highlighted background
-- `table_highlight_textcolor` - Table highlighted textcolor
-- `table_border` -  draw border (true or false)
-- `texture_replacements` - A table with texture replacements, defined as { ['orig_texture_name.png'] = 'themed_texture_name.png', }
+The most colors are grouped by "prefixes". Each prefix means a specific content to be themed.
+#### Theme suffixes
+- background - A background texture
+- button - A foreground texture, used on buttons
+- bgcolor - Background RGB color, should be the same color as background texture
+- textcolor - Foreground RGB color used for label text or button texts
+
+#### Theme prefixes
+- desktop - Main launcher
+  - `desktop_background` Desktop background image
+- desktop_icon - The App icon in main launcher
+  - `desktop_icon_button` App button background in launcher
+- desktop_icon_label The label under the app icon in main launcher (technically a button too)
+  - `desktop_icon_label_button` Background texture for icon label text
+  - `desktop_icon_label_textcolor` Icon label text color
+
+- app - App decorations
+  - `app_background` Apps background image, adds titlebar
+- titlebar - The titlebar on app decorations
+  - `titlebar_textcolor` Sets the color of text on app titlebar
+- back - The back button on app decoration
+  - `back_button` Back Button image
+  - `back_textcolor` Back Button textclolor (for '<' character)
+- exit - The exit button on app decoration
+  - `exit_button` Exit button image
+  - `exit_textcolor` Exit button textcolor (for 'X' character)
+  - `exit_character` Sets the character that shows up in the close box, X is default
+
+- major - Highlighted Button
+  - `major_button` Major (highlighted) button image
+  - `major_textcolor` Major (highlighted) button text color
+
+- minor - not highlighted button
+  - `minor_button` Minor button image
+  - `minor_textcolor` Minor button text color
+
+- contrast - dark background in contrast for not themeable elements
+  - `contrast_background` dark background to place under white text elements that does not support textcolor
+  - `contrast_bgcolor` dark background as RGB
+  - `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
+
+- status_online - Used to show status information "online / green"
+  - `status_online_textcolor` - Sets "online" text color for peripherals
+- status_disabled - Used to show status information "disabled / yellow"
+  - `status_disabled_textcolor` - Sets "disabled" text color for peripherals
+- status_off - Used to show status information "off / red"
+  - `status_off_textcolor =` - Sets "offline" text color for peripherals
+
+- table - Colorize the table-like output
+  - `table_bgcolor` - Table background color
+  - `table_background` - The table background color as texture
+  - `table_textcolor` - Table text color
+- table_highlight - Colorize the selection in tables
+  - `table_highlight_bgcolor` - Table highlighted background
+  - `table_highlight_textcolor` - Table highlighted textcolor
+- muted - muted color
+  - `muted_textcolor` - Table textcolor muted
+
+- monochrome - Optimized for monochrome output (old computers). Some elements will be colorized using this color
+  - `monochrome_textcolor` - default is nil. if set to RGB, colorization is applied on some textures (like tetris shapes)
+
+- fallback - without prefix (obsolete)
+  - `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
+
+- Other settings / without prefix
+  - `taskbar_clock_position_and_size` Set where the clock is positioned and its size on the taskbar
+  - `node_color` Palette number to set if the node is paramtype2 = "colorfacedir" (inactive)
+  - `os_min_version` - minimum version to be used (CS-BOS, optional)
+  - `os_max_version` - maximum version to be used (CS-BOS, optional)
+  - `table_border` -  draw tables border (true or false)
+  - `texture_replacements` - A table with texture replacements, defined as { ['orig_texture_name.png'] = 'themed_texture_name.png', }
 
 ### Theme methods
 `function laptop.get_theme(theme_name)`

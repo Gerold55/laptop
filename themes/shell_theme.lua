@@ -1,7 +1,6 @@
 laptop.register_theme("CS-BOS Shell", {
 	desktop_background = "laptop_theme_shell_desktop_background.png",
 	app_background = "laptop_theme_shell_app_background.png",
-	alt_background = "laptop_theme_desktop_icon_label_button_darkblue.png",
 	major_button = "laptop_theme_shell_major_button.png",
 	minor_button = "laptop_theme_shell_minor_button.png",
 	minor_textcolor = "#FFFFFF",
