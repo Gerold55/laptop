@@ -119,12 +119,13 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 ### Theme definition
 `laptop.register_theme(name, definitiontable)` - add a new theme. All parameters optional, if missed, the default is used
 The most colors are grouped by "prefixes". Each prefix means a specific content to be themed.
-The suffixes are
+#### Theme suffixes
 - background - A background texture
 - button - A foreground texture, used on buttons
 - bgcolor - Background RGB color, should be the same color as background texture
 - textcolor - Foreground RGB color used for label text or button texts
-Definitiontable:
+
+#### Theme prefixes
 - desktop - Main launcher
   - `desktop_background` Desktop background image
 - desktop_icon - The App icon in main launcher
