@@ -1,8 +1,6 @@
 laptop.register_theme("Green Shell", {
 	desktop_background = "laptop_theme_greenshell_desktop_background.png",
 	app_background = "laptop_theme_greenshell_app_background.png",
-	background = "laptop_theme_greenshell_desktop_icon_label_button.png",
-	alt_background = "laptop_theme_desktop_icon_label_button_black.png",
 	major_button = "laptop_theme_greenshell_major_button.png",
 	major_textcolor = "#00FF33",
 	minor_button = "laptop_theme_greenshell_minor_button.png",
@@ -20,6 +18,7 @@ laptop.register_theme("Green Shell", {
 	textcolor = "#00FF33",
 	monochrome_textcolor = "#00FF33",
 	table_highlight_bgcolor = '#00b71a',
+	table_background = "laptop_theme_greenshell_desktop_icon_label_button.png",
 	table_highlight_textcolor = '#000000',
 	muted_textcolor = "#00540b",
 	status_online_textcolor = "#000000",

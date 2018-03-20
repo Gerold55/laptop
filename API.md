@@ -155,6 +155,7 @@ Definitiontable:
 
 - contrast - dark background in contrast for not themeable elements
   - `contrast_background` dark background to place under white text elements that does not support textcolor
+  - `contrast_bgcolor` dark background as RGB
   - `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
 
 - status_online - Used to show status information "online / green"
@@ -166,17 +167,18 @@ Definitiontable:
 
 - table - Colorize the table-like output
   - `table_bgcolor` - Table background color
+  - `table_background` - The table background color as texture
   - `table_textcolor` - Table text color
 - table_highlight - Colorize the selection in tables
   - `table_highlight_bgcolor` - Table highlighted background
   - `table_highlight_textcolor` - Table highlighted textcolor
 - muted - muted color
-  - muted_textcolor - Table textcolor muted
+  - `muted_textcolor` - Table textcolor muted
 
 - monochrome - Optimized for monochrome output (old computers). Some elements will be colorized using this color
   - `monochrome_textcolor` - default is nil. if set to RGB, colorization is applied on some textures (like tetris shapes)
 
-- fallback - without prefix
+- fallback - without prefix (obsolete)
   - `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
 
 - Other settings / without prefix
