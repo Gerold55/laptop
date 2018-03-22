@@ -21,8 +21,8 @@ function bdev:get_ram_disk()
 end
 
 function bdev:free_ram_disk()
-	self.os.meta:set_string('laptop_ram','')
-	self.ram_disk = nil
+	self.ram_disk = {}
+	self:sync()
 end
 
 
@@ -47,7 +47,7 @@ function bdev:get_removable_disk(removable_type)
 		function data:reload(stack)
 			-- self.inv unchanged
 			-- self.rtype unchanged (assumption
-			stack = stack or data.inv:get_stack("main", 1)
+			stack = stack or self.inv:get_stack("main", 1)
 			if stack then
 				local def = stack:get_definition()
 				if def and def.name ~= "" then
