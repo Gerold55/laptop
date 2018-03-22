@@ -257,7 +257,7 @@ laptop.register_view("printer:app", {
 		formspec = formspec .. mtos.theme:get_bgcolor_box("7.15,0.4;7.6,1","contrast")..
 				mtos.theme:get_label('7.3,0.6','Heading:','contrast').."field[9.7,0.7;5,1;label;;"..minetest.formspec_escape(param.label or "").."]"..
 				mtos.theme:get_label('9.7,1.7'," by "..(mtos.sysram.current_player or ""))..
-				"background[7.15,2.55;7.6,6.0;"..mtos.theme.table_background.."]"..
+				mtos.theme:get_tableoptions(false).."tablecolumns[text]table[7.15,2.5;7.6,6.0;preview_bg;]"..
 				"textarea[7.5,2.5;7.5,7;;"..minetest.colorize(mtos.theme.table_textcolor, (minetest.formspec_escape(param.text) or ""))..";]"
 
 		return formspec

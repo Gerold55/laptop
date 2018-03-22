@@ -6,7 +6,6 @@ laptop.register_theme("Cubic", {
 	exit_button = "laptop_theme_cubic_exit_button.png",
 	desktop_icon_button = "laptop_theme_cubic_desktop_icon_button.png",
 	table_bgcolor = "#555555",
-	table_background = "laptop_theme_desktop_icon_label_button_grey.png",
 	table_highlight_bgcolor='#0c1c4f',
 	table_highlight_textcolor = '#ffffff',
 	table_textcolor = "#ffffff",

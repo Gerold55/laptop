@@ -168,7 +168,6 @@ The most colors are grouped by "prefixes". Each prefix means a specific content 
 
 - table - Colorize the table-like output
   - `table_bgcolor` - Table background color
-  - `table_background` - The table background color as texture
   - `table_textcolor` - Table text color
 - table_highlight - Colorize the selection in tables
   - `table_highlight_bgcolor` - Table highlighted background

@@ -17,7 +17,6 @@ laptop.register_theme("Amber Shell", {
 	textcolor = "#FFB000",
 	monochrome_textcolor = "#FFB000",
 	table_bgcolor = "#FFB000",
-	table_background = "laptop_theme_ambershell_desktop_icon_label_button.png",
 	table_highlight_bgcolor = '#a77200',
 	table_highlight_textcolor = '#000000',
 	muted_textcolor = "#6b4900",

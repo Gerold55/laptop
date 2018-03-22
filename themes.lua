@@ -22,7 +22,6 @@ laptop.themes = {
 		status_disabled_textcolor = "#FF0000",
 		status_off_textcolor = "#888888",
 		table_bgcolor = "#ffffff",
-		table_background = "laptop_theme_desktop_icon_label_button_white.png",
 		table_textcolor = "#000000",
 		table_highlight_bgcolor = '#cde6f7',
 		table_highlight_textcolor = '#000000',
