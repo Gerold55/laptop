@@ -178,7 +178,10 @@ function bdev:sync()
 		end
 		self.removable_disk.inv:set_stack("main", 1, self.removable_disk.stack)
 	end
+end
 
+-- Save all data if used
+function bdev:sync_cloud()
 	-- Modmeta (Cloud)
 	if self.cloud_disk then
 		for store, value in pairs(self.cloud_disk) do

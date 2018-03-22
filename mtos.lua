@@ -65,6 +65,65 @@ laptop.supported_textcolors = {
 
 
 -----------------------------------------------------
+-- Operating System cache
+-----------------------------------------------------
+local mtos_cache = {
+	list = {},
+	is_running = false
+}
+laptop.mtos_cache = mtos_cache
+
+function mtos_cache:get(pos)
+	local hash = minetest.hash_node_position(pos)
+	return self.list[hash]
+end
+
+function mtos_cache:set(pos, mtos)
+	local hash = minetest.hash_node_position(pos)
+	mtos.last_access = os.time()
+	self.list[hash] = mtos
+	self:check_free_step()
+end
+
+function mtos_cache:free(pos)
+	local hash = minetest.hash_node_position(pos)
+	self.list[hash] = nil
+end
+
+function mtos_cache:check_free_step()
+	-- do not start twice
+	if self.is_running then
+		return
+	end
+
+	local function check_free(mtos_cache)
+		local current_time
+		for hash, mtos in pairs(mtos_cache.list) do
+			current_time = current_time or os.time()
+			if mtos.last_access +5 < current_time then -- 5 seconds cache
+				mtos.bdev:sync()
+				mtos_cache:free(mtos.pos)
+			end
+		end
+		mtos_cache.is_running = false
+		mtos_cache:check_free_step()
+	end
+
+	if next(self.list) then
+		self.is_running = true
+		minetest.after(1, check_free, self)
+	end
+end
+
+-- Sync all on shutdown
+minetest.register_on_shutdown(function()
+	for hash, mtos in pairs(mtos_cache.list) do
+		mtos.bdev:sync()
+		mtos_cache:free(mtos.pos)
+	end
+end)
+
+-----------------------------------------------------
 -- Operating System class
 -----------------------------------------------------
 local os_class = {}
@@ -89,6 +148,7 @@ end
 -- Power on the system and start the launcher
 function os_class:power_on(new_node_name)
 	self.bdev:free_ram_disk()
+	mtos_cache:free(self.pos)
 	-- update current instance with reinitialized data
 	for k,v in pairs(laptop.os_get(self.pos)) do
 		self[k] = v
@@ -292,7 +352,8 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 end
 
 function os_class:save()
-	self.bdev:sync()
+	self.bdev:sync_cloud()
+	mtos_cache:set(self.pos, self)
 end
 
 -- Use parameter and launch the select_file dialog
@@ -315,7 +376,14 @@ end
 -- Get Operating system object
 -----------------------------------------------------
 function laptop.os_get(pos)
-	local self = setmetatable({}, os_class)
+	-- get OS-object from cache
+	local self = mtos_cache:get(pos)
+	if self then
+		return self
+	end
+
+	-- Create new if not in cache
+	self = setmetatable({}, os_class)
 	self.__index = os_class
 	self.pos = pos
 	self.node = minetest.get_node(pos)

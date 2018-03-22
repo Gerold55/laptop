@@ -207,7 +207,8 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 - `bdev:get_hard_disk()` hdd store - a table with all app-related storage partitions, if hard disk capatibility exists
 - `bdev:get_removable_disk()` removable data object (drive)
 - `bdev:get_cloud_disk(storage_name)` - Get named cloud storage
-- `bdev:sync()` - Write/store all opened and maybe changed data
+- `bdev:sync()` - Write/store all opened and maybe changed data (cached)
+- `bdev:sync_cloud()` - Write/store all opened and maybe changed data in cloud
 
 ### Storage methods
 - `get_boot_disk()` - Check which device can be booted. possible return value is "hdd" or "removable"

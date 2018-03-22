@@ -2,6 +2,7 @@
 laptop.node_config = {}
 
 local function on_construct(pos)
+	laptop.mtos_cache:free(pos)
 	local mtos = laptop.os_get(pos)
 	local node = minetest.get_node(pos)
 	local hwdef = laptop.node_config[node.name]
@@ -13,6 +14,10 @@ local function on_construct(pos)
 	else
 		mtos:power_off()
 	end
+end
+
+local function after_destruct(pos, oldnode)
+	laptop.mtos_cache:free(pos)
 end
 
 local function on_punch(pos, node, puncher)
@@ -36,6 +41,7 @@ local function on_punch(pos, node, puncher)
 		-- reload OS
 		slot:reload(punch_item)
 		mtos.bdev:sync()
+		laptop.mtos_cache:free(pos)
 		for k,v in pairs(laptop.os_get(mtos.pos)) do
 			mtos[k] = v
 		end
@@ -186,6 +192,7 @@ function laptop.register_hardware(name, hwdef)
 --		def.preserve_metadata = preserve_metadata TODO: if MT-0.5 stable
 		def.on_punch = on_punch
 		def.on_construct = on_construct
+		def.after_destruct = after_destruct
 		def.on_receive_fields = on_receive_fields
 		def.allow_metadata_inventory_move = allow_metadata_inventory_move
 		def.allow_metadata_inventory_put = allow_metadata_inventory_put

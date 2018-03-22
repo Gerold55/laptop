@@ -58,5 +58,6 @@ laptop.register_app("removable", {
 			end
 		end
 		mtos.bdev:sync()
+		laptop.mtos_cache:free(mtos.pos)
 	end,
 })
