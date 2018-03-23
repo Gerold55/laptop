@@ -18,7 +18,6 @@ laptop.register_theme("Green Shell", {
 	textcolor = "#00FF33",
 	monochrome_textcolor = "#00FF33",
 	table_highlight_bgcolor = '#00b71a',
-	table_background = "laptop_theme_greenshell_desktop_icon_label_button.png",
 	table_highlight_textcolor = '#000000',
 	muted_textcolor = "#00540b",
 	status_online_textcolor = "#000000",
