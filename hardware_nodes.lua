@@ -84,8 +84,8 @@ laptop.register_hardware("laptop:printer", {
 	description = "Flash Printex",
 	infotext = 'Flash Printex',
 	sequence = { "off", "powersave", "on" },
+	custom_theme = "PrintOS",
 	custom_launcher = "printer_launcher",
-	custom_theme = "Boing!",
 	hw_capabilities = {"hdd"},
 	node_defs = {
 

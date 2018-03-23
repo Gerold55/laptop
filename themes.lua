@@ -1,30 +1,43 @@
 laptop.themes = {
-	Freedom = {
-		desktop_background = "laptop_theme_freedom_desktop_background.png",
-		app_background = "laptop_theme_freedom_app_background.png",
-		major_button = "laptop_theme_freedom_major_button.png",
+	default = { --Fallback theme
+		desktop_background = "blank.png",
+		desktop_icon_button = "blank.png",
+		desktop_icon_label_button = "laptop_theme_desktop_icon_label_button_black.png",
+		desktop_icon_label_textcolor = '#FFFFFF',
+		app_background = "blank.png",
+		titlebar_textcolor = "#FFFFFF",
+		back_button = "laptop_theme_blue_back_button.png",
+		back_textcolor = "#FFFF00",
+		exit_button = "laptop_theme_blue_exit_button.png",
+		exit_textcolor = "#FF0000",
+		exit_character = "X",
+		major_button = "laptop_theme_blue_major_button.png",
 		major_textcolor = "#000000",
 		minor_button = "laptop_theme_minor_button.png",
 		minor_textcolor = "#000000",
-		back_button = "laptop_theme_freedom_back_button.png",
-		back_textcolor = "#FFFF00",
-		exit_button = "laptop_theme_freedom_exit_button.png",
-		exit_textcolor = "#FF0000",
-		exit_character = "X",
-		desktop_icon_button = "laptop_theme_freedom_desktop_icon_button.png",
-		desktop_icon_label_button = "laptop_theme_desktop_icon_label_button_black.png",
-		desktop_icon_label_textcolor = '#FFFFFF',
-		titlebar_textcolor = "#FFFFFF",
-		textcolor = "#000000",
 		contrast_background = "gui_formbg.png",
+		contrast_bgcolor = "#000000",
 		contrast_textcolor = "#FFFFFF",
+		status_online_textcolor = "#00FF00",
+		status_disabled_textcolor = "#FF0000",
+		status_off_textcolor = "#888888",
+		table_bgcolor = "#ffffff",
+		table_textcolor = "#000000",
+		table_highlight_bgcolor = '#cde6f7',
+		table_highlight_textcolor = '#000000',
+		muted_textcolor = "#666666",
+--		monochrome_textcolor = nil, -- If set, some colorizing is applied using this color
+
+		textcolor = "#000000",
+
 		taskbar_clock_position_and_size = "11,9.8;4,0.7",
 		node_color = 0,
+		table_border = 'yes',
+		texture_replacements = {}, -- No replacements in default theme
+--		os_min_version = nil,
+-- 		os_max_version = nil,
 	},
 }
-
-laptop.themes.default = laptop.themes.Freedom -- default can be an complete theme only
-
 
 function laptop.register_theme(name, def)
 	laptop.themes[name] = def
@@ -54,7 +67,7 @@ end
 
 -- get prepared button textures
 function theme_class:get_image_button(area, prefix, code, image, text, tooltip)
-	local formspec = 'image_button['..area..';'..self[prefix.."_button"]..'^'..image..';'..code..';'.. minetest.colorize(self[prefix.."_textcolor"] or self.textcolor,minetest.formspec_escape(text))..']'
+	local formspec = 'image_button['..area..';'..self[prefix.."_button"]..'^'..self:get_texture(image)..';'..code..';'.. minetest.colorize(self[prefix.."_textcolor"] or self.textcolor,minetest.formspec_escape(text))..']'
 	if tooltip then
 		formspec = formspec.."tooltip["..code..";"..minetest.formspec_escape(tooltip).."]"
 	end
@@ -71,8 +84,35 @@ function theme_class:get_label(area, label, color_prefix)
 	end
 end
 
+-- Get themed texture name
+function theme_class:get_texture(texture_name)
+	return self.texture_replacements[texture_name] or texture_name
+end
+
+function theme_class:get_bgcolor_box(area, color_prefix)
+	return 'box['..area..';'..(self[color_prefix.."_bgcolor"] or self.bgcolor)..']'
+end
+
+function theme_class:get_tableoptions(show_select_bar)
+	if show_select_bar == false then
+		return "tableoptions[background="..self.table_bgcolor..
+				";color="..self.table_textcolor..
+				";highlight="..self.table_bgcolor..
+				";highlight_text="..self.table_textcolor..
+				";border="..self.table_border.."]"
+	else
+		return "tableoptions[background="..self.table_bgcolor..
+				";color="..self.table_textcolor..
+				";highlight="..self.table_highlight_bgcolor..
+				";highlight_text="..self.table_highlight_textcolor..
+				";border="..self.table_border.."]"
+	end
+end
+
+
 function laptop.get_theme(theme_name)
 	local self = setmetatable(table.copy(laptop.themes.default), theme_class)
+	theme_name = theme_name or "Freedom"
 	if theme_name and laptop.themes[theme_name] then
 		for k,v in pairs(laptop.themes[theme_name]) do
 			self[k] = v

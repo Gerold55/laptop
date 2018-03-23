@@ -1,31 +1,33 @@
 -----------------------------------------------------
 -- Hard-Coded version attributes
 -----------------------------------------------------
-local os_version_attr = {
+laptop.os_version_attr = {
 	['1.10'] = {
 		releaseyear = '1976',
 		version_string = '1.10',
-		textcolor = 'AMBER',
+		tty_style = 'AMBER',
 		custom_launcher = "cs-bos_launcher",
 		custom_theme = "Amber Shell",
-		blacklist_commands = { TEXTCOLOR = true, EXIT = true },
+		blacklist_commands = { EXIT = true },
+		tty_monochrome = true,
 		min_scrollback_size = 20,
 		max_scrollback_size = 34,
 	},
 	['3.31'] = {
 		releaseyear = '1982',
 		version_string = '3.31',
-		textcolor = 'GREEN',
+		tty_style = 'GREEN',
 		custom_launcher = "cs-bos_launcher",
 		custom_theme = "Green Shell",
-		blacklist_commands = { TEXTCOLOR = true, EXIT = true },
+		blacklist_commands = { EXIT = true },
+		tty_monochrome = true,
 		min_scrollback_size = 25,
 		max_scrollback_size = 100,
 	},
 	['5.02'] = {
 		releaseyear = '1989',
 		version_string = '5.02',
-		textcolor = 'WHITE',
+		tty_style = 'WHITE',
 		custom_theme = "Circuit",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
@@ -34,7 +36,7 @@ local os_version_attr = {
 	['6.33'] = {
 		releaseyear = '1995',
 		version_string = '6.33',
-		textcolor = 'WHITE',
+		tty_style = 'WHITE',
 		custom_theme = "Clouds",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
@@ -43,14 +45,23 @@ local os_version_attr = {
 	['10.00'] = {
 		releaseyear = '2010',
 		version_string = '10.00',
-		textcolor = 'WHITE',
+		tty_style = 'WHITE',
 		custom_theme = "Freedom",
 		blacklist_commands = { },
 		min_scrollback_size = 25,
 		max_scrollback_size = 300,
 	},
 }
-os_version_attr.default = os_version_attr['10.00']
+laptop.os_version_attr.default = laptop.os_version_attr['10.00']
+
+-----------------------------------------------------
+-- Hard-Coded supported monochrome colors
+-----------------------------------------------------
+laptop.supported_textcolors = {
+	GREEN = "#00FF33",
+	AMBER = "#FFB000",
+	WHITE = "#FFFFFF",
+}
 
 
 -----------------------------------------------------
@@ -127,6 +138,21 @@ function os_class:set_theme(theme)
 		self:swap_node()
 		self:save()
 	end
+end
+
+function os_class:get_os_attr()
+	local os_attr = table.copy(laptop.os_version_attr.default)
+	if self.hwdef.os_version then
+		os_attr = table.copy(laptop.os_version_attr[self.hwdef.os_version])
+	end
+	os_attr.tty_style = self.hwdef.tty_style or os_attr.tty_style
+	if self.hwdef.tty_monochrome ~= nil then
+		os_attr.tty_monochrome = self.hwdef.tty_monochrome
+	end
+	if os_attr.tty_monochrome then
+		os_attr.blacklist_commands.TEXTCOLOR = true
+	end
+	return os_attr
 end
 
 -- Add app to stack (before starting new)
@@ -303,11 +329,7 @@ function laptop.os_get(pos)
 	self.sysram.stack = self.sysram.stack or {}
 	self.sysram.app_timer = self.sysram.app_timer or {}
 	self.sysdata = self.bdev:get_app_storage('system', 'os')
-
-	self.os_attr = os_version_attr.default
-	if self.hwdef.os_version then
-		self.os_attr = os_version_attr[self.hwdef.os_version]
-	end
+	self.os_attr = self:get_os_attr()
 	self.theme = self:get_theme()
 	return self
 end

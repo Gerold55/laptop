@@ -75,11 +75,11 @@ laptop.register_app("printer_launcher", {
 				"list[current_player;main;0.3,5.08;8,3;8]" ..
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
 				"listring[current_player;main]"..
-				"label[0,0;"..mtos.hwdef.description.."]"
+				mtos.theme:get_label('0,0', mtos.hwdef.description, 'titlebar')
 		local idata = mtos.bdev:get_removable_disk()
 
 		-- queue
-		formspec = formspec ..
+		formspec = formspec .. mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
 						"text;".. -- label
 						"text;".. -- author
@@ -108,10 +108,9 @@ laptop.register_app("printer_launcher", {
 			formspec = formspec .."background[6.2,2.2;2.5,0.7;"..mtos.theme.contrast_background..']'
 		end
 
---		formspec = formspec .."background[5.2,"..(mtos.sysdata.print_progress/2+0.55)..";1.5,"..((4.9-mtos.sysdata.print_progress)/2)..";"..mtos.theme.contrast_background..
-		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_background..
-				']label[5.3,0.8;Paper: '..mtos.sysdata.paper_count..
-				']label[5.3,1.3;Dye: '..mtos.sysdata.dye_count..']'..
+		formspec = formspec .."background[5.2,0.55;1.5,2.45;"..mtos.theme.contrast_background..']'..
+				mtos.theme:get_label('5.3,0.8', 'Paper: '..mtos.sysdata.paper_count, 'contrast')..
+				mtos.theme:get_label('5.3,1.3', 'Dye: '..mtos.sysdata.dye_count, 'contrast')..
 				mtos.theme:get_button('6.8,0.8;1.5,0.7', paper_button, 'view_paper', 'Paper tray', 'Insert paper')..
 				mtos.theme:get_button('6.8,1.5;1.5,0.7', dye_button, 'view_dye', 'Dye tray', 'Insert black dye')..
 				mtos.theme:get_button('6.8,2.2;1.5,0.7', out_button, 'view_out', 'Output tray', 'Get printed paper')..
@@ -187,13 +186,13 @@ local function get_printer_info(pos)
 			}
 		if not minetest.registered_items[hw_os.node.name].groups.laptop_printer then
 			printer.status =  'off'
-			printer.status_color = '#FF0000'
+--			printer.status_color = '#FF0000'
 		elseif not hw_os.sysram.current_app or hw_os.sysram.current_app == 'os:power_off' then
 			printer.status =  'disabled'
-			printer.status_color = '#FF0000'
+--			printer.status_color = '#FF0000'
 		else
 			printer.status = 'online'
-			printer.status_color = '#00FF00'
+--			printer.status_color = '#00FF00'
 		end
 	end
 	return printer
@@ -218,10 +217,10 @@ laptop.register_view("printer:app", {
 			end
 			formspec = formspec .. 'item_image[0.5,1.5;1,1;'..printer.nodename..']'..
 					mtos.theme:get_label('1.5,1.7', minetest.formspec_escape(printer.name)..' '..
-					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(printer.status_color,printer.status))
+					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(mtos.theme["status_"..printer.status.."_textcolor"],printer.status))
 		end
 
-		formspec = formspec ..
+		formspec = formspec .. mtos.theme:get_tableoptions()..
 				"tablecolumns[" ..
 						"text;".. -- Printer name
 						"text;".. -- Printer position
@@ -238,7 +237,7 @@ laptop.register_view("printer:app", {
 
 				formspec = formspec..minetest.formspec_escape(printer.name)..','..
 						minetest.formspec_escape(minetest.pos_to_string(printer.pos))..','..
-						printer.status_color..','..printer.status
+						mtos.theme["status_"..printer.status.."_textcolor"]..','..printer.status
 				if sysstore.selected_printer and vector.distance(printer.pos, sysstore.selected_printer.pos) == 0 then
 					sel_idx = idx
 				end
@@ -255,11 +254,11 @@ laptop.register_view("printer:app", {
 
 		param.label = param.label or "<unnamed>"
 
-		formspec = formspec .. "background[7.15,0.4;7.6,1;"..mtos.theme.contrast_background.."]"..
-				"label[7.3,0.6;Heading:]".."field[9.7,0.7;5,1;label;;"..minetest.formspec_escape(param.label or "").."]"..
+		formspec = formspec .. mtos.theme:get_bgcolor_box("7.15,0.4;7.6,1","contrast")..
+				mtos.theme:get_label('7.3,0.6','Heading:','contrast').."field[9.7,0.7;5,1;label;;"..minetest.formspec_escape(param.label or "").."]"..
 				mtos.theme:get_label('9.7,1.7'," by "..(mtos.sysram.current_player or ""))..
-				"background[7.15,2.55;7.6,6.0;"..mtos.theme.contrast_background.."]"..
-				"textarea[7.5,2.5;7.5,7;;"..(minetest.formspec_escape(param.text) or "")..";]"
+				mtos.theme:get_tableoptions(false).."tablecolumns[text]table[7.15,2.5;7.6,6.0;preview_bg;]"..
+				"textarea[7.5,2.5;7.5,7;;"..minetest.colorize(mtos.theme.table_textcolor, (minetest.formspec_escape(param.text) or ""))..";]"
 
 		return formspec
 	end,
