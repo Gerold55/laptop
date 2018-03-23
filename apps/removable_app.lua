@@ -8,15 +8,17 @@ laptop.register_app("removable", {
 				"list[current_player;main;0,4.85;8,1;]" ..
 				"list[current_player;main;0,6.08;8,3;8]" ..
 				"listring[nodemeta:"..mtos.pos.x..','..mtos.pos.y..','..mtos.pos.z..";main]" ..
-				"listring[current_player;main]"
+				"listring[current_player;main]"..
+				"background[0,0.3;8,1;".. mtos.theme.contrast_background .. ']'
 
 		mtos.bdev.removable_disk = nil -- force reading
 		local idata = mtos.bdev:get_removable_disk()
 		if idata.stack then
 			-- change label
-			formspec = formspec .. mtos.theme:get_label('0,1.2', idata.def.description).."field[2,0.7;4,1;label;;"..idata.label.."]"..
-					mtos.theme:get_button('5.7,0.55;1.5,0.7', 'minor', 'set_label', 'Rename', 'Rename the '..idata.def.description)..
-					mtos.theme:get_label('0,1.7', "Format: "..idata.os_format).. -- format state
+			formspec = formspec .. "field[2,0.65;4,1;label;;"..idata.label.."]"..
+					mtos.theme:get_button('5.7,0.5;1.5,0.7', 'minor', 'set_label', 'Rename', 'Rename the '..idata.def.description)..
+					mtos.theme:get_label('0,1.5', idata.def.description)..
+					mtos.theme:get_label('0,2', "Format: "..idata.os_format)..
 			-- buttons
 					mtos.theme:get_button('0,3;1.5,0.7', 'minor', 'format_wipe', 'wipe', 'Wipe all data from disk')..
 					mtos.theme:get_button('0,4;1.5,0.7', 'minor', 'format_data', 'data', 'Format disk to store data')
