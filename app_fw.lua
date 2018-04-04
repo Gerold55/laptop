@@ -49,11 +49,10 @@ end
 
 -- Back to previous app in stack
 function app_class:back_app(fields, sender)
-	self.os.sysram.current_app = self.os:appstack_pop()
+	self.os:set_app('<pop>', sender, fields)
 	if fields then
 		self.os:pass_to_app('receive_fields_func', true, sender, fields)
 	end
-	self.os:set_app(self.os.sysram.current_app)
 end
 
 -- Exit current app and back to launcher
