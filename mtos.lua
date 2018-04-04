@@ -80,7 +80,8 @@ end
 
 function mtos_cache:set(pos, mtos)
 	local hash = minetest.hash_node_position(pos)
-	mtos.last_access = os.time()
+	mtos.cache_first_access = mtos.cache_first_access or os.time()
+	mtos.cache_last_access = os.time()
 	self.list[hash] = mtos
 	self:check_free_step()
 end
@@ -89,6 +90,13 @@ function mtos_cache:free(pos)
 	local hash = minetest.hash_node_position(pos)
 	self.list[hash] = nil
 end
+
+
+function mtos_cache:sync_and_free(mtos)
+	mtos.bdev:sync()
+	self:free(mtos.pos)
+end
+
 
 function mtos_cache:check_free_step()
 	-- do not start twice
@@ -100,9 +108,9 @@ function mtos_cache:check_free_step()
 		local current_time
 		for hash, mtos in pairs(mtos_cache.list) do
 			current_time = current_time or os.time()
-			if mtos.last_access +5 < current_time then -- 5 seconds cache
-				mtos.bdev:sync()
-				mtos_cache:free(mtos.pos)
+			if mtos.cache_last_access + 5 <= current_time or -- 5 seconds unused
+					mtos.cache_first_access + 15 <= current_time then -- or 15 seconds active
+				self:sync_and_free(mtos)
 			end
 		end
 		mtos_cache.is_running = false
@@ -118,8 +126,7 @@ end
 -- Sync all on shutdown
 minetest.register_on_shutdown(function()
 	for hash, mtos in pairs(mtos_cache.list) do
-		mtos.bdev:sync()
-		mtos_cache:free(mtos.pos)
+		mtos_cache:sync_and_free(mtos)
 	end
 end)
 
@@ -318,6 +325,7 @@ function os_class:set_app(appname)
 		self.meta:set_string('formspec', formspec)
 	end
 	self:save()
+	mtos_cache:sync_and_free(self)
 end
 
 -- Handle input processing

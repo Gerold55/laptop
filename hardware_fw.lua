@@ -36,8 +36,7 @@ local function on_punch(pos, node, puncher)
 		puncher:set_wielded_item(slot.stack)
 		-- reload OS
 		slot:reload(punch_item)
-		mtos.bdev:sync()
-		laptop.mtos_cache:free(pos)
+		laptop.mtos_cache:sync_and_free(mtos)
 		for k,v in pairs(laptop.os_get(mtos.pos)) do
 			mtos[k] = v
 		end
