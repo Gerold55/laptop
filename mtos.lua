@@ -208,10 +208,12 @@ function os_class:set_theme(theme)
 end
 
 function os_class:get_os_attr()
-	local os_attr = table.copy(laptop.os_version_attr.default)
-	if self.hwdef.os_version then
-		os_attr = table.copy(laptop.os_version_attr[self.hwdef.os_version])
+	local os_attr = {}
+	local os_version = self.hwdef.os_version or 'default'
+	for k, v in pairs(laptop.os_version_attr[os_version]) do
+		os_attr[k] = v
 	end
+
 	os_attr.tty_style = self.hwdef.tty_style or os_attr.tty_style
 	if self.hwdef.tty_monochrome ~= nil then
 		os_attr.tty_monochrome = self.hwdef.tty_monochrome
@@ -278,7 +280,10 @@ function os_class:get_app(name)
 	if not template then
 		return
 	end
-	local app = setmetatable(table.copy(template), laptop.class_lib.app)
+	local app = setmetatable({}, laptop.class_lib.app)
+	for k,v in pairs(template) do
+		app[k] = v
+	end
 	app.name = name
 	app.os = self
 	return app
