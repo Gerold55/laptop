@@ -98,7 +98,7 @@ function sweeper_class:toggle_bomb_mark(sel_w, sel_h)
 	end
 end
 
-function get_sweeper(data)
+local function get_sweeper(data)
 	local self = setmetatable({}, sweeper_class)
 	self.data = data
 	return self

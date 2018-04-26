@@ -29,7 +29,7 @@ local shapes = {
 
 local base_color_texture = "laptop_tetris_block.png"
 local base_color_alpha = '128'
-colors = { base_color_texture.."^[colorize:#00FFFF:"..base_color_alpha, base_color_texture.."^[colorize:#FF00FF:"..base_color_alpha, base_color_texture.."^[colorize:#FF0000:"..base_color_alpha,
+local colors = { base_color_texture.."^[colorize:#00FFFF:"..base_color_alpha, base_color_texture.."^[colorize:#FF00FF:"..base_color_alpha, base_color_texture.."^[colorize:#FF0000:"..base_color_alpha,
 		base_color_texture.."^[colorize:#0000FF:"..base_color_alpha, base_color_texture.."^[colorize:#00FF00:"..base_color_alpha, base_color_texture.."^[colorize:#FF4500:"..base_color_alpha,
 		base_color_texture.."^[colorize:#FFFF00:"..base_color_alpha }
 
@@ -46,7 +46,7 @@ local insert = table.insert
 local tetris_class = {}
 tetris_class.__index = tetris_class
 
-function get_tetris(app, data)
+local function get_tetris(app, data)
 	local self = setmetatable({}, tetris_class)
 	self.data = data
 	self.app = app
