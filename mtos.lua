@@ -65,6 +65,72 @@ laptop.supported_textcolors = {
 
 
 -----------------------------------------------------
+-- Operating System cache
+-----------------------------------------------------
+local mtos_cache = {
+	list = {},
+	is_running = false
+}
+laptop.mtos_cache = mtos_cache
+
+function mtos_cache:get(pos)
+	local hash = minetest.hash_node_position(pos)
+	return self.list[hash]
+end
+
+function mtos_cache:set(pos, mtos)
+	local hash = minetest.hash_node_position(pos)
+	mtos.cache_first_access = mtos.cache_first_access or os.time()
+	mtos.cache_last_access = os.time()
+	self.list[hash] = mtos
+	self:check_free_step()
+end
+
+function mtos_cache:free(pos)
+	local hash = minetest.hash_node_position(pos)
+	self.list[hash] = nil
+end
+
+
+function mtos_cache:sync_and_free(mtos)
+	mtos.bdev:sync()
+	self:free(mtos.pos)
+end
+
+
+function mtos_cache:check_free_step()
+	-- do not start twice
+	if self.is_running then
+		return
+	end
+
+	local function check_free(mtos_cache)
+		local current_time
+		for hash, mtos in pairs(mtos_cache.list) do
+			current_time = current_time or os.time()
+			if mtos.cache_last_access + 5 <= current_time or -- 5 seconds unused
+					mtos.cache_first_access + 15 <= current_time then -- or 15 seconds active
+				self:sync_and_free(mtos)
+			end
+		end
+		mtos_cache.is_running = false
+		mtos_cache:check_free_step()
+	end
+
+	if next(self.list) then
+		self.is_running = true
+		minetest.after(1, check_free, self)
+	end
+end
+
+-- Sync all on shutdown
+minetest.register_on_shutdown(function()
+	for hash, mtos in pairs(mtos_cache.list) do
+		mtos_cache:sync_and_free(mtos)
+	end
+end)
+
+-----------------------------------------------------
 -- Operating System class
 -----------------------------------------------------
 local os_class = {}
@@ -89,6 +155,7 @@ end
 -- Power on the system and start the launcher
 function os_class:power_on(new_node_name)
 	self.bdev:free_ram_disk()
+	mtos_cache:free(self.pos)
 	-- update current instance with reinitialized data
 	for k,v in pairs(laptop.os_get(self.pos)) do
 		self[k] = v
@@ -140,10 +207,12 @@ function os_class:set_theme(theme)
 end
 
 function os_class:get_os_attr()
-	local os_attr = table.copy(laptop.os_version_attr.default)
-	if self.hwdef.os_version then
-		os_attr = table.copy(laptop.os_version_attr[self.hwdef.os_version])
+	local os_attr = {}
+	local os_version = self.hwdef.os_version or 'default'
+	for k, v in pairs(laptop.os_version_attr[os_version]) do
+		os_attr[k] = v
 	end
+
 	os_attr.tty_style = self.hwdef.tty_style or os_attr.tty_style
 	if self.hwdef.tty_monochrome ~= nil then
 		os_attr.tty_monochrome = self.hwdef.tty_monochrome
@@ -210,7 +279,10 @@ function os_class:get_app(name)
 	if not template then
 		return
 	end
-	local app = setmetatable(table.copy(template), laptop.class_lib.app)
+	local app = setmetatable({}, laptop.class_lib.app)
+	for k,v in pairs(template) do
+		app[k] = v
+	end
 	app.name = name
 	app.os = self
 	return app
@@ -279,6 +351,7 @@ function os_class:set_app(appname)
 		self.meta:set_string('formspec', formspec)
 	end
 	self:save()
+	mtos_cache:sync_and_free(self)
 end
 
 -- Handle input processing
@@ -313,7 +386,8 @@ function os_class:pass_to_app(method, reshow, sender, ...)
 end
 
 function os_class:save()
-	self.bdev:sync()
+	self.bdev:sync_cloud()
+	mtos_cache:set(self.pos, self)
 end
 
 -- Use parameter and launch the select_file dialog
@@ -336,7 +410,14 @@ end
 -- Get Operating system object
 -----------------------------------------------------
 function laptop.os_get(pos)
-	local self = setmetatable({}, os_class)
+	-- get OS-object from cache
+	local self = mtos_cache:get(pos)
+	if self then
+		return self
+	end
+
+	-- Create new if not in cache
+	self = setmetatable({}, os_class)
 	self.__index = os_class
 	self.pos = pos
 	self.node = minetest.get_node(pos)

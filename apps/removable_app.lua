@@ -57,6 +57,6 @@ laptop.register_app("removable", {
 				mtos:power_on() --reboot
 			end
 		end
-		mtos.bdev:sync()
+		laptop.mtos_cache:sync_and_free(mtos)
 	end,
 })

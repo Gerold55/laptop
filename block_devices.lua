@@ -21,8 +21,8 @@ function bdev:get_ram_disk()
 end
 
 function bdev:free_ram_disk()
-	self.os.meta:set_string('laptop_ram','')
-	self.ram_disk = nil
+	self.ram_disk = {}
+	self:sync()
 end
 
 
@@ -47,7 +47,7 @@ function bdev:get_removable_disk(removable_type)
 		function data:reload(stack)
 			-- self.inv unchanged
 			-- self.rtype unchanged (assumption
-			stack = stack or data.inv:get_stack("main", 1)
+			stack = stack or self.inv:get_stack("main", 1)
 			if stack then
 				local def = stack:get_definition()
 				if def and def.name ~= "" then
@@ -77,8 +77,8 @@ function bdev:get_removable_disk(removable_type)
 			if not self.stack then
 				return false
 			end
-			local drop_pos = table.copy(self.bdev.os.pos)
-			drop_pos = { x=drop_pos.x+math.random()*2-1, y=drop_pos.y,z=drop_pos.z+math.random()*2-1 }
+			local p = self.bdev.os.pos
+			local drop_pos = { x=p.x+math.random()*2-1, y=p.y,z=p.z+math.random()*2-1 }
 			minetest.item_drop(self.stack, nil, drop_pos)
 			self.stack = nil
 			return true
@@ -178,7 +178,10 @@ function bdev:sync()
 		end
 		self.removable_disk.inv:set_stack("main", 1, self.removable_disk.stack)
 	end
+end
 
+-- Save all data if used
+function bdev:sync_cloud()
 	-- Modmeta (Cloud)
 	if self.cloud_disk then
 		for store, value in pairs(self.cloud_disk) do
@@ -189,7 +192,10 @@ end
 
 -- Get handler
 function laptop.get_bdev_handler(mtos)
-	local bdevobj = table.copy(bdev)
+	local bdevobj = {}
+	for k,v in pairs(bdev) do
+		bdevobj[k] = v
+	end
 	bdevobj.os = mtos
 	return bdevobj
 end

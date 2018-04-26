@@ -111,8 +111,11 @@ end
 
 
 function laptop.get_theme(theme_name)
-	local self = setmetatable(table.copy(laptop.themes.default), theme_class)
 	theme_name = theme_name or "Freedom"
+	local self = setmetatable({}, theme_class)
+	for k, v in pairs(laptop.themes.default) do
+		self[k] = v
+	end
 	if theme_name and laptop.themes[theme_name] then
 		for k,v in pairs(laptop.themes[theme_name]) do
 			self[k] = v

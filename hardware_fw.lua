@@ -2,6 +2,7 @@
 laptop.node_config = {}
 
 local function on_construct(pos)
+	laptop.mtos_cache:free(pos)
 	local mtos = laptop.os_get(pos)
 	local node = minetest.get_node(pos)
 	local hwdef = laptop.node_config[node.name]
@@ -35,7 +36,7 @@ local function on_punch(pos, node, puncher)
 		puncher:set_wielded_item(slot.stack)
 		-- reload OS
 		slot:reload(punch_item)
-		mtos.bdev:sync()
+		laptop.mtos_cache:sync_and_free(mtos)
 		for k,v in pairs(laptop.os_get(mtos.pos)) do
 			mtos[k] = v
 		end
@@ -98,6 +99,7 @@ local function on_metadata_inventory_take(pos, listname, index, stack, player)
 	local mtos = laptop.os_get(pos)
 	mtos:pass_to_app("on_metadata_inventory_take", true, player, listname, index, stack)
 end
+
 local function on_timer(pos, elapsed)
 	local mtos = laptop.os_get(pos)
 	return mtos:pass_to_app("on_timer", true, nil, elapsed)
@@ -105,15 +107,13 @@ end
 
 local function after_place_node(pos, placer, itemstack, pointed_thing)
 	local save = minetest.deserialize(itemstack:get_meta():get_string("laptop_metadata"))
+	laptop.mtos_cache:free(pos)
 	if save then
 		local meta = minetest.get_meta(pos)
 		meta:from_table({fields = save.fields})
-		if save.invlist.main then
-			for invname, inv in pairs(save.invlist) do
-				meta:get_inventory():set_list(invname, inv)
-			end
-		else -- compatibility to prev. version
-			meta:get_inventory():set_list("main", save.invlist)
+
+		for invname, inv in pairs(save.invlist) do
+			meta:get_inventory():set_list(invname, inv)
 		end
 	end
 	itemstack:clear()
@@ -122,6 +122,30 @@ end
 local function after_dig_node(pos, oldnode, oldmetadata, digger)
 --local function preserve_metadata(pos, oldnode, oldmetadata, drops) --TODO: if MT-0.5 stable
 	local save = { fields = oldmetadata.fields, invlist = {} }
+	local cached_mtos = laptop.mtos_cache:get(pos)
+	if cached_mtos then
+		-- Workaround, handle sync without nodemeta access
+		local bdev = cached_mtos.bdev
+		save.fields.laptop_ram = minetest.serialize(bdev.ram_disk)
+		save.fields.laptop_appdata = minetest.serialize(bdev.hard_disk)
+
+		if bdev.removable_disk then
+			local stack = bdev.removable_disk.stack
+			if stack then
+				local stackmeta  = stack:get_meta()
+				if bdev.removable_disk.def and bdev.removable_disk.label ~= bdev.removable_disk.def.description then
+					stackmeta:set_string("description", bdev.removable_disk.label)
+				end
+				if bdev.removable_disk.storage then
+					stackmeta:set_string("os_storage", minetest.serialize(bdev.removable_disk.storage))
+				end
+			end
+			oldmetadata.inventory.main = oldmetadata.inventory.main or {}
+			oldmetadata.inventory.main[1] = stack
+		end
+		laptop.mtos_cache:free(pos)
+	end
+
 	if oldmetadata.inventory then
 		for invname, inv in pairs(oldmetadata.inventory) do
 			local invsave = {}
@@ -131,7 +155,6 @@ local function after_dig_node(pos, oldnode, oldmetadata, digger)
 			end
 		end
 	end
-
 	local item_name = minetest.registered_items[oldnode.name].drop or oldnode.name
 	local inventory = digger:get_inventory()
 	local in_inv
