@@ -99,9 +99,8 @@ end
 
 -- Power on the system / and resume last running app
 function os_class:resume(new_node_name)
-	self.sysram.current_app = self:appstack_pop()
 	self:swap_node(new_node_name)
-	self:set_app(self.sysram.current_app)
+	self:set_app('<pop>')
 end
 
 -- Power off the system
@@ -217,38 +216,60 @@ function os_class:get_app(name)
 	return app
 end
 
+-- suspend timer from previous app before switching to new app
+function os_class:save_timer()
+	if not self.sysram.current_app then
+		return
+	end
+	local appname = self.sysram.current_app
+	if not appname then
+		return
+	end
+	self.timer = minetest.get_node_timer(self.pos)
+	if self.timer:is_started() then
+		self.sysram.app_timer[appname] = {
+				timeout = self.timer:get_timeout(),
+				elapsed = self.timer:get_elapsed(),
+			}
+	else
+		self.sysram.app_timer[self.sysram.current_app] = nil
+	end
+end
+
+-- restore the timer of current app
+function os_class:resume_timer(appname)
+	if not appname then
+		if not self.sysram.current_app then
+			return
+		end
+		appname = self.sysram.current_app
+	end
+	self.timer = self.timer or minetest.get_node_timer(self.pos)
+	if self.sysram.app_timer[appname] then
+		local data = self.sysram.app_timer[appname]
+		self.timer:set(data.timeout, data.elapsed)
+	else
+		self.timer:stop()
+	end
+end
+
 -- Activate the app
 function os_class:set_app(appname)
 	local launcher = self.hwdef.custom_launcher or self.os_attr.custom_launcher or "launcher"
 	local newapp = appname or launcher
 	if newapp == launcher then
 		self:appstack_free()
+	elseif newapp == '<pop>' then
+		newapp = self:appstack_pop()
 	elseif self.sysram.current_app and
 			self.sysram.current_app ~= launcher and
 			self.sysram.current_app ~= newapp then
 		self:appstack_add(self.sysram.current_app)
 	end
 
-	-- suspend timer from previous app and resume the new one
 	if self.sysram.current_app ~= newapp then
-		self.timer = minetest.get_node_timer(self.pos)
-		if self.sysram.current_app then
-			if self.timer:is_started() then
-				self.sysram.app_timer[self.sysram.current_app] = {
-						timeout = self.timer:get_timeout(),
-						elapsed = self.timer:get_elapsed(),
-					}
-			else
-				self.sysram.app_timer[self.sysram.current_app] = nil
-			end
-		end
-		-- restore the timer of current app
-		if self.sysram.app_timer[newapp] then
-			local data = self.sysram.app_timer[newapp]
-			self.timer:set(data.timeout, data.elapsed)
-		else
-			self.timer:stop()
-		end
+		self:save_timer()
+		self:resume_timer(newapp)
 	end
 
 	self.sysram.current_app = newapp
