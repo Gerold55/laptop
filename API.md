@@ -6,7 +6,7 @@
 - `hwdef.description`  -  Computer item name
 - `hwdef.infotext` - Text shown if node is pointed
 - `hwdef.sequence` = { "variant_1_name", "variant_2_name", "variant_3_name" } On punch swaps sequence. the first variant is in creative inventory
-- `hwdef.custom_launcer` - optional - custom launcher name
+- `hwdef.custom_launcher` - optional - custom launcher name
 - `hwdef.os_version` - optional - Set OS version. ('1.10', '3.31' or '6.33') By default the latest version is used
 - `hwdef.tty_style` - optional - override CS-BOS console textcolor
 - `hwdef.tty_monochrome` - Old computer with monochrome CRT screen
