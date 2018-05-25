@@ -19,7 +19,6 @@ laptop.register_app("browser", {
 			"image[.1,3.8;12,1.2;laptop_wa_web.png]"..
 			"label[.3,4.7;welcome.official]"..
 			"label[.3,5.1;submit.official]"..
-			"label[.3,5.5;bible.official]"..
 			']'
 			return formspec
 		end,
