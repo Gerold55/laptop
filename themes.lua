@@ -36,6 +36,12 @@ laptop.themes = {
 		texture_replacements = {}, -- No replacements in default theme
 --		os_min_version = nil,
 -- 		os_max_version = nil,
+
+		-- used in browser app
+		url_dark_textcolor = "#6495ED",
+		url_dark_button = "laptop_theme_desktop_icon_label_button_black.png",
+		url_bright_textcolor = "#000080",
+		url_bright_button = "laptop_fruit_base.png",
 	},
 }
 
