@@ -48,6 +48,7 @@ laptop.register_app("browser", {
 	app_name = "MineBrowse",
 	app_icon = "laptop_removable.png",
 	app_info = "Web Browser",
+	os_min_version = "5.51",
 	formspec_func = function(app, mtos)
 		local formspec = laptop.browser_api.header_formspec_func(app, mtos) ..
 				--"image[.1,1.3;18,1.6;laptop_header_web.png]"..
