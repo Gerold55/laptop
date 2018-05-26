@@ -38,6 +38,8 @@ function laptop.browser_api.header_receive_fields_func(app, mtos, sender, fields
 		mtos:set_app("browser")
 	elseif fields.settings_button then
 		mtos:set_app("browser:settings")
+	elseif fields.page_link then
+		laptop.browser_api.navigate(app, mtos, fields.page_link)
 	end
 end
 
@@ -57,7 +59,7 @@ laptop.register_app("browser", {
 				mtos.theme:get_label('.1,3', 'which means websites are created by the community. If you like to add your own site', 'contrast') ..
 				mtos.theme:get_label('.1,3.3', 'visit submit.official for further details.', 'contrast') ..
 				"background[0,1.2;15,9;laptop_background.png]"..
-				mtos.theme:get_image_button('11.3,9.3;3,.8', 'minor', 'submit_button', 'laptop_theme_basic_button.png', 'Submit a Website', 'Submit a Website') ..
+				mtos.theme:get_button('11.3,9.3;3,.8', 'url_bright', 'page_link', 'submit.official') ..
 				"image[11,2.8;4,8.1;laptop_ad1_web.png]"..
 				"image[.1,3.8;12,1.2;laptop_wa_web.png]"
 
@@ -82,10 +84,6 @@ laptop.register_app("browser", {
 	end,
 	receive_fields_func = function(app, mtos, sender, fields)
 		laptop.browser_api.header_receive_fields_func(app, mtos, sender, fields)
-
-		if fields.page_link then
-			laptop.browser_api.navigate(app, mtos, fields.page_link)
-		end
 	end
 })
 
