@@ -159,6 +159,10 @@ The most colors are grouped by "prefixes". Each prefix means a specific content 
   - `contrast_bgcolor` dark background as RGB
   - `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
 
+- toolbar - Toolbar buttons
+		`toolbar_button` Button unterlay
+		`toolbar_textcolor` Toolbar buttons textcolor
+
 - status_online - Used to show status information "online / green"
   - `status_online_textcolor` - Sets "online" text color for peripherals
 - status_disabled - Used to show status information "disabled / yellow"

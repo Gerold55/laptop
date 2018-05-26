@@ -24,9 +24,9 @@ function laptop.browser_api.header_formspec_func(app, mtos)
 		currentpage = app.name
 	end
 	local formspec = "field[.2,.5;13,1;input_field;;"..currentpage.."]field_close_on_enter[input_field;false]"..
-			mtos.theme:get_image_button('12.9,.3;.8,.8', 'minor', 'go_button', 'laptop_theme_basic_button.png', '', 'Go') ..
-			mtos.theme:get_image_button('13.6,.3;.8,.8', 'minor', 'home_button', 'laptop_theme_basic_button.png', '', 'Home') ..
-			mtos.theme:get_image_button('14.3,.3;.8,.8', 'minor', 'settings_button', 'laptop_theme_basic_button.png', '', 'Settings')
+			mtos.theme:get_image_button('12.9,.3;.8,.8', 'toolbar', 'go_button', 'laptop_go_web.png', '', 'Go') ..
+			mtos.theme:get_image_button('13.6,.3;.8,.8', 'toolbar', 'home_button', 'laptop_home_web.png', '', 'Home') ..
+			mtos.theme:get_image_button('14.3,.3;.8,.8', 'toolbar', 'settings_button', 'laptop_settings_web.png', '', 'Settings')
 	return formspec
 end
 
@@ -46,7 +46,7 @@ end
 --------------------------------------------
 laptop.register_app("browser", {
 	app_name = "MineBrowse",
-	app_icon = "laptop_removable.png",
+	app_icon = "laptop_browser.png",
 	app_info = "Web Browser",
 	os_min_version = "5.51",
 	formspec_func = function(app, mtos)
