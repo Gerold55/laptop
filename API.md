@@ -94,6 +94,7 @@
 - `os_max_version` - maximum version to be used (CS-BOS, optional)
 - `fullscreen` - (boolean) Do not add app-background and window buttons
 - `view` - (boolean) The definition is a view. That means the app/view is not visible in launcher
+- `browser_page` - (boolean) This view is shown in browser app as available page
 - `formspec_func(app, mtos)` - Function, should return the app formspec (mandatory) During definition the "app" and the "mtos" are available
 - `appwindow_formspec_func(launcher_app, app, mtos)`- Only custom launcher app: App background / Window decorations and buttons
 - `receive_fields_func(app, mtos, sender, fields)` Function for input processing. The "app" and the "mtos" are available inside the call
@@ -113,7 +114,6 @@ same as register_app, but the view flag is set. app_name and app_icon not necess
 - `app:back_app(fields, sender)` - Go back to previous app/view. Trough fields/sender additional data can be sent to the previous app trough receive_fields_func
 - `app:exit_app()` - Delete call stack and return to launcher
 - `app:get_timer()` - Get timer for this app (based on nodetimer)
-
 
 ## Themes
 ### Theme definition
@@ -159,6 +159,10 @@ The most colors are grouped by "prefixes". Each prefix means a specific content 
   - `contrast_bgcolor` dark background as RGB
   - `contrast_textcolor` some labels are placed on contrast background. This color is used to colorize them
 
+- toolbar - Toolbar buttons
+		`toolbar_button` Button unterlay
+		`toolbar_textcolor` Toolbar buttons textcolor
+
 - status_online - Used to show status information "online / green"
   - `status_online_textcolor` - Sets "online" text color for peripherals
 - status_disabled - Used to show status information "disabled / yellow"
@@ -177,6 +181,18 @@ The most colors are grouped by "prefixes". Each prefix means a specific content 
 
 - monochrome - Optimized for monochrome output (old computers). Some elements will be colorized using this color
   - `monochrome_textcolor` - default is nil. if set to RGB, colorization is applied on some textures (like tetris shapes)
+
+- url - Browser URL's for default background
+	`url_textcolor`
+	`url_button`
+
+- url_dark - Browser URL's for dark background
+	`url_dark_textcolor`
+	`url_dark_button`
+
+- url_bright - Browser URL's for white background
+	`url_bright_textcolor`
+	`url_bright_button`
 
 - fallback - without prefix (obsolete)
   - `textcolor` Default text color for buttons and labels. Each "prefix" can have own textcolor, like major_textcolor and minor_textcolor for major/minor buttons or labels
@@ -234,3 +250,9 @@ Can be used for non-data and/or system tasks. For usual data store please use th
 There is no own compatible items registrator. The item needs to match the item group to be usable with the laptops
 - `laptop_removable_floppy = 1` - The item is a floppy
 - `laptop_removable_usb = 1` - The item is usb storage disk
+
+## Browser app specific functions
+- `laptop.browser_api.navigate(app, mtos, pagename)` Check the "pagename" and start if the app have browser_page setting
+- `formspec = laptop.browser_api.header_formspec_func(app, mtos)` Contains the formspec for navigation bar. Needs to be included to all pages
+- `laptop.browser_api.header_receive_fields_func(app, mtos, sender, fields)` Process the navigation bar buttons. Needs to be included to all pages
+

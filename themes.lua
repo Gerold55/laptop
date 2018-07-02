@@ -18,6 +18,8 @@ laptop.themes = {
 		contrast_background = "gui_formbg.png",
 		contrast_bgcolor = "#000000",
 		contrast_textcolor = "#FFFFFF",
+		toolbar_button = "laptop_theme_basic_button.png",
+		toolbar_textcolor = "#000000",
 		status_online_textcolor = "#00FF00",
 		status_disabled_textcolor = "#FF0000",
 		status_off_textcolor = "#888888",
@@ -36,6 +38,12 @@ laptop.themes = {
 		texture_replacements = {}, -- No replacements in default theme
 --		os_min_version = nil,
 -- 		os_max_version = nil,
+
+		-- used in browser app
+		url_dark_textcolor = "#6495ED",
+		url_dark_button = "laptop_theme_desktop_icon_label_button_black.png",
+		url_bright_textcolor = "#000080",
+		url_bright_button = "laptop_fruit_base.png",
 	},
 }
 

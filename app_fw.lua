@@ -86,3 +86,11 @@ for _, file in ipairs(app_list) do
 		dofile(app_path..file)
 	end
 end
+
+dofile(app_path..'browser_app.lua')
+for _, file in ipairs(app_list) do
+    if file:sub(-8) == '_app.lua' and file ~= 'browser_app.lua' 
+then
+        dofile(app_path..file)
+    end
+end
