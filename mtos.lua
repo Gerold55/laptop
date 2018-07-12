@@ -332,7 +332,7 @@ function os_class:set_app(appname)
 	if newapp == launcher then
 		self:appstack_free()
 	elseif newapp == '<pop>' then
-		newapp = self:appstack_pop()
+		newapp = self:appstack_pop() or launcher
 	elseif self.sysram.current_app and
 			self.sysram.current_app ~= launcher and
 			self.sysram.current_app ~= newapp then
