@@ -215,9 +215,10 @@ laptop.register_view("printer:app", {
 			else
 				sysstore.selected_printer = printer
 			end
+			local status_color = mtos.theme["status_"..printer.status.."_textcolor"] or mtos.theme.textcolor
 			formspec = formspec .. 'item_image[0.5,1.5;1,1;'..printer.nodename..']'..
 					mtos.theme:get_label('1.5,1.7', minetest.formspec_escape(printer.name)..' '..
-					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(mtos.theme["status_"..printer.status.."_textcolor"],printer.status))
+					minetest.pos_to_string(printer.pos)..' '.. minetest.colorize(status_color, printer.status))
 		end
 
 		formspec = formspec .. mtos.theme:get_tableoptions()..
@@ -234,10 +235,10 @@ laptop.register_view("printer:app", {
 					formspec = formspec..','
 				end
 				local pos_string = minetest.pos_to_string(printer.pos)
-
+				local status_color = mtos.theme["status_"..printer.status.."_textcolor"] or mtos.theme.textcolor
 				formspec = formspec..minetest.formspec_escape(printer.name)..','..
 						minetest.formspec_escape(minetest.pos_to_string(printer.pos))..','..
-						mtos.theme["status_"..printer.status.."_textcolor"]..','..printer.status
+						status_color..','..printer.status
 				if sysstore.selected_printer and vector.distance(printer.pos, sysstore.selected_printer.pos) == 0 then
 					sel_idx = idx
 				end
