@@ -42,11 +42,11 @@ laptop.register_app("mail", {
 				end
 				-- set read/unread status
 				if account.selected_box == "sentbox" then
-					formspec = formspec .. "1,"..mtos.theme.muted_textcolor..","  -- unread
+					formspec = formspec .. "2,"..mtos.theme.muted_textcolor.."," -- sent are always read
 				elseif not message.is_read then
 					formspec = formspec .. "1,"..mtos.theme.table_textcolor.."," -- unread
 				else
-					formspec = formspec .. "1,"..mtos.theme.muted_textcolor.."," -- read
+					formspec = formspec .. "2,"..mtos.theme.muted_textcolor.."," -- read
 				end
 
 				-- set subject
