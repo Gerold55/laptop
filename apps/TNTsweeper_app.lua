@@ -13,6 +13,7 @@ sweeper_class.__index = sweeper_class
 
 function sweeper_class:init(level)
 	self.data.level = level
+	if not level_config[level] then print('ERROR: WRONG LEVEL', level) end
 	local config = level_config[level]
 	-- build board
 	self.data.board = {}
