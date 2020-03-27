@@ -292,7 +292,7 @@ laptop.register_view("printer:app", {
 			param.label = fields.label
 		end
 
-		if fields.print then
+		if fields.print and sysstore.selected_printer then
 			local hw_os = laptop.os_get(sysstore.selected_printer.pos)
 			if hw_os and minetest.registered_items[hw_os.node.name].groups.laptop_printer then
 				hw_os.sysdata.print_queue = hw_os.sysdata.print_queue or {}
