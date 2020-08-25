@@ -111,6 +111,19 @@ local function after_place_node(pos, placer, itemstack, pointed_thing)
 		return
 	end
 
+	-- Backwards compatibility code
+	if not save.ram_disk and not save.hard_disk then
+		laptop.mtos_cache:free(pos)
+		local meta = minetest.get_meta(pos)
+		meta:from_table({fields = save.fields})
+		for invname, inv in pairs(save.invlist) do
+			meta:get_inventory():set_list(invname, inv)
+		end
+		itemstack:clear()
+		return
+	end
+	-- Backwards compatibility code end
+
 	local mtos = laptop.os_get(pos)
 	mtos.bdev.ram_disk = save.ram_disk or mtos.bdev.ram_disk
 	mtos.bdev.hard_disk = save.hard_disk or mtos.bdev.hard_disk
