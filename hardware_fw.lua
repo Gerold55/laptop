@@ -1,6 +1,8 @@
 
 laptop.node_config = {}
 
+local have_technic = minetest.get_modpath("technic")
+
 local function on_construct(pos)
 	laptop.mtos_cache:free(pos)
 	local mtos = laptop.os_get(pos)
@@ -132,6 +134,19 @@ local function after_place_node(pos, placer, itemstack, pointed_thing)
 		local removable = mtos.bdev:get_removable_disk()
 		removable:reload(ItemStack(save.removable_disk))
 	end
+	
+	-- battery support
+	if have_technic then
+		local node = minetest.get_node(pos)
+		local hwdef = laptop.node_config[node.name]
+		if hwdef.battery_capacity then
+			local metadata = minetest.deserialize(itemstack:get_metadata())
+			if metadata and metadata.charge then
+				local meta = minetest.get_meta(pos)
+				meta:set_int("battery", metadata.charge)
+			end
+		end
+	end
 
 	mtos.bdev:sync()
 	itemstack:clear()
@@ -157,6 +172,78 @@ local function preserve_metadata(pos, oldnode, oldmetadata, drops)
 	for _, stack in pairs(drops) do
 		if stack:get_name() == item_name then
 			stack:get_meta():set_string("laptop_metadata", minetest.serialize(save))
+			if have_technic then
+				local hwdef = laptop.node_config[oldnode.name]
+				if hwdef.battery_capacity then
+					stack:set_metadata(minetest.serialize({charge=tonumber(oldmetadata.battery or "0")}))
+					technic.set_RE_wear(stack, oldmetadata.battery or 0, hwdef.battery_capacity)
+				end
+			end
+		end
+	end
+end
+
+local function technic_run(pos, node)
+	local mtos = laptop.os_get(pos)
+	if not mtos then
+		return
+	end
+	
+	local meta = minetest.get_meta(pos)
+	local demand = meta:get_int("LV_EU_demand")
+	local supply = meta:get_int("LV_EU_input")
+	
+	if (supply<demand) and (demand>0) then
+		local hwdef = laptop.node_config[node.name]
+		if hwdef.power_off_node then
+			local hwdef_next = laptop.node_config[hwdef.power_off_node]
+			if hwdef_next.hw_state then
+				mtos[hwdef_next.hw_state](mtos, hwdef.power_off_node)
+			else
+				mtos:power_off(hwdef.power_off_node)
+				mtos:save()
+			end
+		end
+	elseif (demand>0) then
+		local hwdef = laptop.node_config[node.name]
+		if hwdef.battery_capacity then
+			local battery = meta:get_int("battery")
+			battery = battery+(hwdef.battery_charge or 400)
+			battery = math.min(battery, hwdef.battery_capacity)
+			meta:set_int("battery", battery)
+		end
+	end
+end
+
+local function technic_on_disable(pos, node)
+	local meta = minetest.get_meta(pos)
+	local demand = meta:get_int("LV_EU_demand")
+	if (demand==0) then
+		return
+	end
+	
+	local mtos = laptop.os_get(pos)
+	if not mtos then
+		return
+	end
+	
+	local hwdef = laptop.node_config[node.name]
+	if hwdef.battery_capacity then
+		local battery = meta:get_int("battery")
+		if (battery>demand) then
+			meta:set_int("battery", battery - demand)
+			return
+		end
+		meta:set_int("battery", 0)
+	end
+	meta:set_int("LV_EU_demand", 0)
+	if hwdef.power_off_node then
+		local hwdef_next = laptop.node_config[hwdef.power_off_node]
+		if hwdef_next.hw_state then
+			mtos[hwdef_next.hw_state](mtos, hwdef.power_off_node)
+		else
+			mtos:power_off(hwdef.power_off_node)
+			mtos:save()
 		end
 	end
 end
@@ -172,7 +259,12 @@ function laptop.register_hardware(name, hwdef)
 		if def.groups then
 			def.groups = table.copy(def.groups)
 		else
-			def.groups = {choppy=2, oddly_breakably_by_hand=2,  dig_immediate = 2}
+			def.groups = {choppy=2, oddly_breakably_by_hand=2,  dig_immediate = 2, technic_machine = 1, technic_lv = 1}
+		end
+		if def.connect_sides then
+			def.connect_sides = table.copy(def.connect_sides)
+		else
+			def.connect_sides = {"back"}
 		end
 		if nodename ~= default_nodename then
 			def.drop = default_nodename
@@ -196,8 +288,20 @@ function laptop.register_hardware(name, hwdef)
 		def.on_metadata_inventory_put = on_metadata_inventory_put
 		def.on_metadata_inventory_take = on_metadata_inventory_take
 		def.on_timer = on_timer
+		def.technic_run = technic_run
+		def.technic_on_disable = technic_on_disable
+		if have_technic then
+			if hwdef.battery_capacity then
+				def.groups.not_in_creative_inventory = 1
+				def.drop = name.."_item"
+			end
+		end
 		minetest.register_node(nodename, def)
-
+		
+		if have_technic then
+			technic.register_machine("LV", nodename, technic.receiver)
+		end
+		
 		-- set node configuration for hooks
 		local merged_hwdef = table.copy(hwdef)
 		merged_hwdef.name = name
@@ -210,10 +314,49 @@ function laptop.register_hardware(name, hwdef)
 		if next_node ~= nodename then
 			merged_hwdef.next_node = next_node
 		end
+		
+		-- power off node
+		if def._power_off_seq then
+			local power_off_node = name.."_"..def._power_off_seq
+			if power_off_node ~= nodename then
+				merged_hwdef.power_off_node = power_off_node
+			end
+		end
+		-- battery charge
+		if def._battery_charge then
+			merged_hwdef.battery_charge = def._battery_charge
+		end
+		-- eu demand
+		if def._eu_demand then
+			merged_hwdef.eu_demand = def._eu_demand
+		end
 
 		-- Defaults
 		merged_hwdef.hw_capabilities =  merged_hwdef.hw_capabilities or {"hdd", "floppy", "usb", "net", "liveboot"}
 		laptop.node_config[nodename] = merged_hwdef
+	end
+	
+	if hwdef.battery_capacity then
+		if have_technic then
+			technic.register_power_tool(name.."_item", hwdef.battery_capacity)
+			
+			minetest.register_tool(name.."_item", {
+					description = hwdef.description,
+					inventory_image = hwdef.inventory_image,
+					stack_max = 1,
+					wear_represents = "technic_RE_charge",
+					on_refill = technic.refill_RE_charge,
+					on_place = function(itemstack, placer, pointed_thing)
+						itemstack:set_name(default_nodename)
+						minetest.item_place_node(itemstack, placer, pointed_thing)
+						itemstack:clear()
+						return itemstack
+					end,
+
+				})
+		else
+			minetest.register_alias(name.."_item", default_nodename)
+		end
 	end
 end
 

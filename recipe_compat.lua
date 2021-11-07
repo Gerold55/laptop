@@ -8,6 +8,8 @@ laptop.recipe_compat = {
 	fpga = '-unknown-', programmer = '-unknown-', delayer = '-unknown-',
 	controller = '-unknown-', light_red = '-unknown-', light_green = '-unknown-',
 	light_blue = '-unknown-',
+  plastic = '-unknown-', motor = '-unknown-',
+  battery = '-unknown-', lv_transformer = '-unknown-',
 }
 
 local rc = laptop.recipe_compat
@@ -20,6 +22,10 @@ if minetest.get_modpath('default') then
 	rc.steel = 'default:steel_ingot'
 	rc.glass = 'default:glass'
 	rc.diamond = 'default:diamond'
+	rc.plastic = 'default:steel_ingot'
+	rc.motor = 'default:steel_ingot'
+	rc.battery = 'default:steel_ingot'
+	rc.lv_transformer = 'default:copper_ingot'
 end
 
 if minetest.get_modpath('homedecor') then
@@ -32,6 +38,7 @@ if minetest.get_modpath('homedecor') then
 	rc.fpga = 'homedecor:ic'
 	rc.programmer = 'homedecor:heating_element'
 	rc.controller = 'homedecor:motor'
+	rc.motor = 'homedecor:motor'
 end
 
 if minetest.get_modpath('mesecons_materials') then
@@ -66,3 +73,15 @@ if minetest.get_modpath('mesecons_lightstone') then
 	rc.light_green = 'mesecons_lightstone:lightstone_green_off'
 	rc.light_blue = 'mesecons_lightstone:lightstone_blue_off'
 end
+
+if minetest.get_modpath('basic_materials') then
+  rc.plastic = 'basic_materials:plastic_sheet'
+	rc.motor = 'basic_materials:motor'
+end
+
+if minetest.get_modpath('technic') then
+	rc.battery = 'technic:battery'
+	rc.lv_transformer = 'technic:lv_transformer'
+	rc.silicon = 'technic:doped_silicon_wafer'
+end
+

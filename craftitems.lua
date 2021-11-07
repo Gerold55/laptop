@@ -68,9 +68,9 @@ minetest.register_craftitem("laptop:bat", {
 minetest.register_craft({
 	output = 'laptop:bat',
 	recipe = {
-		{rc.steel, rc.steel, rc.steel},
-		{rc.steel, rc.gates_diode, rc.steel},
-		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.battery, rc.steel},
+		{rc.battery, rc.gates_diode, rc.battery},
+		{rc.steel, rc.battery, rc.steel},
 	}
 })
 
@@ -152,9 +152,9 @@ minetest.register_craftitem("laptop:gpu", {
 minetest.register_craft({
 	output = 'laptop:gpu',
 	recipe = {
-		{rc.steel, rc.steel, rc.steel},
-		{rc.steel, rc.fpga, rc.steel},
-		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.silicon, rc.steel},
+		{'laptop:fan', rc.fpga, 'laptop:fan'},
+		{rc.steel, rc.silicon, rc.steel},
 	}
 })
 
@@ -182,7 +182,7 @@ minetest.register_craft({
 	recipe = {
 		{rc.controller, rc.fpga, rc.gates_nand},
 		{'dye:dark_green', 'dye:dark_green', 'dye:dark_green'},
-		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.copper, rc.steel},
 	}
 })
 
@@ -194,9 +194,9 @@ minetest.register_craftitem("laptop:fan", {
 minetest.register_craft({
 	output = 'laptop:fan',
 	recipe = {
-		{'', rc.steel, ''},
-		{rc.steel, rc.steel, rc.steel},
-		{'', rc.steel, ''},
+		{rc.plastic, rc.steel, rc.plastic},
+		{rc.steel, rc.motor, rc.steel},
+		{rc.plastic, rc.steel, rc.plastic},
 	}
 })
 
@@ -208,9 +208,9 @@ minetest.register_craftitem("laptop:psu", {
 minetest.register_craft({
 	output = 'laptop:psu',
 	recipe = {
-		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.lv_transformer, rc.steel},
 		{rc.controller, rc.fpga, 'laptop:fan'},
-		{rc.steel, rc.steel, rc.steel},
+		{rc.steel, rc.lv_transformer, rc.steel},
 	}
 })
 
@@ -224,9 +224,9 @@ minetest.register_craftitem("laptop:floppy", {
 minetest.register_craft({
 	output = 'laptop:floppy',
 	recipe = {
-		{rc.steel, rc.steel, rc.steel},
-		{rc.steel, rc.programmer, rc.steel},
-		{rc.steel, rc.steel, rc.steel},
+		{rc.plastic, rc.plastic, rc.plastic},
+		{rc.plastic, rc.programmer, rc.plastic},
+		{rc.plastic, rc.plastic, rc.plastic},
 	}
 })
 
@@ -240,9 +240,9 @@ minetest.register_craftitem("laptop:usbstick", {
 minetest.register_craft({
 	output = 'laptop:usbstick',
 	recipe = {
-		{'', rc.steel, ''},
+		{'', rc.silicon, ''},
 		{'', rc.programmer, ''},
-		{'', rc.steel, ''},
+		{'', rc.plastic, ''},
 	}
 })
 
