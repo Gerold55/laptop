@@ -194,9 +194,9 @@ minetest.register_craftitem("laptop:fan", {
 minetest.register_craft({
 	output = 'laptop:fan',
 	recipe = {
-		{rc.plastic, rc.steel, rc.plastic},
-		{rc.steel, rc.motor, rc.steel},
-		{rc.plastic, rc.steel, rc.plastic},
+		{'', rc.plastic, ''},
+		{rc.plastic, rc.motor, rc.plastic},
+		{'', rc.plastic, ''},
 	}
 })
 
