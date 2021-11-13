@@ -2,6 +2,7 @@
 laptop.node_config = {}
 
 local have_technic = minetest.get_modpath("technic")
+local have_generator = minetest.get_modpath("power_generators")
 
 local function on_construct(pos)
 	laptop.mtos_cache:free(pos)
@@ -136,7 +137,7 @@ local function after_place_node(pos, placer, itemstack, pointed_thing)
 	end
 	
 	-- battery support
-	if have_technic then
+	if have_technic or have_generator then
 		local node = minetest.get_node(pos)
 		local hwdef = laptop.node_config[node.name]
 		if hwdef.battery_capacity then
@@ -172,11 +173,19 @@ local function preserve_metadata(pos, oldnode, oldmetadata, drops)
 	for _, stack in pairs(drops) do
 		if stack:get_name() == item_name then
 			stack:get_meta():set_string("laptop_metadata", minetest.serialize(save))
-			if have_technic then
+			if have_technic or have_generator then
 				local hwdef = laptop.node_config[oldnode.name]
 				if hwdef.battery_capacity then
 					stack:set_metadata(minetest.serialize({charge=tonumber(oldmetadata.battery or "0")}))
-					technic.set_RE_wear(stack, oldmetadata.battery or 0, hwdef.battery_capacity)
+					-- calculate wear manually for support power_generators without technic
+					local wear = 65534*(oldmetadata.battery or 0)/hwdef.battery_capacity
+					if wear<1 then
+						wear = 1
+					end
+					if wear>65534 then
+						wear = 65534
+					end
+					stack:set_wear(65534-wear)
 				end
 			end
 		end
@@ -191,7 +200,8 @@ local function technic_run(pos, node)
 	
 	local meta = minetest.get_meta(pos)
 	local demand = meta:get_int("LV_EU_demand")
-	local supply = meta:get_int("LV_EU_input")
+	-- support both technic and power_generators, demand should be always same, supply should be active only one
+	local supply = meta:get_int("LV_EU_input") + meta:get_int("generator_input")
 	
 	if (supply<demand) and (demand>0) then
 		local hwdef = laptop.node_config[node.name]
@@ -219,6 +229,12 @@ local function technic_on_disable(pos, node)
 	local meta = minetest.get_meta(pos)
 	local demand = meta:get_int("LV_EU_demand")
 	if (demand==0) then
+		return
+	end
+	
+	-- support both technic and power_generator
+	local input = meta:get_int("generator_input")
+	if input>=meta:get_int("generator_demand") then
 		return
 	end
 	
@@ -259,13 +275,14 @@ function laptop.register_hardware(name, hwdef)
 		if def.groups then
 			def.groups = table.copy(def.groups)
 		else
-			def.groups = {choppy=2, oddly_breakably_by_hand=2,  dig_immediate = 2, technic_machine = 1, technic_lv = 1}
+			def.groups = {choppy=2, oddly_breakably_by_hand=2,	dig_immediate = 2, laptop = 1, technic_machine = 1, technic_lv = 1, generator_powered = 1}
 		end
 		if def.connect_sides then
 			def.connect_sides = table.copy(def.connect_sides)
 		else
 			def.connect_sides = {"back"}
 		end
+		def._generator_connect_sides = def.connect_sides
 		if nodename ~= default_nodename then
 			def.drop = default_nodename
 			def.groups.not_in_creative_inventory = 1
@@ -290,7 +307,7 @@ function laptop.register_hardware(name, hwdef)
 		def.on_timer = on_timer
 		def.technic_run = technic_run
 		def.technic_on_disable = technic_on_disable
-		if have_technic then
+		if have_technic or have_generator then
 			if hwdef.battery_capacity then
 				def.groups.not_in_creative_inventory = 1
 				def.drop = name.."_item"
@@ -332,20 +349,24 @@ function laptop.register_hardware(name, hwdef)
 		end
 
 		-- Defaults
-		merged_hwdef.hw_capabilities =  merged_hwdef.hw_capabilities or {"hdd", "floppy", "usb", "net", "liveboot"}
+		merged_hwdef.hw_capabilities =	merged_hwdef.hw_capabilities or {"hdd", "floppy", "usb", "net", "liveboot"}
 		laptop.node_config[nodename] = merged_hwdef
 	end
 	
 	if hwdef.battery_capacity then
-		if have_technic then
-			technic.register_power_tool(name.."_item", hwdef.battery_capacity)
+		if have_technic or have_generator then
+			local on_refill = nil
+			if have_technic then
+				technic.register_power_tool(name.."_item", hwdef.battery_capacity)
+				on_refill = technic.refill_RE_charge
+			end
 			
 			minetest.register_tool(name.."_item", {
 					description = hwdef.description,
 					inventory_image = hwdef.inventory_image,
 					stack_max = 1,
 					wear_represents = "technic_RE_charge",
-					on_refill = technic.refill_RE_charge,
+					on_refill = on_refill,
 					on_place = function(itemstack, placer, pointed_thing)
 						itemstack:set_name(default_nodename)
 						minetest.item_place_node(itemstack, placer, pointed_thing)

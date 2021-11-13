@@ -65,6 +65,7 @@ laptop.supported_textcolors = {
 
 -- have technic
 local have_technic = minetest.get_modpath("technic")
+local have_generator = minetest.get_modpath("power_generators")
 
 -----------------------------------------------------
 -- Operating System cache
@@ -159,8 +160,14 @@ function os_class:power_on(new_node_name)
 	if new_node_name then
 		local meta = minetest.get_meta(self.pos)
 		local hwdef = laptop.node_config[new_node_name]
-		meta:set_int("LV_EU_demand", hwdef.eu_demand or 100)
-		meta:set_int("LV_EU_input", hwdef.eu_demand or 100)
+		if have_technic then
+			meta:set_int("LV_EU_demand", hwdef.eu_demand or 100)
+			meta:set_int("LV_EU_input", hwdef.eu_demand or 100)
+		end
+		if have_generator then
+			meta:set_int("generator_demand", hwdef.eu_demand or 100)
+			meta:set_int("generator_input", hwdef.eu_demand or 100)
+		end
 	end
 	self.bdev:free_ram_disk()
 	mtos_cache:free(self.pos)
@@ -177,8 +184,14 @@ function os_class:resume(new_node_name)
 	if new_node_name then
 		local meta = minetest.get_meta(self.pos)
 		local hwdef = laptop.node_config[new_node_name]
-		meta:set_int("LV_EU_demand", hwdef.eu_demand or 100)
-		meta:set_int("LV_EU_input", hwdef.eu_demand or 100)
+		if have_technic then
+			meta:set_int("LV_EU_demand", hwdef.eu_demand or 100)
+			meta:set_int("LV_EU_input", hwdef.eu_demand or 100)
+		end
+		if have_generator then
+			meta:set_int("generator_demand", hwdef.eu_demand or 100)
+			meta:set_int("generator_input", hwdef.eu_demand or 100)
+		end
 	end
 	self:swap_node(new_node_name)
 	self:set_app('<pop>')
@@ -187,7 +200,10 @@ end
 -- Power off the system
 function os_class:power_off(new_node_name)
   local meta = minetest.get_meta(self.pos)
-	local demand = meta:set_int("LV_EU_demand", 0)
+	meta:set_int("LV_EU_demand", 0)
+	meta:set_int("LV_EU_input", 0)
+	meta:set_int("generator_demand", 0)
+	meta:set_int("generator_input", 0)
 	self:swap_node(new_node_name)
 	self:set_app('os:power_off')
 end
