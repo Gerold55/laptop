@@ -112,7 +112,7 @@ local function after_place_node(pos, placer, itemstack, pointed_thing)
 	end
 
 	-- Backwards compatibility code
-	if not save.ram_disk and not save.hard_disk then
+	if save.fields then
 		laptop.mtos_cache:free(pos)
 		local meta = minetest.get_meta(pos)
 		meta:from_table({fields = save.fields})
