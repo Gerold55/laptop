@@ -192,26 +192,45 @@ local function preserve_metadata(pos, oldnode, oldmetadata, drops)
 	end
 end
 
-local function technic_run(pos, node)
-	local mtos = laptop.os_get(pos)
-	if not mtos then
-		return
-	end
-	
+local function laptop_run(pos, node, mtos)
 	local meta = minetest.get_meta(pos)
-	local demand = meta:get_int("LV_EU_demand")
+	local hwdef = mtos.hwdef
+	local demand = hwdef.eu_demand or 0
 	-- support both technic and power_generators, demand should be always same, supply should be active only one
 	local supply = meta:get_int("LV_EU_input") + meta:get_int("generator_input")
 	
+	if have_generator and (supply>0) then
+		meta:set_int("generator_input", 0)
+	end
+	
+	-- powered off, nothing to do
+	if (demand==0) then
+		return
+	end
+	
 	if (supply<demand) and (demand>0) then
-		local hwdef = laptop.node_config[node.name]
-		if hwdef.power_off_node then
-			local hwdef_next = laptop.node_config[hwdef.power_off_node]
-			if hwdef_next.hw_state then
-				mtos[hwdef_next.hw_state](mtos, hwdef.power_off_node)
+		local power_off = true
+	
+		if hwdef.battery_capacity then
+			local battery = meta:get_int("battery")
+			if (battery>(demand-supply)) then
+				meta:set_int("battery", battery - (demand - supply))
+				power_off = false
 			else
-				mtos:power_off(hwdef.power_off_node)
-				mtos:save()
+				meta:set_int("battery", 0)
+			end
+		end
+		
+		if power_off then
+			local hwdef = laptop.node_config[node.name]
+			if hwdef.power_off_node then
+				local hwdef_next = laptop.node_config[hwdef.power_off_node]
+				if hwdef_next.hw_state then
+					mtos[hwdef_next.hw_state](mtos, hwdef.power_off_node)
+				else
+					mtos:power_off(hwdef.power_off_node)
+					mtos:save()
+				end
 			end
 		end
 	elseif (demand>0) then
@@ -223,46 +242,34 @@ local function technic_run(pos, node)
 			meta:set_int("battery", battery)
 		end
 	end
+	
 end
 
-local function technic_on_disable(pos, node)
-	local meta = minetest.get_meta(pos)
-	local demand = meta:get_int("LV_EU_demand")
-	if (demand==0) then
-		return
-	end
-	
-	-- support both technic and power_generator
-	local input = meta:get_int("generator_input")
-	if input>=meta:get_int("generator_demand") then
-		return
-	end
-	
+local function technic_run(pos, node)
 	local mtos = laptop.os_get(pos)
 	if not mtos then
 		return
 	end
 	
-	local hwdef = laptop.node_config[node.name]
-	if hwdef.battery_capacity then
-		local battery = meta:get_int("battery")
-		if (battery>demand) then
-			meta:set_int("battery", battery - demand)
-			return
-		end
-		meta:set_int("battery", 0)
-	end
-	meta:set_int("LV_EU_demand", 0)
-	if hwdef.power_off_node then
-		local hwdef_next = laptop.node_config[hwdef.power_off_node]
-		if hwdef_next.hw_state then
-			mtos[hwdef_next.hw_state](mtos, hwdef.power_off_node)
-		else
-			mtos:power_off(hwdef.power_off_node)
-			mtos:save()
-		end
-	end
+	laptop_run(pos, node, mtos)
 end
+
+local function technic_on_disable(pos, node)
+	local mtos = laptop.os_get(pos)
+	-- fix infotext for technic mod enable
+	mtos:set_infotext(mtos.hwdef.infotext)
+	
+	laptop_run(pos, node, mtos)
+end
+
+local tubelib2_side = {
+		right = "R",
+		left = "L",
+		front = "F",
+		back = "B",
+		top = "U",
+		bottom = "D",
+	}
 
 function laptop.register_hardware(name, hwdef)
 	local default_nodename = name.."_"..hwdef.sequence[1]
@@ -275,7 +282,16 @@ function laptop.register_hardware(name, hwdef)
 		if def.groups then
 			def.groups = table.copy(def.groups)
 		else
-			def.groups = {choppy=2, oddly_breakably_by_hand=2,	dig_immediate = 2, laptop = 1, technic_machine = 1, technic_lv = 1, generator_powered = 1}
+			def.groups = {choppy=2, oddly_breakably_by_hand=2,	dig_immediate = 2, laptop = 1}
+		end
+		if have_technic then
+			def.groups.technic_machine = 1
+			def.groups.technic_lv = 1
+		end
+		if have_generator then
+			if def._eu_demand then
+				def.groups.laptop_generator_powered = 1
+			end
 		end
 		if def.connect_sides then
 			def.connect_sides = table.copy(def.connect_sides)
@@ -283,6 +299,10 @@ function laptop.register_hardware(name, hwdef)
 			def.connect_sides = {"back"}
 		end
 		def._generator_connect_sides = def.connect_sides
+		def._generator_powered_valid_sides = {}
+		for _,side in pairs(def.connect_sides) do
+			def._generator_powered_valid_sides[tubelib2_side[side]] = true
+		end
 		if nodename ~= default_nodename then
 			def.drop = default_nodename
 			def.groups.not_in_creative_inventory = 1
@@ -317,6 +337,15 @@ function laptop.register_hardware(name, hwdef)
 		
 		if have_technic then
 			technic.register_machine("LV", nodename, technic.receiver)
+		end
+		if have_generator then
+			local cable = power_generators.electric_cable
+			local sides = {}
+			for _,side in pairs(def._generator_connect_sides) do
+				table.insert(sides, tubelib2_side[side])
+			end
+			cable:add_secondary_node_names({nodename})
+			cable:set_valid_sides(nodename, sides)
 		end
 		
 		-- set node configuration for hooks
@@ -379,5 +408,18 @@ function laptop.register_hardware(name, hwdef)
 			minetest.register_alias(name.."_item", default_nodename)
 		end
 	end
+end
+
+if have_generator and (not have_technic) then
+	minetest.register_abm({
+			label = "Update running laptops power.",
+			nodenames = {"group:laptop_generator_powered"},
+			interval = 1,
+			chance = 1,
+			action = function(pos, node)
+				local def = minetest.registered_nodes[node.name]
+				def.technic_run(pos, node)
+			end,
+		})
 end
 
