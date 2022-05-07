@@ -12,11 +12,15 @@
 - `hwdef.tty_monochrome` - Old computer with monochrome CRT screen
 - `hwdef.custom_theme` -  optional - custom initial theme name
 - `hwdef.hw_capabilities` = { "hdd", "floppy", "usb", "net", "liveboot" } Table with hardware capabilities. Default is all, if nothing set
+-	`hwdef.battery_capacity` - battery capacity (used if technic mod is aviable)
 - `hwdef.node_defs` - A list for node definitions for each variant. with hw_state parameter for OS-initialization
 ```
   hwdef.node_defs = {
 		variant_1_name = {
 			hw_state =  "resume", "power_on" or "power_off", -- Hardware state
+			_eu_demand = 100, -- required technic power
+			_power_off_seq = "variant_name", -- name of variant for switch when power source is not aviable 
+			_battery_charge = 400, -- speed of batter charging (with technin mod)
 			--node 1 definiton
 		},
 		variant_2_name = {

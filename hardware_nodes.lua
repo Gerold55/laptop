@@ -4,6 +4,8 @@ laptop.register_hardware("laptop:core", {
 	sequence = { "closed", "open", "open_on" },
 	custom_theme = "Red",
 	hw_capabilities = { 'hdd', 'usb', 'net' },
+	battery_capacity = 80000,
+	inventory_image = "laptop_lap_car_item.png",
 	node_defs = {
 		["open"] = {
 			hw_state = "power_off",
@@ -28,6 +30,9 @@ laptop.register_hardware("laptop:core", {
 		},
 		["open_on"] = {
 			hw_state = "resume",
+			_power_off_seq = "open",
+			_eu_demand = 100,
+			_battery_charge = 400,
 			light_source = 4,
 			tiles = {
 				"laptop_lap_car_open_on_top.png",
@@ -72,7 +77,7 @@ laptop.register_hardware("laptop:core", {
 })
 
 minetest.register_craft({
-	output = 'laptop:core_closed',
+	output = 'laptop:core_item',
 	recipe = {
 	{'dye:red', 'laptop:lcd', 'dye:red', },
 	{'laptop:HDD', 'laptop:motherboard', 'laptop:gpu', },
@@ -91,6 +96,7 @@ laptop.register_hardware("laptop:printer", {
 
 		["powersave"] = {
 			hw_state = "power_off",
+			_power_off_seq = "off",
 			tiles = {
 				"laptop_printer_top.png",
 				"laptop_printer_bottom.png",
@@ -102,7 +108,7 @@ laptop.register_hardware("laptop:printer", {
 			drawtype = "nodebox",
 			paramtype = "light",
 			paramtype2 = "facedir",
-			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1},
+			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1, technic_machine = 1, technic_lv = 1},
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -114,6 +120,8 @@ laptop.register_hardware("laptop:printer", {
 		},
 		["on"] = {
 			hw_state = "power_on",
+			_power_off_seq = "off",
+			_eu_demand = 100,
 			tiles = {
 				"laptop_printer_top.png",
 				"laptop_printer_bottom.png",
@@ -125,7 +133,7 @@ laptop.register_hardware("laptop:printer", {
 			drawtype = "nodebox",
 			paramtype = "light",
 			paramtype2 = "facedir",
-			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1},
+			groups = {choppy=2, oddly_breakably_by_hand=2, dig_immediate = 2, laptop_printer = 1, technic_machine = 1, technic_lv = 1},
 			node_box = {
 				type = "fixed",
 				fixed = {
@@ -178,6 +186,8 @@ laptop.register_hardware("laptop:cube", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			_power_off_seq = "off",
+			_eu_demand = 150,
 			light_source = 4,
 			tiles = {
 				"laptop_cube_monitor_top.png^laptop_cube_tower_top.png",
@@ -243,6 +253,8 @@ laptop.register_hardware("laptop:fruit_zero", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			_power_off_seq = "off",
+			_eu_demand = 300,
 			light_source = 4,
 			tiles = {
 				"laptop_fruit_stand_top.png",
@@ -310,6 +322,8 @@ laptop.register_hardware("laptop:bell_crossover", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			_power_off_seq = "off",
+			_eu_demand = 250,
 			light_source = 4,
 			tiles = {
 				"laptop_opti_pc_top.png^laptop_opti_kb_top.png^laptop_opti_ms_top.png^laptop_opti_lcb_top.png^laptop_opti_lcp_top.png^laptop_opti_lcd_top.png",
@@ -381,6 +395,8 @@ laptop.register_hardware("laptop:kodiak_1000", {
 	node_defs = {
 		["on"] = {
 			hw_state = "power_on",
+			_power_off_seq = "off",
+			_eu_demand = 100,
 			light_source = 3,
 			tiles = {
 				"laptop_k_top.png^laptop_t_top.png^laptop_p_top.png^laptop_m_top.png",
@@ -445,6 +461,8 @@ laptop.register_hardware("laptop:portable_workstation_2", {
 	os_version = "5.02",
 	custom_theme = "Argyle",
 	sequence = { "closed", "open", "open_on"},
+	battery_capacity = 80000,
+	inventory_image = "laptop_lap_base_item.png",
 	node_defs = {
 		["closed"] = {
 			hw_state = "power_off",
@@ -489,6 +507,9 @@ laptop.register_hardware("laptop:portable_workstation_2", {
 		},
 		["open_on"] = {
 			hw_state = "resume",
+			_power_off_seq = "open",
+			_eu_demand = 200,
+			_battery_charge = 400,
 			light_source = 4,
 			tiles = {
 				"laptop_lap_base_open_on_top.png",
@@ -513,7 +534,7 @@ laptop.register_hardware("laptop:portable_workstation_2", {
 })
 
 minetest.register_craft({
-	output = 'laptop:portable_workstation_2_closed',
+	output = 'laptop:portable_workstation_2_item',
 	recipe = {
 	{'dye:dark_grey', 'laptop:lcd', 'dye:dark_grey', },
 	{'laptop:HDD', 'laptop:motherboard', 'laptop:cpu_d75a', },
