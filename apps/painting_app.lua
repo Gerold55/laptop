@@ -179,7 +179,6 @@ laptop.register_app("painting", {
 				for x = 1,data.resolution do
 					local key = "pixel_"..y.."_"..x
 					if fields[key] then
-	  	  	  	  	  	  print("clicked "..key)
 						local line = data.grid[y] or {}
 						  line[x] = data.brush_color..""
 						return
